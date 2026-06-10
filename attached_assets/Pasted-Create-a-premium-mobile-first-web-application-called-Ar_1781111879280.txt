@@ -1,0 +1,427 @@
+Create a premium mobile-first web application called "ArtMap College" as a SINGLE self-contained HTML file (index.html only).
+
+This is NOT a traditional education website, LMS, museum directory, blog, or encyclopedia.
+
+The product vision is:
+
+"Google Earth for Art History."
+
+Users learn art by exploring the world through an interactive map and timeline.
+
+========================================
+DESIGN PHILOSOPHY
+========================================
+
+- Mobile-first.
+- Premium.
+- Fast.
+- Touch-friendly.
+- Visual-first.
+- Minimal text.
+- Elegant.
+- Feels like a modern iOS/Apple-quality product.
+- Dark mode by default.
+- No generic AI website styling.
+- No Bootstrap look.
+- No corporate dashboard look.
+- No sidebar.
+
+Visual hierarchy:
+
+80% visual
+20% text
+
+The user should feel like they are exploring civilization and art, not reading a database.
+
+========================================
+TECH REQUIREMENTS
+========================================
+
+Single HTML file only.
+
+Use:
+- HTML
+- CSS
+- Vanilla JavaScript
+
+No backend.
+
+No frameworks.
+
+All data stored in JS arrays.
+
+Must work immediately after opening.
+
+Responsive mobile-first design.
+
+========================================
+MAIN EXPERIENCE
+========================================
+
+The homepage IS the product.
+
+No landing page.
+
+No hero section.
+
+No marketing section.
+
+The first screen should instantly show:
+
+1. Interactive world map
+2. Timeline slider
+3. Search button
+4. Bottom navigation
+
+========================================
+FEATURE #1
+ART TIME MACHINE
+========================================
+
+The signature feature.
+
+A timeline slider from:
+
+1000 → 2026
+
+When the user drags the timeline:
+
+The map updates.
+
+Different art centers appear.
+
+Different civilizations become active.
+
+Different artworks appear.
+
+Create demo data for:
+
+1000
+1200
+1450
+1500
+1700
+1889
+1950
+2026
+
+Each year should show:
+
+- Region
+- Art movement
+- Famous artist
+- Representative artwork
+
+Animate transitions smoothly.
+
+========================================
+FEATURE #2
+INTERACTIVE WORLD MAP
+========================================
+
+Create a beautiful stylized SVG world map.
+
+Dark background.
+
+Glowing art nodes.
+
+Users can tap:
+
+- Italy
+- France
+- Netherlands
+- Japan
+- China
+- Egypt
+- United Kingdom
+- United States
+
+On tap:
+
+Open a bottom sheet.
+
+Never navigate away.
+
+========================================
+FEATURE #3
+ART DISCOVERY SHEET
+========================================
+
+Bottom sheet slides up like Google Maps.
+
+Contains:
+
+Artwork image
+Artwork title
+Artist
+Year
+Movement
+
+Buttons:
+
+Explore
+AI Explain
+Save
+
+Smooth animations.
+
+Premium cards.
+
+========================================
+FEATURE #4
+ART PASSPORT
+========================================
+
+Bottom navigation tab:
+
+Passport
+
+Shows:
+
+Countries explored
+Artists discovered
+Movements completed
+
+Use beautiful achievement cards.
+
+Show progress percentage.
+
+Gamified but elegant.
+
+========================================
+FEATURE #5
+ART GENOME
+========================================
+
+For every artwork show:
+
+Influence DNA.
+
+Example:
+
+Color Theory
+Impressionism
+Perspective
+Symbolism
+Expressionism
+
+Display as premium horizontal bars.
+
+Looks futuristic.
+
+========================================
+FEATURE #6
+GUIDED JOURNEYS
+========================================
+
+Add a tab:
+
+Journeys
+
+Example journeys:
+
+- Renaissance Italy
+- Van Gogh Europe
+- Silk Road Art
+- Japanese Ukiyo-e
+- Modernism in Paris
+
+Each journey:
+
+Cover image
+Duration
+Progress
+
+Card-based design.
+
+========================================
+FEATURE #7
+AI GUIDE
+========================================
+
+Demo AI guide.
+
+When user taps:
+
+"AI Explain"
+
+Open modal.
+
+Generate contextual explanations from local JS data.
+
+Different explanation lengths:
+
+- Beginner
+- Student
+- Expert
+
+Animated typing effect.
+
+No API required.
+
+========================================
+FEATURE #8
+SEARCH EXPERIENCE
+========================================
+
+Floating search button.
+
+Search:
+
+Artists
+Artworks
+Movements
+Countries
+
+Instant filtering.
+
+Beautiful overlay search.
+
+========================================
+FEATURE #9
+DISCOVER MODE
+========================================
+
+Random exploration engine.
+
+Button:
+
+"Surprise Me"
+
+Randomly jumps to:
+
+Country
+Artist
+Artwork
+Period
+
+Animated transition.
+
+========================================
+FEATURE #10
+TODAY IN ART HISTORY
+========================================
+
+Daily card.
+
+Shows:
+
+Artwork
+Artist
+Location
+Interesting fact
+
+Place above timeline.
+
+========================================
+BOTTOM NAVIGATION
+========================================
+
+Only 4 tabs:
+
+🌍 Explore
+🧭 Journeys
+🛂 Passport
+👤 Profile
+
+Modern floating glassmorphism style.
+
+========================================
+VISUAL STYLE
+========================================
+
+Colors:
+
+Background:
+#09090B
+
+Cards:
+#111827
+
+Accent:
+#D4AF37
+
+Secondary:
+#E5E7EB
+
+Use large spacing.
+
+Rounded corners.
+
+Soft shadows.
+
+Smooth transitions.
+
+Premium typography.
+
+Beautiful microinteractions.
+
+========================================
+ANIMATIONS
+========================================
+
+- Map zoom effect
+- Timeline transitions
+- Bottom sheet drag effect
+- Card hover/touch effects
+- Achievement unlock animation
+- Typing effect for AI guide
+- Smooth page transitions
+
+60fps feel.
+
+========================================
+EMPTY STATES
+========================================
+
+Design custom premium empty states.
+
+Never use placeholder lorem ipsum.
+
+========================================
+DEMO CONTENT
+========================================
+
+Include at least:
+
+Artists:
+- Leonardo da Vinci
+- Michelangelo
+- Vincent van Gogh
+- Claude Monet
+- Pablo Picasso
+- Katsushika Hokusai
+
+Movements:
+- Renaissance
+- Baroque
+- Impressionism
+- Post-Impressionism
+- Modernism
+- Ukiyo-e
+
+Countries:
+- Italy
+- France
+- Netherlands
+- Japan
+- China
+- Egypt
+- United Kingdom
+- United States
+
+========================================
+FINAL GOAL
+========================================
+
+Build a product that feels like:
+
+Google Earth
++
+Apple Design
++
+Duolingo Progression
++
+Interactive Art History
+
+The result should feel investor-ready, museum-quality, educational, premium, and genuinely innovative while remaining a single HTML file.
