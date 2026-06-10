@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "buildCommand": "cd artifacts/artmap-college && npx vite build --config vite.config.vercel.ts",
+  "outputDirectory": "artifacts/artmap-college/dist",
+  "installCommand": "npm install -g pnpm && pnpm install",
+  "framework": null
+}
