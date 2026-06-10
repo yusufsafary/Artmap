@@ -41,7 +41,7 @@ html, body, #root {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background: #09090B;
+  background: #04080f;
   font-family: 'Inter', system-ui, sans-serif;
   color: #E5E7EB;
 }
@@ -83,13 +83,6 @@ html, body, #root {
   box-shadow: 0 0 12px rgba(212,175,55,0.6);
 }
 
-/* Glow node pulse */
-@keyframes pulse-node {
-  0%, 100% { opacity: 1; r: 6; }
-  50% { opacity: 0.6; r: 8; }
-}
-.node-pulse { animation: pulse-node 2s ease-in-out infinite; }
-
 /* Bottom sheet */
 .bottom-sheet {
   transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
@@ -98,22 +91,16 @@ html, body, #root {
 
 /* Card glass */
 .glass-card {
-  background: rgba(17, 24, 39, 0.92);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(212,175,55,0.15);
+  background: rgba(10, 16, 28, 0.92);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(212,175,55,0.12);
 }
 
 /* Nav glass */
 .nav-glass {
-  background: rgba(9, 9, 11, 0.85);
-  backdrop-filter: blur(24px);
-  border-top: 1px solid rgba(255,255,255,0.07);
-}
-
-/* Shimmer */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  background: rgba(4, 8, 18, 0.92);
+  backdrop-filter: blur(28px);
+  border-top: 1px solid rgba(255,255,255,0.06);
 }
 
 /* Achievement unlock */
@@ -127,7 +114,7 @@ html, body, #root {
 /* Page transitions */
 .page-enter { animation: fadeSlideIn 0.3s ease forwards; }
 @keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -144,17 +131,10 @@ html, body, #root {
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 .cursor-blink { animation: blink 1s infinite; }
 
-/* Map hover */
-.map-region {
-  transition: fill 0.2s ease, filter 0.2s ease;
-  cursor: pointer;
-}
-.map-region:hover { filter: brightness(1.5); }
-
 /* Search overlay */
 .search-overlay {
-  background: rgba(9, 9, 11, 0.95);
-  backdrop-filter: blur(20px);
+  background: rgba(4, 8, 18, 0.97);
+  backdrop-filter: blur(24px);
 }
 
 /* Progress bar */
@@ -177,10 +157,13 @@ html, body, #root {
 .journey-grad-4 { background: linear-gradient(135deg, #2a0d0d 0%, #7a1e1e 100%); }
 .journey-grad-5 { background: linear-gradient(135deg, #1a1a0d 0%, #6b6b1e 100%); }
 
-/* Star sparkle */
-@keyframes sparkle {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: scale(1.2) rotate(15deg); opacity: 0.8; }
-}
-
 input[type="range"] { touch-action: none; }
+
+/* Icon containers */
+.icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
