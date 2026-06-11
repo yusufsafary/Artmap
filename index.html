@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ArtMap — Navigate Human Creativity</title>
+<meta name="description" content="Explore 40,000 years of art history through an interactive visual map.">
+<meta property="og:title" content="ArtMap — Navigate Human Creativity">
+<meta property="og:description" content="Explore 40,000 years of art history through an interactive visual map.">
+<meta property="og:url" content="https://artmap.college">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0A;--fg:#FFFFFF;--dim:#B0B0B0;--accent:#E6FF00;
+  --era-bg:#0A0A0A;--era-fg:#FFFFFF;--era-accent:#E6FF00;
+  --font:'Space Grotesk',Inter,sans-serif;
+  --r:12px;--r2:20px;--r3:32px;
+  --nav-h:72px;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:var(--font);border:none;background:none;color:inherit}
+input,select{font-family:var(--font)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;padding-bottom:var(--nav-h)}
+.screen.active{display:block}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-around;z-index:100;display:none}
+#nav.visible{display:flex}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;color:var(--dim);transition:color 0.2s;font-size:10px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase}
+.nav-btn.active{color:var(--accent)}
+.nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* LANDING */
+#landing{display:flex;flex-direction:column;min-height:100vh;padding:0;position:relative;overflow:hidden}
+#landing-canvas{position:absolute;inset:0;z-index:0}
+.landing-content{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;padding:40px 24px 40px}
+.landing-logo{font-size:clamp(56px,14vw,120px);font-weight:700;letter-spacing:-0.04em;line-height:0.9;color:var(--fg)}
+.landing-logo span{color:var(--accent)}
+.landing-tagline{font-size:clamp(13px,3.5vw,16px);color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:16px;font-weight:400}
+.landing-hero-text{margin-top:auto;padding-top:60px}
+.landing-headline{font-size:clamp(32px,9vw,72px);font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:16px}
+.landing-sub{font-size:clamp(14px,3.5vw,18px);color:var(--dim);line-height:1.5;max-width:340px;margin-bottom:40px}
+.landing-ctas{display:flex;flex-direction:column;gap:12px}
+.btn-primary{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%;transition:transform 0.15s,opacity 0.15s}
+.btn-primary:active{transform:scale(0.97)}
+.btn-secondary{background:transparent;color:var(--fg);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:17px 32px;border-radius:var(--r);width:100%;border:1px solid rgba(255,255,255,0.15);transition:border-color 0.2s}
+.btn-secondary:active{border-color:var(--accent)}
+.landing-stats{display:flex;gap:32px;margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.07)}
+.stat-item{display:flex;flex-direction:column;gap:4px}
+.stat-num{font-size:28px;font-weight:700;color:var(--accent);letter-spacing:-0.02em}
+.stat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.daily-badge{position:absolute;top:32px;right:24px;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.3);color:var(--accent);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:8px 12px;border-radius:var(--r);cursor:pointer;z-index:2}
+
+/* MAP SCREEN */
+#map{background:var(--bg);padding-top:0}
+.map-header{padding:56px 24px 24px;display:flex;justify-content:space-between;align-items:flex-start}
+.map-title{font-size:32px;font-weight:700;letter-spacing:-0.02em}
+.map-sub{font-size:13px;color:var(--dim);margin-top:4px}
+.xp-badge{background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.2);padding:8px 14px;border-radius:50px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent)}
+.map-progress-bar{margin:0 24px 32px;background:rgba(255,255,255,0.05);border-radius:4px;height:4px;overflow:hidden}
+.map-progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1)}
+.map-nodes{padding:0 24px 32px;display:flex;flex-direction:column;gap:0}
+.era-node{position:relative;display:flex;align-items:center;gap:16px;padding:20px 20px;background:rgba(255,255,255,0.03);border-radius:var(--r2);margin-bottom:4px;cursor:pointer;transition:background 0.2s,transform 0.15s;border:1px solid transparent;overflow:hidden}
+.era-node::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--era-color,#444) 0%,transparent 60%);opacity:0.06;transition:opacity 0.2s}
+.era-node:active{transform:scale(0.98)}
+.era-node.completed{border-color:rgba(230,255,0,0.2)}
+.era-node.completed::before{opacity:0.1}
+.era-node.locked{opacity:0.4;cursor:not-allowed}
+.era-node-icon{width:52px;height:52px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative}
+.era-node-icon .stamp{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(230,255,0,0.2);border-radius:var(--r);border:2px solid var(--accent);opacity:0;transition:opacity 0.3s}
+.era-node.completed .stamp{opacity:1}
+.era-node-info{flex:1;min-width:0}
+.era-node-name{font-size:16px;font-weight:600;letter-spacing:-0.01em}
+.era-node-date{font-size:11px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em}
+.era-node-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.era-tag{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,0.07)}
+.era-xp{font-size:10px;font-weight:600;color:var(--accent)}
+.era-arrow{color:var(--dim);transition:transform 0.2s;flex-shrink:0}
+.connector{width:2px;height:24px;background:linear-gradient(to bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03));margin-left:46px;margin-bottom:4px}
+.connector.filled{background:linear-gradient(to bottom,rgba(230,255,0,0.4),rgba(230,255,0,0.1))}
+
+/* ERA EXPERIENCE */
+#era{background:var(--era-bg);transition:background 0.5s}
+.era-header{padding:56px 24px 24px;position:relative}
+.era-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
+.era-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.era-num{font-size:80px;font-weight:700;letter-spacing:-0.04em;line-height:0.85;color:rgba(255,255,255,0.06);position:absolute;top:48px;right:24px;pointer-events:none}
+.era-title{font-size:clamp(36px,10vw,64px);font-weight:700;letter-spacing:-0.03em;line-height:0.95}
+.era-period{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;margin-top:12px}
+.era-desc{font-size:14px;color:var(--dim);line-height:1.6;margin-top:16px;max-width:340px}
+
+/* CARDS */
+.cards-track{padding:0 24px;overflow-x:auto;display:flex;gap:16px;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.cards-track::-webkit-scrollbar{display:none}
+.art-card{min-width:calc(100vw - 64px);max-width:360px;background:rgba(255,255,255,0.04);border-radius:var(--r2);border:1px solid rgba(255,255,255,0.06);overflow:hidden;scroll-snap-align:start;flex-shrink:0}
+.art-card-img{width:100%;aspect-ratio:4/3;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.art-card-art{font-size:80px;opacity:0.3}
+.art-card-body{padding:20px}
+.art-card-title{font-size:20px;font-weight:700;letter-spacing:-0.02em}
+.art-card-insight{font-size:13px;color:var(--dim);line-height:1.5;margin-top:8px}
+.art-card-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)}
+.art-card-field label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);display:block;margin-bottom:4px}
+.art-card-field span{font-size:13px;font-weight:500}
+.cards-dots{display:flex;justify-content:center;gap:6px;padding:20px 0 8px}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s}
+.dot.active{background:var(--accent);width:20px;border-radius:3px}
+.era-artifacts{padding:24px}
+.era-artifacts-title{font-size:13px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:16px}
+.artifact-chips{display:flex;gap:8px;flex-wrap:wrap}
+.artifact-chip{padding:8px 14px;border-radius:50px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03)}
+.artifact-chip:hover{border-color:var(--accent);color:var(--accent)}
+.artifact-chip.discovered{border-color:rgba(230,255,0,0.4);background:rgba(230,255,0,0.08);color:var(--accent)}
+.era-quiz-btn{margin:0 24px 40px;background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:calc(100% - 48px);transition:transform 0.15s}
+.era-quiz-btn:active{transform:scale(0.97)}
+
+/* ARTIFACT MODAL */
+#artifact-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
+#artifact-modal.open{display:flex}
+.artifact-sheet{background:#111;border-radius:28px 28px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.artifact-sheet-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 28px}
+.artifact-rarity{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+.artifact-rarity.legendary{color:#FFD700}
+.artifact-rarity.epic{color:#C084FC}
+.artifact-rarity.rare{color:#60A5FA}
+.artifact-rarity.common{color:var(--dim)}
+.artifact-sheet-title{font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
+.artifact-sheet-year{font-size:13px;color:var(--dim);margin-bottom:24px}
+.artifact-sheet-art{width:100%;aspect-ratio:16/9;border-radius:var(--r);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:24px}
+.artifact-connections{margin-bottom:24px}
+.artifact-connections h3{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:12px}
+.connection-tags{display:flex;gap:8px;flex-wrap:wrap}
+.connection-tag{padding:6px 12px;border-radius:6px;font-size:12px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s}
+.connection-tag:hover{border-color:var(--accent);color:var(--accent)}
+.artifact-collect-btn{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%}
+
+/* QUIZ */
+#quiz{background:var(--bg)}
+.quiz-header{padding:56px 24px 32px}
+.quiz-era-label{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px}
+.quiz-q-num{font-size:13px;color:var(--dim);margin-bottom:24px}
+.quiz-question{font-size:clamp(22px,6vw,32px);font-weight:700;letter-spacing:-0.02em;line-height:1.2;margin-bottom:40px}
+.quiz-options{padding:0 24px;display:flex;flex-direction:column;gap:12px}
+.quiz-option{padding:18px 20px;border-radius:var(--r);border:1px solid rgba(255,255,255,0.1);font-size:15px;font-weight:500;text-align:left;transition:all 0.2s;cursor:pointer;background:rgba(255,255,255,0.02)}
+.quiz-option:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04)}
+.quiz-option.correct{border-color:#4ADE80;background:rgba(74,222,128,0.1);color:#4ADE80}
+.quiz-option.wrong{border-color:#F87171;background:rgba(248,113,113,0.1);color:#F87171}
+.quiz-progress{display:flex;gap:6px;padding:0 24px 24px}
+.quiz-pip{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.1);transition:background 0.3s}
+.quiz-pip.done{background:var(--accent)}
+.quiz-pip.current{background:rgba(230,255,0,0.4)}
+.quiz-result{padding:56px 24px;text-align:center;display:none}
+.quiz-result.show{display:block}
+.quiz-result-icon{font-size:72px;margin-bottom:24px}
+.quiz-result-title{font-size:36px;font-weight:700;letter-spacing:-0.02em;margin-bottom:12px}
+.quiz-result-sub{font-size:15px;color:var(--dim);line-height:1.5;margin-bottom:32px}
+.quiz-xp{font-size:48px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.quiz-xp-label{font-size:13px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.quiz-continue-btn{margin-top:40px;background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%}
+
+/* PASSPORT */
+#passport{background:var(--bg)}
+.passport-header{padding:56px 24px 32px}
+.passport-cover{margin:0 24px 32px;background:linear-gradient(135deg,#1a1400 0%,#0f0f0f 100%);border-radius:var(--r2);padding:32px;border:1px solid rgba(255,215,0,0.15);position:relative;overflow:hidden}
+.passport-cover::before{content:'ArtMap';position:absolute;bottom:-20px;right:-10px;font-size:100px;font-weight:700;color:rgba(255,215,0,0.03);letter-spacing:-0.04em;pointer-events:none;user-select:none}
+.passport-cover-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.passport-name{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,215,0,0.6)}
+.passport-org{font-size:11px;color:rgba(255,215,0,0.4)}
+.passport-big-num{font-size:72px;font-weight:700;letter-spacing:-0.04em;color:#FFD700;line-height:1}
+.passport-big-label{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,215,0,0.5);margin-top:4px}
+.passport-progress-bar{background:rgba(255,215,0,0.1);border-radius:4px;height:6px;margin-top:16px;overflow:hidden}
+.passport-progress-fill{height:100%;background:linear-gradient(90deg,#FFD700,#E6FF00);border-radius:4px;transition:width 1s cubic-bezier(0.34,1.56,0.64,1)}
+.passport-stamps{padding:0 24px}
+.section-title{font-size:13px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:16px}
+.stamps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:32px}
+.stamp{background:rgba(255,255,255,0.03);border-radius:var(--r);padding:14px 10px;text-align:center;border:1px solid transparent;transition:all 0.3s;cursor:pointer}
+.stamp.earned{border-color:rgba(230,255,0,0.2);background:rgba(230,255,0,0.05)}
+.stamp-emoji{font-size:28px;margin-bottom:6px;filter:grayscale(1);transition:filter 0.3s}
+.stamp.earned .stamp-emoji{filter:none}
+.stamp-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim)}
+.stamp.earned .stamp-label{color:var(--fg)}
+.passport-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 40px}
+.pstat{background:rgba(255,255,255,0.03);border-radius:var(--r);padding:18px}
+.pstat-num{font-size:36px;font-weight:700;letter-spacing:-0.02em;color:var(--accent)}
+.pstat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px}
+
+/* COLLECTION */
+#collection{background:var(--bg)}
+.collection-header{padding:56px 24px 16px}
+.collection-filters{display:flex;gap:8px;padding:0 24px 24px;overflow-x:auto;scrollbar-width:none}
+.collection-filters::-webkit-scrollbar{display:none}
+.filter-pill{padding:8px 16px;border-radius:50px;font-size:12px;font-weight:500;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);background:transparent;cursor:pointer;transition:all 0.2s}
+.filter-pill.active,.filter-pill:hover{border-color:var(--accent);background:rgba(230,255,0,0.08);color:var(--accent)}
+.collection-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 40px}
+.collect-card{background:rgba(255,255,255,0.03);border-radius:var(--r2);overflow:hidden;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform 0.15s,border-color 0.2s;position:relative}
+.collect-card:active{transform:scale(0.97)}
+.collect-card-art{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:52px;background:rgba(255,255,255,0.02);position:relative}
+.collect-card-rarity{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 7px;border-radius:4px}
+.rarity-legendary{background:rgba(255,215,0,0.2);color:#FFD700}
+.rarity-epic{background:rgba(192,132,252,0.2);color:#C084FC}
+.rarity-rare{background:rgba(96,165,250,0.2);color:#60A5FA}
+.rarity-common{background:rgba(255,255,255,0.1);color:var(--dim)}
+.collect-card-info{padding:12px}
+.collect-card-title{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:4px}
+.collect-card-era{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.08em}
+.collection-empty{padding:80px 24px;text-align:center;color:var(--dim)}
+.collection-empty-icon{font-size:64px;margin-bottom:16px;opacity:0.4}
+.collection-empty p{font-size:14px;line-height:1.6}
+
+/* DNA */
+#dna{background:var(--bg)}
+.dna-header{padding:56px 24px 32px}
+.dna-card{margin:0 24px 24px;background:linear-gradient(135deg,rgba(230,255,0,0.05) 0%,rgba(0,0,0,0) 100%);border-radius:var(--r2);border:1px solid rgba(230,255,0,0.15);padding:32px;position:relative;overflow:hidden}
+.dna-card-label{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.dna-title{font-size:clamp(32px,9vw,56px);font-weight:700;letter-spacing:-0.03em;line-height:0.95;margin-bottom:24px}
+.dna-bars{display:flex;flex-direction:column;gap:14px;margin-bottom:32px}
+.dna-bar-row{display:flex;align-items:center;gap:12px}
+.dna-bar-label{font-size:12px;font-weight:500;width:90px;flex-shrink:0}
+.dna-bar-track{flex:1;background:rgba(255,255,255,0.05);border-radius:4px;height:8px;overflow:hidden}
+.dna-bar-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(0.34,1.56,0.64,1)}
+.dna-bar-pct{font-size:12px;font-weight:700;color:var(--accent);width:36px;text-align:right;flex-shrink:0}
+.dna-actions{display:flex;flex-direction:column;gap:10px;padding:0 24px 40px}
+.dna-share-btn{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%}
+.dna-reset-btn{background:transparent;color:var(--dim);font-size:13px;font-weight:500;padding:14px;border-radius:var(--r);width:100%;border:1px solid rgba(255,255,255,0.08)}
+
+/* ACHIEVEMENTS */
+#achievements{background:var(--bg)}
+.achieve-header{padding:56px 24px 32px}
+.achieve-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 16px}
+.achieve-card{background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:20px;border:1px solid transparent;transition:all 0.3s;position:relative;overflow:hidden}
+.achieve-card.unlocked{border-color:rgba(230,255,0,0.2);background:rgba(230,255,0,0.04)}
+.achieve-card.locked{opacity:0.4}
+.achieve-badge{font-size:36px;margin-bottom:12px}
+.achieve-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.achieve-desc{font-size:11px;color:var(--dim);line-height:1.4}
+.achieve-unlocked-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(230,255,0,0.1);padding:3px 6px;border-radius:4px}
+.hidden-section{padding:24px;margin:0 24px 40px;border-radius:var(--r2);border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02)}
+.hidden-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hidden-title{font-size:14px;font-weight:600}
+.hidden-count{font-size:24px;font-weight:700;color:var(--accent)}
+.hidden-sub{font-size:12px;color:var(--dim);margin-bottom:16px}
+.hidden-dots{display:flex;gap:6px;flex-wrap:wrap}
+.hdot{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s}
+.hdot.found{background:rgba(230,255,0,0.15);border-color:rgba(230,255,0,0.4)}
+
+/* COMING SOON */
+#coming-soon{background:var(--bg)}
+.cs-header{padding:56px 24px 32px}
+.cs-list{padding:0 24px 40px;display:flex;flex-direction:column;gap:12px}
+.cs-item{background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:24px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:16px;opacity:0.6;cursor:not-allowed;position:relative;overflow:hidden}
+.cs-item::after{content:'COMING SOON';position:absolute;top:12px;right:16px;font-size:9px;font-weight:700;letter-spacing:0.15em;color:var(--dim);border:1px solid rgba(255,255,255,0.1);padding:3px 7px;border-radius:4px}
+.cs-icon{width:52px;height:52px;border-radius:var(--r);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.cs-title{font-size:16px;font-weight:600;margin-bottom:4px}
+.cs-sub{font-size:12px;color:var(--dim)}
+
+/* TOAST */
+#toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-100px);background:#111;border-radius:var(--r);padding:12px 20px;font-size:13px;font-weight:500;z-index:300;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;border:1px solid rgba(255,255,255,0.1);max-width:calc(100vw - 48px);text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.accent{color:#000;background:var(--accent);border-color:var(--accent)}
+
+/* XP POPUP */
+.xp-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:250;pointer-events:none;text-align:center;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.xp-popup.show{transform:translate(-50%,-50%) scale(1)}
+.xp-popup-inner{background:rgba(10,10,10,0.95);border:2px solid var(--accent);border-radius:var(--r2);padding:32px 48px}
+.xp-popup-num{font-size:72px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;line-height:1}
+.xp-popup-label{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;margin-top:4px}
+
+/* DAILY MODAL */
+#daily-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
+#daily-modal.open{display:flex}
+.daily-sheet{background:#111;border-radius:28px 28px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+.daily-label{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.daily-title{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
+.daily-era{font-size:13px;color:var(--dim);margin-bottom:20px}
+.daily-art{width:100%;aspect-ratio:16/9;background:rgba(255,255,255,0.04);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:72px;margin-bottom:20px}
+.daily-fact{font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r);border-left:2px solid var(--accent)}
+.daily-close{width:100%;padding:16px;border-radius:var(--r);font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,0.1);color:var(--dim);background:transparent;cursor:pointer}
+
+/* RESPONSIVE */
+@media(min-width:640px){
+  .collection-grid{grid-template-columns:repeat(3,1fr)}
+  .stamps-grid{grid-template-columns:repeat(4,1fr)}
+  .achieve-grid{grid-template-columns:repeat(3,1fr)}
+  .art-card{min-width:340px}
+  .landing-ctas{flex-direction:row}
+  .btn-primary,.btn-secondary{width:auto;min-width:180px}
+}
+@media(min-width:900px){
+  body{max-width:480px;margin:0 auto}
+  #landing-canvas{max-width:480px;margin:0 auto}
+  #nav{max-width:480px;left:50%;transform:translateX(-50%);border-radius:0 0 20px 20px;border-left:1px solid rgba(255,255,255,0.07);border-right:1px solid rgba(255,255,255,0.07)}
+}
+
+/* TRANSITIONS */
+.screen{animation:fadeInUp 0.3s ease both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.era-node{transition:background 0.2s,transform 0.15s,border-color 0.2s}
+.era-node:not(.locked):hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- XP POPUP -->
+<div class="xp-popup" id="xp-popup">
+  <div class="xp-popup-inner">
+    <div class="xp-popup-num" id="xp-popup-num">+100</div>
+    <div class="xp-popup-label">XP Earned</div>
+  </div>
+</div>
+
+<!-- DAILY MODAL -->
+<div id="daily-modal">
+  <div class="daily-sheet">
+    <div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 28px"></div>
+    <div class="daily-label">Daily Artifact</div>
+    <div class="daily-title" id="daily-title"></div>
+    <div class="daily-era" id="daily-era"></div>
+    <div class="daily-art" id="daily-art"></div>
+    <div class="daily-fact" id="daily-fact"></div>
+    <button class="daily-close" onclick="closeModal('daily-modal')">Close</button>
+  </div>
+</div>
+
+<!-- ARTIFACT MODAL -->
+<div id="artifact-modal">
+  <div class="artifact-sheet">
+    <div class="artifact-sheet-handle"></div>
+    <div class="artifact-rarity" id="art-rarity"></div>
+    <div class="artifact-sheet-title" id="art-title"></div>
+    <div class="artifact-sheet-year" id="art-year"></div>
+    <div class="artifact-sheet-art" id="art-emoji"></div>
+    <div class="artifact-connections">
+      <h3>Art Connections</h3>
+      <div class="connection-tags" id="art-connections"></div>
+    </div>
+    <button class="artifact-collect-btn" id="art-collect-btn" onclick="collectCurrentArtifact()">Add to Collection</button>
+  </div>
+</div>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <canvas id="landing-canvas"></canvas>
+  <div class="landing-content">
+    <div>
+      <div class="landing-logo">ART<span>MAP</span></div>
+      <div class="landing-tagline">Navigate Human Creativity</div>
+    </div>
+    <button class="daily-badge" onclick="openDailyArtifact()">✦ Daily Artifact</button>
+    <div class="landing-hero-text">
+      <div class="landing-headline">Explore 40,000 Years of Art</div>
+      <div class="landing-sub">Discover eras, collect artifacts, and uncover the hidden connections between art across time.</div>
+      <div class="landing-ctas">
+        <button class="btn-primary" onclick="startJourney()">Start Journey</button>
+        <button class="btn-secondary" onclick="goToScreen('map')">Explore Map</button>
+      </div>
+      <div class="landing-stats">
+        <div class="stat-item">
+          <div class="stat-num">12</div>
+          <div class="stat-label">Eras</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-artifacts">0</div>
+          <div class="stat-label">Collected</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-xp">0</div>
+          <div class="stat-label">XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="map" class="screen">
+  <div class="map-header">
+    <div>
+      <div class="map-title">World Art Map</div>
+      <div class="map-sub">Your journey through human creativity</div>
+    </div>
+    <div class="xp-badge">
+      <span>⚡</span>
+      <span id="map-xp">0 XP</span>
+    </div>
+  </div>
+  <div class="map-progress-bar"><div class="map-progress-fill" id="map-progress-fill" style="width:0%"></div></div>
+  <div class="map-nodes" id="map-nodes"></div>
+</div>
+
+<!-- ERA -->
+<div id="era" class="screen">
+  <div class="era-header">
+    <div class="era-back" onclick="goToScreen('map')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      World Map
+    </div>
+    <div class="era-num" id="era-num"></div>
+    <div class="era-title" id="era-title"></div>
+    <div class="era-period" id="era-period"></div>
+    <div class="era-desc" id="era-desc"></div>
+  </div>
+  <div class="cards-track" id="cards-track"></div>
+  <div class="cards-dots" id="cards-dots"></div>
+  <div class="era-artifacts">
+    <div class="era-artifacts-title">Artifacts in this Era</div>
+    <div class="artifact-chips" id="artifact-chips"></div>
+  </div>
+  <button class="era-quiz-btn" id="era-quiz-btn" onclick="startQuiz()">Take the Challenge →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-era-label" id="quiz-era-label"></div>
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div class="quiz-q-num" id="quiz-q-num"></div>
+    <div class="quiz-question" id="quiz-question"></div>
+  </div>
+  <div class="quiz-options" id="quiz-options"></div>
+  <div class="quiz-result" id="quiz-result">
+    <div class="quiz-result-icon" id="quiz-result-icon"></div>
+    <div class="quiz-result-title" id="quiz-result-title"></div>
+    <div class="quiz-result-sub" id="quiz-result-sub"></div>
+    <div class="quiz-xp" id="quiz-xp-earned"></div>
+    <div class="quiz-xp-label">XP Earned</div>
+    <button class="quiz-continue-btn" onclick="finishQuiz()">Continue Exploring</button>
+  </div>
+</div>
+
+<!-- PASSPORT -->
+<div id="passport" class="screen">
+  <div class="passport-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Art Passport</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Your Creative Journey</div>
+  </div>
+  <div class="passport-cover">
+    <div class="passport-cover-top">
+      <div>
+        <div class="passport-name">ArtMap Passport</div>
+        <div class="passport-org">artmap.college</div>
+      </div>
+      <div style="text-align:right">
+        <div class="passport-big-num" id="passport-pct">0%</div>
+        <div class="passport-big-label">Explored</div>
+      </div>
+    </div>
+    <div class="passport-progress-bar">
+      <div class="passport-progress-fill" id="passport-fill" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="passport-stamps">
+    <div class="section-title">Era Stamps</div>
+    <div class="stamps-grid" id="stamps-grid"></div>
+    <div class="section-title">Explorer Stats</div>
+  </div>
+  <div class="passport-stats" id="passport-stats"></div>
+</div>
+
+<!-- COLLECTION -->
+<div id="collection" class="screen">
+  <div class="collection-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Collection</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Your Artifacts</div>
+    <div style="font-size:13px;color:var(--dim);margin-top:6px" id="collection-count">0 artifacts collected</div>
+  </div>
+  <div class="collection-filters">
+    <button class="filter-pill active" onclick="filterCollection('all',this)">All</button>
+    <button class="filter-pill" onclick="filterCollection('legendary',this)">Legendary</button>
+    <button class="filter-pill" onclick="filterCollection('epic',this)">Epic</button>
+    <button class="filter-pill" onclick="filterCollection('rare',this)">Rare</button>
+    <button class="filter-pill" onclick="filterCollection('common',this)">Common</button>
+  </div>
+  <div class="collection-grid" id="collection-grid"></div>
+</div>
+
+<!-- DNA -->
+<div id="dna" class="screen">
+  <div class="dna-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Art DNA</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Your Creative Identity</div>
+  </div>
+  <div class="dna-card">
+    <div class="dna-card-label">Your Art DNA</div>
+    <div class="dna-title" id="dna-title">Explore eras to<br>reveal your DNA</div>
+    <div class="dna-bars" id="dna-bars"></div>
+    <div style="font-size:11px;color:var(--dim)">Based on your exploration history</div>
+  </div>
+  <div class="dna-actions">
+    <button class="dna-share-btn" onclick="exportDNA()">Export as PNG</button>
+    <button class="dna-reset-btn" onclick="confirmReset()">Reset Journey</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div id="achievements" class="screen">
+  <div class="achieve-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Achievements</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Badges &amp; Milestones</div>
+  </div>
+  <div class="achieve-grid" id="achieve-grid"></div>
+  <div class="hidden-section" style="margin-top:8px">
+    <div class="hidden-top">
+      <div>
+        <div class="hidden-title">Hidden Artifacts</div>
+        <div class="hidden-sub">Secret discoveries hidden throughout the app</div>
+      </div>
+      <div class="hidden-count" id="hidden-count">0/10</div>
+    </div>
+    <div class="hidden-dots" id="hidden-dots"></div>
+  </div>
+</div>
+
+<!-- COMING SOON -->
+<div id="coming-soon" class="screen">
+  <div class="cs-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px">Premium Features</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Coming Soon</div>
+    <div style="font-size:14px;color:var(--dim);margin-top:8px;line-height:1.5">The next chapter of<br>ArtMap is being written.</div>
+  </div>
+  <div class="cs-list" id="cs-list"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav id="nav">
+  <button class="nav-btn active" onclick="goToScreen('map')" data-screen="map">
+    <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
+    Map
+  </button>
+  <button class="nav-btn" onclick="goToScreen('passport')" data-screen="passport">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="14" y2="14"/></svg>
+    Passport
+  </button>
+  <button class="nav-btn" onclick="goToScreen('collection')" data-screen="collection">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    Collection
+  </button>
+  <button class="nav-btn" onclick="goToScreen('dna')" data-screen="dna">
+    <svg viewBox="0 0 24 24"><path d="M2 12c0-4 4-8 8-8s8 4 8 8-4 8-8 8"/><path d="M12 4c4 0 8 4 8 8s-4 8-8 8-8-4-8-8"/></svg>
+    DNA
+  </button>
+  <button class="nav-btn" onclick="goToScreen('achievements')" data-screen="achievements">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M8 14l-2 8 6-3 6 3-2-8"/></svg>
+    Badges
+  </button>
+</nav>
+
+<script>
+/* ===== DATA ===== */
+const ERAS = [
+  {
+    id:'cave-art',name:'Cave Art',period:'40,000–10,000 BCE',num:'01',emoji:'🦌',
+    color:'#8B5E3C',bg:'#120A06',
+    desc:'The earliest known human artistic expression — raw, powerful marks that connected our ancestors to the living world.',
+    cards:[
+      {title:'Lascaux Cave',insight:'Discovered in 1940, these paintings reveal advanced artistic planning and a deep connection to nature.',figure:'Unknown Paleolithic Artists',innovation:'Mineral pigment painting'},
+      {title:'Hand Stencils',insight:'The oldest form of self-portrait — a hand pressed against stone, proof of "I was here."',figure:'Unknown',innovation:'Negative space technique'},
+      {title:'Chauvet Cave',insight:'Horses, lions, and bears rendered with perspective that wouldn\'t be rediscovered for 30,000 years.',figure:'Unknown',innovation:'Depth illusion in 2D'},
+      {title:'Venus Figurines',insight:'Carved figures of women found across Europe, possibly representing fertility or the divine feminine.',figure:'Unknown',innovation:'Sculpture and 3D form'},
+      {title:'Rock Engravings',insight:'Petroglyphs carved into stone created the first permanent visual archive of human life.',figure:'Unknown',innovation:'Permanent record keeping'},
+      {title:'Altamira Bison',insight:'So sophisticated that 19th-century scholars refused to believe they were 14,000 years old.',figure:'Unknown',innovation:'Naturalistic animal rendering'}
+    ],
+    artifacts:['Lascaux Bull','Hand of Altamira','Venus of Willendorf','Chauvet Lion','Cave Bear','Bison of Font-de-Gaume'],
+    quiz:[
+      {q:'Where are the famous cave paintings of Lascaux located?',a:1,opts:['Spain','France','Germany','Italy']},
+      {q:'Approximately how old are the oldest known cave paintings?',a:2,opts:['10,000 years','25,000 years','40,000 years','100,000 years']},
+      {q:'What materials did cave artists primarily use for pigment?',a:0,opts:['Minerals & charcoal','Plant dyes','Animal blood','Clay only']}
+    ]
+  },
+  {
+    id:'egypt',name:'Ancient Egypt',period:'3100–30 BCE',num:'02',emoji:'𓂀',
+    color:'#D4AF37',bg:'#0D0C06',
+    desc:'Three thousand years of artistic continuity — where art was not decoration but a technology for eternal life.',
+    cards:[
+      {title:'The Great Sphinx',insight:'Guardian of Giza — built to protect the pharaoh\'s tomb for eternity.',figure:'Pharaoh Khafre',innovation:'Monumental stone sculpture'},
+      {title:'Hieroglyphic Art',insight:'Writing and image were inseparable in Egypt. Every symbol served both language and art.',figure:'Royal Scribes',innovation:'Pictographic communication'},
+      {title:'Tomb Paintings',insight:'Vivid scenes of daily life preserved for the afterlife, showing the Egyptian belief in eternal continuation.',figure:'Anonymous Court Artists',innovation:'Systematic visual narrative'},
+      {title:'The Book of the Dead',insight:'A guide to the afterlife illustrated with vivid imagery — the world\'s first illustrated manuscript.',figure:'Scribes of Thebes',innovation:'Sequential narrative illustration'},
+      {title:'Nefertiti Bust',insight:'The 3,400-year-old limestone portrait remains one of the most striking artworks ever created.',figure:'Thutmose',innovation:'Sculptural portraiture'},
+      {title:'Amarna Art',insight:'Akhenaten\'s radical reign produced a unique naturalistic style unlike anything before or after.',figure:'Akhenaten',innovation:'Naturalistic figure representation'}
+    ],
+    artifacts:['Mask of Tutankhamun','Nefertiti Bust','Book of the Dead','Rosetta Stone','Temple at Karnak','Eye of Horus'],
+    quiz:[
+      {q:'What is the ancient Egyptian system of pictographic writing called?',a:2,opts:['Cuneiform','Pictograms','Hieroglyphics','Sanskrit']},
+      {q:'The Nefertiti bust was created during which dynasty?',a:1,opts:['Old Kingdom','New Kingdom','Middle Kingdom','Late Period']},
+      {q:'What purpose did most Egyptian art serve?',a:0,opts:['Religious & funerary','Decoration','Trade','Entertainment']}
+    ]
+  },
+  {
+    id:'greece',name:'Ancient Greece',period:'800–146 BCE',num:'03',emoji:'🏺',
+    color:'#D4C5A9',bg:'#0C0C0A',
+    desc:'The Greeks invented beauty as an idea — and then tried relentlessly to capture it in marble and paint.',
+    cards:[
+      {title:'Black-Figure Pottery',insight:'Silhouetted figures in black against red clay told epic myths on objects used every day.',figure:'Exekias',innovation:'Narrative ceramics'},
+      {title:'The Parthenon',insight:'Built to perfection — columns that curve imperceptibly to correct optical illusions.',figure:'Phidias & Iktinos',innovation:'Optical correction in architecture'},
+      {title:'Contrapposto',insight:'The weight-shift stance that gave sculpture the illusion of natural movement and life.',figure:'Polykleitos',innovation:'Dynamic human figure'},
+      {title:'Ideal Proportions',insight:'The Canon of Polykleitos established mathematical ratios for the perfect human body.',figure:'Polykleitos',innovation:'Mathematical beauty'},
+      {title:'Red-Figure Vases',insight:'A technical revolution that allowed artists to show muscles, emotions, and complex scenes.',figure:'Euphronios',innovation:'Foreshortening technique'},
+      {title:'Hellenistic Realism',insight:'Late Greek sculpture embraced emotion, age, and struggle — moving beyond idealized perfection.',figure:'Unknown Hellenistic Master',innovation:'Emotional realism'}
+    ],
+    artifacts:['Elgin Marbles','Venus de Milo','Discobolus','Parthenon Frieze','Laocoön Group','Nike of Samothrace'],
+    quiz:[
+      {q:'What is the contrapposto stance in sculpture?',a:1,opts:['Arms raised upward','Weight shifted to one leg','Sitting position','Running pose']},
+      {q:'Which Greek artist created the "Canon" of ideal proportions?',a:2,opts:['Phidias','Praxiteles','Polykleitos','Myron']},
+      {q:'Black-figure pottery was replaced by which technique?',a:0,opts:['Red-figure','White-ground','Relief carving','Mosaic']}
+    ]
+  },
+  {
+    id:'rome',name:'Roman Empire',period:'27 BCE–476 CE',num:'04',emoji:'🏛️',
+    color:'#A8A8A8',bg:'#0A0A0A',
+    desc:'Rome took Greek ideals and turned them into propaganda, portraiture, and an empire-wide visual language.',
+    cards:[
+      {title:'Portrait Realism',insight:'Unlike Greek idealism, Romans depicted real faces with wrinkles, age, and character.',figure:'Anonymous Imperial Sculptors',innovation:'Veristic portraiture'},
+      {title:'Triumphal Arches',insight:'Public monuments that functioned as permanent victory announcements visible across the city.',figure:'Imperial Architects',innovation:'Narrative relief sculpture'},
+      {title:'Pompeii Frescoes',insight:'Preserved by Vesuvius, these wall paintings reveal a sophisticated Roman visual culture.',figure:'Anonymous House Painters',innovation:'Large-scale fresco technique'},
+      {title:'Roman Mosaic',insight:'Thousands of tiny tesserae assembled into paintings that could outlast any canvas.',figure:'Dioscurides of Samos',innovation:'Durable pictorial mosaic'},
+      {title:'The Pantheon',insight:'An engineering triumph — a dome with a perfect oculus that inspired architects for 2,000 years.',figure:'Apollodorus of Damascus',innovation:'Dome and oculus architecture'},
+      {title:'Column of Trajan',insight:'A 30-metre spiral narrative carved into marble — the world\'s first graphic novel.',figure:'Unknown Imperial Sculptors',innovation:'Spiral narrative relief'}
+    ],
+    artifacts:['Colosseum','Trajan\'s Column','Pantheon','Augustus Prima Porta','Roman Forum Mosaic','Pompeiian Fresco'],
+    quiz:[
+      {q:'What was veristic portraiture in Roman art?',a:0,opts:['Realistic facial features','Idealized perfection','Abstract forms','Religious imagery']},
+      {q:'The Pantheon\'s famous opening in the dome is called what?',a:2,opts:['Fenestra','Apertura','Oculus','Lunette']},
+      {q:'Pompeii\'s art was preserved by which volcanic eruption?',a:1,opts:['Stromboli','Vesuvius','Etna','Santorini']}
+    ]
+  },
+  {
+    id:'medieval',name:'Medieval',period:'500–1400 CE',num:'05',emoji:'⚜️',
+    color:'#8B0000',bg:'#0A0608',
+    desc:'Art turned inward — away from the body, toward the soul. Gold leaf, illuminated manuscripts, and Gothic cathedrals reaching toward heaven.',
+    cards:[
+      {title:'Illuminated Manuscripts',insight:'Monks spent lifetimes creating these jewel-like books — each page a meditation in color.',figure:'Benedictine Monks',innovation:'Miniature illumination with gold'},
+      {title:'Byzantine Icons',insight:'Spiritual portals, not mere images — faces flattened and gilded to transcend the physical world.',figure:'Anonymous Icon Painters',innovation:'Gold ground painting'},
+      {title:'Gothic Cathedral',insight:'Stone made to look weightless — light filtered through stained glass transforming sacred space.',figure:'Anonymous Master Builders',innovation:'Pointed arch & flying buttress'},
+      {title:'Tapestry Art',insight:'The Bayeux Tapestry tells the entire Norman Conquest in 70 meters of embroidered cloth.',figure:'Anonymous Weavers',innovation:'Narrative textile art'},
+      {title:'Stained Glass',insight:'At Chartres Cathedral, 176 stained glass windows create a symphony of colored light.',figure:'Unknown Glaziers',innovation:'Light as spiritual medium'},
+      {title:'Fresco Cycles',insight:'Giotto\'s Arena Chapel broke the Byzantine mold — giving figures weight, emotion, and space.',figure:'Giotto di Bondone',innovation:'Proto-naturalistic painting'}
+    ],
+    artifacts:['Book of Kells','Bayeux Tapestry','Notre-Dame Rose Window','Unicorn Tapestries','Duccio Madonna','Giotto Scrovegni'],
+    quiz:[
+      {q:'What artistic feature characterized Byzantine icon painting?',a:0,opts:['Gold ground & flat figures','Naturalistic perspective','Dark backgrounds','Oil paint technique']},
+      {q:'Which structural innovation allowed Gothic cathedrals to have large windows?',a:2,opts:['Round arches','Barrel vaults','Flying buttresses','Stone columns']},
+      {q:'Who created the Scrovegni Chapel frescoes that broke with Byzantine style?',a:1,opts:['Duccio','Giotto','Cimabue','Simone Martini']}
+    ]
+  },
+  {
+    id:'renaissance',name:'Renaissance',period:'1400–1600 CE',num:'06',emoji:'🎨',
+    color:'#8B2635',bg:'#0C0806',
+    desc:'Rebirth — humanity rediscovered itself as the measure of all things, and art became a window onto a rational, beautiful world.',
+    cards:[
+      {title:'Mona Lisa',insight:'The most famous smile in history — da Vinci\'s sfumato technique blurs boundaries between figure and landscape.',figure:'Leonardo da Vinci',innovation:'Sfumato technique'},
+      {title:'The Sistine Chapel',insight:'Four years lying on scaffolding — Michelangelo\'s ceiling became the apex of human artistic ambition.',figure:'Michelangelo Buonarroti',innovation:'Monumental fresco cycle'},
+      {title:'Linear Perspective',insight:'Brunelleschi\'s discovery that parallel lines converge at a vanishing point transformed painting forever.',figure:'Filippo Brunelleschi',innovation:'Mathematical perspective'},
+      {title:'The Birth of Venus',insight:'Botticelli\'s goddess rises from the sea — a pagan vision commissioned by the most powerful family in Florence.',figure:'Sandro Botticelli',innovation:'Mythological painting on canvas'},
+      {title:'Vitruvian Man',insight:'Leonardo\'s drawing reconciled the human body with geometric perfection — art and science as one.',figure:'Leonardo da Vinci',innovation:'Scientific humanism in art'},
+      {title:'School of Athens',insight:'Raphael placed all of ancient philosophy in one architectural space — the Renaissance as dialogue with antiquity.',figure:'Raphael Sanzio',innovation:'Complex multi-figure composition'}
+    ],
+    artifacts:['Mona Lisa','David','Birth of Venus','Sistine Chapel','The Last Supper','Vitruvian Man'],
+    quiz:[
+      {q:'What is the name of da Vinci\'s technique of blurring outlines?',a:1,opts:['Chiaroscuro','Sfumato','Tenebrism','Impasto']},
+      {q:'Who discovered the mathematical principles of linear perspective?',a:0,opts:['Brunelleschi','da Vinci','Alberti','Bramante']},
+      {q:'The Birth of Venus was commissioned by which Florentine family?',a:2,opts:['Pazzi','Strozzi','Medici','Visconti']}
+    ]
+  },
+  {
+    id:'baroque',name:'Baroque',period:'1600–1750 CE',num:'07',emoji:'🕯️',
+    color:'#D4AF37',bg:'#0A0800',
+    desc:'Drama, darkness, and divine light. Baroque artists wielded shadow like a weapon and emotion like a declaration.',
+    cards:[
+      {title:'Caravaggio\'s Tenebrism',insight:'Violent light from darkness — Caravaggio made holy subjects feel dangerous and alive.',figure:'Caravaggio',innovation:'Tenebrism (extreme chiaroscuro)'},
+      {title:'Rembrandt\'s Portraits',insight:'The greatest self-portrait artist in history — 90 self-portraits documenting a life through painting.',figure:'Rembrandt van Rijn',innovation:'Psychological portraiture'},
+      {title:'Vermeer\'s Light',insight:'Vermeer captured the silence of domestic life — light from a window turning ordinary scenes into poetry.',figure:'Johannes Vermeer',innovation:'Interior light painting'},
+      {title:'Bernini\'s Ecstasy',insight:'Marble that looks like it breathes. Bernini gave stone the emotion of flesh and the movement of wind.',figure:'Gian Lorenzo Bernini',innovation:'Emotional stone sculpture'},
+      {title:'Velázquez Court Art',insight:'Las Meninas broke every rule — artist and king reflected in a mirror, reality and painting collapsed.',figure:'Diego Velázquez',innovation:'Meta-pictorial composition'},
+      {title:'Rubens\'s Energy',insight:'Swirling compositions of massive figures — Baroque as physical, sensory overwhelming force.',figure:'Peter Paul Rubens',innovation:'Dynamic multi-figure painting'}
+    ],
+    artifacts:['Night Watch','Girl with a Pearl Earring','Las Meninas','Ecstasy of Saint Teresa','Calling of St Matthew','Self-Portrait Rembrandt'],
+    quiz:[
+      {q:'What technique uses extreme contrast between light and dark?',a:2,opts:['Sfumato','Fresco','Tenebrism','Tempera']},
+      {q:'Who painted Las Meninas?',a:0,opts:['Velázquez','Caravaggio','Rembrandt','Rubens']},
+      {q:'Rembrandt is known for how many self-portraits?',a:1,opts:['Around 30','Around 90','Around 150','Around 20']}
+    ]
+  },
+  {
+    id:'impressionism',name:'Impressionism',period:'1860–1900 CE',num:'08',emoji:'🌸',
+    color:'#C8A4C0',bg:'#0A080C',
+    desc:'They stepped outside — painting light itself, not objects. A revolution born in a rejected salon show.',
+    cards:[
+      {title:'Monet\'s Water Lilies',insight:'250 paintings of the same pond — a meditation on light, time, and the impossibility of capturing a moment.',figure:'Claude Monet',innovation:'Serial painting of light'},
+      {title:'Starry Night',insight:'Van Gogh\'s swirling sky is pure emotional energy translated into paint — the night sky as inner state.',figure:'Vincent van Gogh',innovation:'Expressive brushwork'},
+      {title:'Renoir\'s Dancers',insight:'The shimmer of dappled light across bodies in motion — paint applied like light itself was dancing.',figure:'Pierre-Auguste Renoir',innovation:'Broken color technique'},
+      {title:'Degas\'s Dancers',insight:'Backstage, off-guard — Degas captured movement and modern life from new, unexpected angles.',figure:'Edgar Degas',innovation:'Modern life as subject matter'},
+      {title:'Seurat\'s Pointillism',insight:'If you mix colors optically rather than on the palette, they sing. Seurat proved it with millions of dots.',figure:'Georges Seurat',innovation:'Divisionism/Pointillism'},
+      {title:'Cézanne\'s Structure',insight:'The father of modern art — finding the geometry beneath nature, paving the way for Cubism.',figure:'Paul Cézanne',innovation:'Structural color planes'}
+    ],
+    artifacts:['Starry Night','Water Lilies Series','A Sunday on La Grande Jatte','The Dance Class','Luncheon of the Boating Party','Mont Sainte-Victoire'],
+    quiz:[
+      {q:'Which Impressionist painted in series to capture changing light?',a:0,opts:['Monet','Renoir','Degas','Manet']},
+      {q:'Seurat developed which painting technique using small dots of color?',a:2,opts:['Impasto','Fresco','Pointillism','Glazing']},
+      {q:'Who is considered "the father of modern art"?',a:1,opts:['Van Gogh','Cézanne','Gauguin','Signac']}
+    ]
+  },
+  {
+    id:'modernism',name:'Modernism',period:'1900–1945 CE',num:'09',emoji:'◼',
+    color:'#FFFFFF',bg:'#0A0A0A',
+    desc:'The 20th century arrived and art shattered. Cubism, Expressionism, Surrealism — reality itself became debatable.',
+    cards:[
+      {title:'Les Demoiselles d\'Avignon',insight:'Picasso\'s 1907 painting fractured the single viewpoint — five figures seen from multiple perspectives simultaneously.',figure:'Pablo Picasso',innovation:'Cubist multi-perspective'},
+      {title:'Mondrian\'s Grids',insight:'Pure abstraction — primary colors and black lines. Mondrian believed this was the universal visual language.',figure:'Piet Mondrian',innovation:'Pure geometric abstraction'},
+      {title:'Duchamp\'s Fountain',insight:'A urinal signed R.Mutt. The most radical act in art history — concept over craft.',figure:'Marcel Duchamp',innovation:'Conceptual art & readymades'},
+      {title:'Dali\'s Persistence',insight:'A dreamscape made physical — the melting clocks of The Persistence of Memory made the unconscious visible.',figure:'Salvador Dalí',innovation:'Surrealist realism'},
+      {title:'Pollock\'s Drips',insight:'Painting without touching canvas — Pollock placed the canvas on the floor and became the painting.',figure:'Jackson Pollock',innovation:'Action painting'},
+      {title:'Malevich Black Square',insight:'A black square on white canvas. The most minimal and most radical painting of the 20th century.',figure:'Kazimir Malevich',innovation:'Suprematism — pure form'}
+    ],
+    artifacts:['Guernica','Les Demoiselles d\'Avignon','The Persistence of Memory','Composition II','Black Square','No. 31'],
+    quiz:[
+      {q:'In which year did Picasso paint Les Demoiselles d\'Avignon?',a:0,opts:['1907','1912','1915','1920']},
+      {q:'Marcel Duchamp\'s "Fountain" was which object?',a:2,opts:['A sculpture','A painting','A urinal','A window']},
+      {q:'What technique did Jackson Pollock develop?',a:1,opts:['Collage','Drip painting','Block printing','Mosaic']}
+    ]
+  },
+  {
+    id:'bauhaus',name:'Bauhaus',period:'1919–1933 CE',num:'10',emoji:'⬡',
+    color:'#E63946',bg:'#0A060A',
+    desc:'Art, craft, and industry united. The Bauhaus believed everything designed could be beautiful — chairs, buildings, typography, everything.',
+    cards:[
+      {title:'The Bauhaus School',insight:'Founded in Weimar by Gropius — art and technology combined in a school that changed design forever.',figure:'Walter Gropius',innovation:'Total design philosophy'},
+      {title:'Marcel Breuer\'s Chair',insight:'Steel tube and canvas — industrial materials transformed into furniture of radical simplicity.',figure:'Marcel Breuer',innovation:'Industrial material furniture'},
+      {title:'Paul Klee\'s Teaching',insight:'Color theory as emotional language — Klee taught at Bauhaus and transformed how we understand color.',figure:'Paul Klee',innovation:'Color theory pedagogy'},
+      {title:'Moholy-Nagy Light',insight:'Light as artistic medium — photography, film, and kinetic sculpture explored at Bauhaus.',figure:'László Moholy-Nagy',innovation:'Light as primary medium'},
+      {title:'Bauhaus Typography',insight:'Clean, geometric sans-serif fonts designed for legibility in the machine age.',figure:'Herbert Bayer',innovation:'Universal typography'},
+      {title:'Albers Color Study',insight:'Interaction of Color — Josef Albers demonstrated that color perception is always relative.',figure:'Josef Albers',innovation:'Perceptual color theory'}
+    ],
+    artifacts:['Wassily Chair','Bauhaus Manifesto','Concentric Squares','Steel Light Fixture','Bauhaus Building Dessau','Universal Alphabet'],
+    quiz:[
+      {q:'In which city was the Bauhaus school founded?',a:1,opts:['Berlin','Weimar','Munich','Hamburg']},
+      {q:'Marcel Breuer\'s famous chair was made from which material?',a:0,opts:['Steel tube','Oak wood','Iron cast','Aluminum sheet']},
+      {q:'Josef Albers is famous for his study of what?',a:2,opts:['Form','Typography','Color interaction','Architecture']}
+    ]
+  },
+  {
+    id:'digital',name:'Digital Art',period:'1960–2010 CE',num:'11',emoji:'💾',
+    color:'#00F5FF',bg:'#020B0C',
+    desc:'The screen became the canvas. New tools, new possibilities — and entirely new questions about what it means to make art.',
+    cards:[
+      {title:'Vera Molnár\'s Algorithms',insight:'Before personal computers, she wrote algorithms by hand and had them plotted — the first computational art.',figure:'Vera Molnár',innovation:'Algorithmic art'},
+      {title:'Pixel Art',insight:'The aesthetic constraint of early computers became a visual language — beautiful art made from limitation.',figure:'Various',innovation:'Raster pixel aesthetics'},
+      {title:'CGI Film',insight:'Toy Story in 1995 — the first fully computer-animated feature, opening an entirely new creative universe.',figure:'Pixar Animation',innovation:'3D computer animation'},
+      {title:'Net Art',insight:'Artists used the internet itself as the medium — art that could only exist in browser windows.',figure:'Various Net Artists',innovation:'Browser-based art'},
+      {title:'Digital Photography',insight:'Removing the scarcity of film changed everything about how we see, document, and create images.',figure:'Various',innovation:'Unlimited digital capture'},
+      {title:'Generative Art',insight:'Code that produces infinite unique variations — art as system rather than single object.',figure:'Casey Reas & others',innovation:'Software generative systems'}
+    ],
+    artifacts:['Vera\'s Computer Drawing','Space Invaders Sprite','Toy Story Frame','net.art Piece','Digital Photograph','Processing Sketch'],
+    quiz:[
+      {q:'Vera Molnár is known as a pioneer of which art form?',a:0,opts:['Algorithmic/Computational art','Photography','Video art','Print art']},
+      {q:'Which was the first fully CGI-animated feature film?',a:2,opts:['A Bug\'s Life','The Jungle Book','Toy Story','Shrek']},
+      {q:'What is generative art primarily created with?',a:1,opts:['Photography','Code/Algorithms','Digital painting','Video']}
+    ]
+  },
+  {
+    id:'ai-art',name:'AI Art',period:'2015–Present',num:'12',emoji:'✦',
+    color:'#7B2FBE',bg:'#080510',
+    desc:'Machine learning encountered human creativity and neither has been the same since. A new frontier, still uncharted.',
+    cards:[
+      {title:'Generative Adversarial Networks',insight:'Two neural networks compete — one creating, one judging — producing images no human has imagined.',figure:'Ian Goodfellow',innovation:'GAN image generation'},
+      {title:'DALL-E & Midjourney',insight:'Text becomes image in seconds. The prompt is the new brushstroke.',figure:'OpenAI / Midjourney',innovation:'Text-to-image synthesis'},
+      {title:'Style Transfer',insight:'Van Gogh\'s swirls wrapped around a photograph — artistic style separated from content and recombined.',figure:'Gatys, Ecker & Bethge',innovation:'Neural style transfer'},
+      {title:'Refik Anadol',insight:'Melting data into architecture — AI-generated projections that turn buildings into living paintings.',figure:'Refik Anadol',innovation:'Data sculpture & installation'},
+      {title:'Beeple\'s Everydays',insight:'5,000 digital artworks sold as NFT for $69 million — AI-adjacent digital art entered the fine art market.',figure:'Mike Winkelmann (Beeple)',innovation:'Digital art as collectible'},
+      {title:'Collaborative AI',insight:'Artists and algorithms working together — neither fully in control, discovering new aesthetic territories.',figure:'Various AI Artists',innovation:'Human-AI co-creation'}
+    ],
+    artifacts:['GAN Portrait','Midjourney Landscape','Neural Style Photo','Anadol\'s MoMA Wall','Beeple NFT','CLIP Imagined World'],
+    quiz:[
+      {q:'What does GAN stand for in AI art?',a:1,opts:['Generated Artistic Networks','Generative Adversarial Networks','Graphics Art Nodes','Generated Animation Networks']},
+      {q:'Which AI tool turns text descriptions into images?',a:0,opts:['DALL-E / Midjourney','DeepDream','StyleGAN','CLIP']},
+      {q:'Refik Anadol is known for which type of AI artwork?',a:2,opts:['Portrait generation','Photography','Data sculptures & projections','Film']}
+    ]
+  }
+];
+
+const ARTIFACTS_DATA = [
+  {id:'lascaux-bull',title:'Lascaux Bull',year:'c. 15,000 BCE',era:'cave-art',rarity:'legendary',emoji:'🦬',connections:['Cave Art','Animal Symbolism','Prehistoric Society','Hunting Rituals']},
+  {id:'venus-willendorf',title:'Venus of Willendorf',year:'c. 28,000 BCE',era:'cave-art',rarity:'legendary',emoji:'🗿',connections:['Fertility','Female Symbolism','Prehistoric Religion','First Sculpture']},
+  {id:'altamira-hand',title:'Hand of Altamira',year:'c. 25,000 BCE',era:'cave-art',rarity:'epic',emoji:'🖐',connections:['Self-Expression','Cave Art','Negative Space','Human Identity']},
+  {id:'tut-mask',title:'Mask of Tutankhamun',year:'c. 1323 BCE',era:'egypt',rarity:'legendary',emoji:'𓁚',connections:['Egyptian Art','Gold Work','Funerary Art','Kingship']},
+  {id:'nefertiti',title:'Nefertiti Bust',year:'c. 1345 BCE',era:'egypt',rarity:'legendary',emoji:'👑',connections:['Egyptian Portraiture','Amarna Art','Female Power','Sculptural Realism']},
+  {id:'rosetta',title:'Rosetta Stone',year:'196 BCE',era:'egypt',rarity:'epic',emoji:'📜',connections:['Hieroglyphics','Ancient Language','Egyptian Art','Decipherment']},
+  {id:'venus-milo',title:'Venus de Milo',year:'c. 100 BCE',era:'greece',rarity:'legendary',emoji:'🏛️',connections:['Greek Ideal Beauty','Hellenistic Period','Female Form','Marble Sculpture']},
+  {id:'discus',title:'Discobolus',year:'c. 450 BCE',era:'greece',rarity:'epic',emoji:'💪',connections:['Greek Athletics','Human Form','Bronze Casting','Motion in Art']},
+  {id:'laocooon',title:'Laocoön Group',year:'c. 25 BCE',era:'greece',rarity:'legendary',emoji:'⚡',connections:['Hellenistic Drama','Agony','Trojan War','Expressive Sculpture']},
+  {id:'augustus',title:'Augustus Prima Porta',year:'c. 20 BCE',era:'rome',rarity:'epic',emoji:'🏺',connections:['Imperial Propaganda','Roman Portraiture','Power Imagery','Greek Influence']},
+  {id:'trajan-col',title:'Trajan\'s Column',year:'113 CE',era:'rome',rarity:'rare',emoji:'🗽',connections:['Roman Narrative','Military Art','Spiral Relief','Historical Documentation']},
+  {id:'pompeii-fresco',title:'Pompeiian Fresco',year:'c. 50 CE',era:'rome',rarity:'rare',emoji:'🖼️',connections:['Roman Daily Life','Wall Painting','Interior Decoration','Volcanic Preservation']},
+  {id:'book-kells',title:'Book of Kells',year:'c. 800 CE',era:'medieval',rarity:'legendary',emoji:'📖',connections:['Christian Art','Illuminated Manuscript','Celtic Art','Monastic Culture']},
+  {id:'bayeux',title:'Bayeux Tapestry',year:'c. 1070 CE',era:'medieval',rarity:'legendary',emoji:'🧵',connections:['Norman Conquest','Narrative Textile','Medieval History','Embroidery Art']},
+  {id:'notre-dame',title:'Notre-Dame Rose Window',year:'c. 1250 CE',era:'medieval',rarity:'epic',emoji:'🌹',connections:['Gothic Architecture','Stained Glass','Sacred Light','Medieval Symbolism']},
+  {id:'mona-lisa',title:'Mona Lisa',year:'1503–1519',era:'renaissance',rarity:'legendary',emoji:'🎨',connections:['Portrait Painting','Sfumato','Humanism','The Last Supper','Modern Photography','Iconic Imagery']},
+  {id:'david',title:'David',year:'1501–1504',era:'renaissance',rarity:'legendary',emoji:'🗿',connections:['Human Form','Biblical Art','Florentine Republic','Marble Mastery']},
+  {id:'sistine',title:'Sistine Chapel Ceiling',year:'1508–1512',era:'renaissance',rarity:'legendary',emoji:'✋',connections:['Fresco','Biblical Narrative','Vatican','Divine Inspiration','Ceiling Painting']},
+  {id:'birth-venus',title:'Birth of Venus',year:'c. 1485',era:'renaissance',rarity:'legendary',emoji:'🐚',connections:['Mythology','Female Beauty','Medici Patronage','Neo-Platonism']},
+  {id:'last-supper',title:'The Last Supper',year:'1495–1498',era:'renaissance',rarity:'legendary',emoji:'🍷',connections:['Christian Art','Linear Perspective','Group Portrait','Narrative Painting']},
+  {id:'night-watch',title:'The Night Watch',year:'1642',era:'baroque',rarity:'legendary',emoji:'🌙',connections:['Group Portrait','Dutch Golden Age','Rembrandt','Light and Shadow']},
+  {id:'pearl-earring',title:'Girl with a Pearl Earring',year:'c. 1665',era:'baroque',rarity:'legendary',emoji:'💎',connections:['Tronie Portrait','Dutch Baroque','Vermeer\'s Light','Mystery in Art']},
+  {id:'las-meninas',title:'Las Meninas',year:'1656',era:'baroque',rarity:'legendary',emoji:'🪞',connections:['Meta-painting','Spanish Court','Velázquez','Mirror Reflection']},
+  {id:'starry-night',title:'Starry Night',year:'1889',era:'impressionism',rarity:'legendary',emoji:'🌌',connections:['Post-Impressionism','Emotional Color','Mental State','Swirling Movement','Modern Expressionism']},
+  {id:'water-lilies',title:'Water Lilies Series',year:'1896–1926',era:'impressionism',rarity:'legendary',emoji:'🌸',connections:['Impressionism','Serial Painting','Garden','Reflected Light']},
+  {id:'grande-jatte',title:'A Sunday on La Grande Jatte',year:'1884–1886',era:'impressionism',rarity:'epic',emoji:'☀️',connections:['Pointillism','Divisionism','Modern Leisure','Paris Life']},
+  {id:'guernica',title:'Guernica',year:'1937',era:'modernism',rarity:'legendary',emoji:'🕊️',connections:['Anti-war','Cubism','Spanish Civil War','Political Art','Suffering']},
+  {id:'persistence',title:'The Persistence of Memory',year:'1931',era:'modernism',rarity:'legendary',emoji:'⏰',connections:['Surrealism','Dreams','Time','Unconscious Mind','Dalí']},
+  {id:'demoiselles',title:'Les Demoiselles d\'Avignon',year:'1907',era:'modernism',rarity:'legendary',emoji:'🔷',connections:['Cubism','Primitive Art','Female Form','Art Revolution','African Masks']},
+  {id:'composition-ii',title:'Composition II in Red, Blue & Yellow',year:'1930',era:'modernism',rarity:'epic',emoji:'🟥',connections:['De Stijl','Pure Abstraction','Primary Colors','Grid Geometry']},
+  {id:'wassily',title:'Wassily Chair',year:'1925',era:'bauhaus',rarity:'rare',emoji:'💺',connections:['Industrial Design','Bauhaus','Form Follows Function','Steel Furniture']},
+  {id:'dessau',title:'Bauhaus Building Dessau',year:'1926',era:'bauhaus',rarity:'epic',emoji:'🏗️',connections:['Architecture','Modernism','Glass Curtain Wall','Gropius']},
+  {id:'processing',title:'Processing Sketch',year:'2001',era:'digital',rarity:'common',emoji:'💻',connections:['Creative Coding','Generative Art','Open Source','Digital Aesthetics']},
+  {id:'toy-story-frame',title:'Toy Story Frame',year:'1995',era:'digital',rarity:'rare',emoji:'🎬',connections:['CGI Animation','Digital Cinema','3D Graphics','Pixar']},
+  {id:'gan-portrait',title:'Portrait of Edmond de Belamy',year:'2018',era:'ai-art',rarity:'epic',emoji:'🤖',connections:['GAN Art','AI Creativity','Auction Record','Obvious Collective']},
+  {id:'beeple-nft',title:'Everydays: The First 5000 Days',year:'2021',era:'ai-art',rarity:'legendary',emoji:'✦',connections:['NFT','Digital Art Market','Beeple','Christie\'s Auction']},
+  {id:'anadol',title:'Unsupervised (MoMA)',year:'2022',era:'ai-art',rarity:'legendary',emoji:'🌊',connections:['AI Installation','Data Sculpture','MoMA','Refik Anadol']},
+];
+
+const ACHIEVEMENTS = [
+  {id:'first-discovery',name:'First Discovery',desc:'Collect your first artifact',emoji:'🔍',req:1},
+  {id:'explorer',name:'Explorer',desc:'Explore 3 art eras',emoji:'🗺️',req:3},
+  {id:'artifact-hunter',name:'Artifact Hunter',desc:'Collect 10 artifacts',emoji:'⚗️',req:10},
+  {id:'renaissance-explorer',name:'Renaissance Explorer',desc:'Complete the Renaissance era',emoji:'🎨',req:'era:renaissance'},
+  {id:'modernist-mind',name:'Modernist Mind',desc:'Complete the Modernism era',emoji:'◼',req:'era:modernism'},
+  {id:'master-collector',name:'Master Collector',desc:'Collect 25 artifacts',emoji:'🏆',req:25},
+  {id:'world-traveler',name:'World Traveler',desc:'Explore 8 art eras',emoji:'🌍',req:8},
+  {id:'art-historian',name:'Art Historian',desc:'Complete all 12 eras',emoji:'📚',req:12},
+  {id:'quiz-master',name:'Quiz Master',desc:'Ace 3 quizzes in a row',emoji:'🧠',req:'quiz:3'},
+  {id:'dna-decoded',name:'DNA Decoded',desc:'Explore 5 eras to reveal Art DNA',emoji:'🧬',req:5},
+];
+
+const COMING_SOON = [
+  {icon:'👛',title:'Wallet Connect',desc:'Link your crypto wallet to unlock exclusive features'},
+  {icon:'🛂',title:'Onchain Passport',desc:'Mint your Art Passport as a soulbound NFT on-chain'},
+  {icon:'🖼️',title:'NFT Collections',desc:'Own certified digital artworks from the ArtMap collection'},
+  {icon:'🌐',title:'Global Rankings',desc:'Compete with art explorers from around the world'},
+  {icon:'🏛️',title:'Museum Challenges',desc:'Partner with real museums for exclusive challenge drops'},
+];
+
+const DAILY_ARTIFACTS = [
+  {title:'Starry Night',era:'Post-Impressionism · 1889',emoji:'🌌',fact:'Van Gogh painted Starry Night from memory while at the Saint-Paul-de-Mausole asylum, looking out from his window. The swirling sky is not a literal view, but an emotional state rendered as cosmic energy.'},
+  {title:'Guernica',era:'Modernism · 1937',emoji:'🕊️',fact:'Picasso refused to allow Guernica to return to Spain until the restoration of democracy. It lived in New York\'s MoMA for 44 years as a statement against fascism.'},
+  {title:'Mona Lisa',era:'Renaissance · c. 1503',emoji:'🎨',fact:'The Mona Lisa has no eyebrows. This was fashionable at the time — women plucked them. Da Vinci also used sfumato so subtly that the infamous smile changes depending on where you look.'},
+  {title:'The Birth of Venus',era:'Renaissance · c. 1485',emoji:'🐚',fact:'Botticelli\'s Venus stands on a giant scallop shell, measuring nearly 6 feet tall. The painting was so ahead of its time that it disappeared into storage and wasn\'t rediscovered for centuries.'},
+  {title:'The Great Wave off Kanagawa',era:'Japanese Edo · 1831',emoji:'🌊',fact:'Hokusai created The Great Wave when he was in his 70s. He created over 30,000 artworks in his lifetime, and considered his early work merely preparation for what was to come.'},
+  {title:'Girl with a Pearl Earring',era:'Baroque · c. 1665',emoji:'💎',fact:'Vermeer\'s "Mona Lisa of the North" is technically a tronie — a study of a type of person rather than a portrait of a specific individual. The identity of the girl remains unknown.'},
+  {title:'The Persistence of Memory',era:'Surrealism · 1931',emoji:'⏰',fact:'Dalí painted The Persistence of Memory in just two hours. He got the idea while staring at a melting piece of Camembert cheese after lunch.'},
+];
+
+/* ===== STATE ===== */
+const STATE_KEY = 'artmap_v1';
+let state = JSON.parse(localStorage.getItem(STATE_KEY) || 'null') || {
+  xp: 0,
+  completedEras: [],
+  discoveredArtifacts: [],
+  quizStreak: 0,
+  hiddenFound: 0,
+  lastDaily: null,
+  dailyIdx: 0,
+};
+function saveState(){localStorage.setItem(STATE_KEY, JSON.stringify(state))}
+
+/* ===== NAVIGATION ===== */
+let currentScreen = 'landing';
+let currentEra = null;
+let currentCard = 0;
+let quizState = {era:null,qi:0,correct:0};
+
+function goToScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.screen === id);
+  });
+  currentScreen = id;
+  if(id==='landing'){
+    document.getElementById('nav').classList.remove('visible');
+    updateLandingStats();
+  } else {
+    document.getElementById('nav').classList.add('visible');
+    if(id==='map') renderMap();
+    if(id==='passport') renderPassport();
+    if(id==='collection') renderCollection();
+    if(id==='dna') renderDNA();
+    if(id==='achievements') renderAchievements();
+    if(id==='coming-soon') renderComingSoon();
+  }
+  window.scrollTo(0,0);
+}
+
+function startJourney(){
+  // Check if user has already started
+  if(state.completedEras.length > 0){
+    const nextIdx = state.completedEras.length < ERAS.length ? state.completedEras.length : 0;
+    openEra(ERAS[nextIdx].id);
+  } else {
+    openEra('cave-art');
+  }
+}
+
+/* ===== MAP ===== */
+function renderMap(){
+  document.getElementById('map-xp').textContent = state.xp + ' XP';
+  const pct = Math.round((state.completedEras.length / ERAS.length) * 100);
+  document.getElementById('map-progress-fill').style.width = pct + '%';
+  
+  const container = document.getElementById('map-nodes');
+  container.innerHTML = '';
+  
+  ERAS.forEach((era, i) => {
+    const completed = state.completedEras.includes(era.id);
+    const locked = i > 0 && !state.completedEras.includes(ERAS[i-1].id) && !completed;
+    
+    // Connector line
+    if(i > 0){
+      const conn = document.createElement('div');
+      conn.className = 'connector' + (state.completedEras.includes(ERAS[i-1].id) ? ' filled' : '');
+      container.appendChild(conn);
+    }
+    
+    const node = document.createElement('div');
+    node.className = `era-node${completed?' completed':''}${locked?' locked':''}`;
+    node.style.setProperty('--era-color', era.color);
+    if(!locked) node.onclick = () => openEra(era.id);
+    
+    const artifacts = ARTIFACTS_DATA.filter(a=>a.era===era.id);
+    const discovered = artifacts.filter(a=>state.discoveredArtifacts.includes(a.id)).length;
+    
+    node.innerHTML = `
+      <div class="era-node-icon" style="background:${era.color}22">
+        <span style="font-size:22px">${era.emoji}</span>
+        <div class="stamp">✓</div>
+      </div>
+      <div class="era-node-info">
+        <div class="era-node-name">${era.name}</div>
+        <div class="era-node-date">${era.period}</div>
+        <div class="era-node-meta">
+          <span class="era-tag">${discovered}/${artifacts.length} artifacts</span>
+          ${completed ? '<span class="era-xp">✓ Complete</span>' : ''}
+          ${locked ? '<span class="era-tag" style="color:var(--dim)">🔒 Locked</span>' : ''}
+        </div>
+      </div>
+      <svg class="era-arrow" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    `;
+    container.appendChild(node);
+  });
+}
+
+/* ===== ERA ===== */
+function openEra(eraId){
+  currentEra = ERAS.find(e=>e.id===eraId);
+  if(!currentEra) return;
+  
+  document.documentElement.style.setProperty('--era-bg', currentEra.bg);
+  document.getElementById('era').style.background = currentEra.bg;
+  document.getElementById('era-num').textContent = currentEra.num;
+  document.getElementById('era-title').textContent = currentEra.name;
+  document.getElementById('era-period').textContent = currentEra.period;
+  document.getElementById('era-desc').textContent = currentEra.desc;
+  
+  // Cards
+  renderCards();
+  
+  // Artifact chips
+  const chips = document.getElementById('artifact-chips');
+  chips.innerHTML = '';
+  const artifacts = ARTIFACTS_DATA.filter(a=>a.era===eraId);
+  artifacts.forEach(a=>{
+    const chip = document.createElement('button');
+    const discovered = state.discoveredArtifacts.includes(a.id);
+    chip.className = 'artifact-chip' + (discovered?' discovered':'');
+    chip.textContent = a.title;
+    chip.onclick = () => openArtifactModal(a);
+    chips.appendChild(chip);
+  });
+  
+  goToScreen('era');
+  
+  // Check for hidden artifact
+  if(Math.random() < 0.15){
+    setTimeout(()=>{
+      if(state.hiddenFound < 10){
+        state.hiddenFound++;
+        saveState();
+        showToast('✦ Hidden artifact discovered!', true);
+      }
+    }, 3000);
+  }
+}
+
+function renderCards(){
+  const track = document.getElementById('cards-track');
+  const dots = document.getElementById('cards-dots');
+  track.innerHTML = '';
+  dots.innerHTML = '';
+  
+  currentEra.cards.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'art-card';
+    el.innerHTML = `
+      <div class="art-card-img">
+        <span class="art-card-art">${currentEra.emoji}</span>
+      </div>
+      <div class="art-card-body">
+        <div class="art-card-title">${card.title}</div>
+        <div class="art-card-insight">${card.insight}</div>
+        <div class="art-card-row">
+          <div class="art-card-field">
+            <label>Key Figure</label>
+            <span>${card.figure}</span>
+          </div>
+          <div class="art-card-field" style="text-align:right">
+            <label>Innovation</label>
+            <span style="color:var(--accent)">${card.innovation}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    track.appendChild(el);
+    
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i===0?' active':'');
+    dots.appendChild(dot);
+  });
+  
+  currentCard = 0;
+  track.addEventListener('scroll', onCardsScroll, {passive:true});
+}
+
+function onCardsScroll(){
+  const track = document.getElementById('cards-track');
+  const idx = Math.round(track.scrollLeft / (track.offsetWidth * 0.9));
+  document.querySelectorAll('.cards-track .dot, .cards-dots .dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===idx);
+  });
+  currentCard = idx;
+}
+
+/* ===== ARTIFACT MODAL ===== */
+let currentArtifact = null;
+function openArtifactModal(artifact){
+  currentArtifact = artifact;
+  document.getElementById('art-rarity').textContent = artifact.rarity.toUpperCase();
+  document.getElementById('art-rarity').className = 'artifact-rarity ' + artifact.rarity;
+  document.getElementById('art-title').textContent = artifact.title;
+  document.getElementById('art-year').textContent = artifact.year + ' · ' + ERAS.find(e=>e.id===artifact.era)?.name;
+  document.getElementById('art-emoji').textContent = artifact.emoji;
+  
+  const conns = document.getElementById('art-connections');
+  conns.innerHTML = artifact.connections.map(c=>`<span class="connection-tag">${c}</span>`).join('');
+  
+  const btn = document.getElementById('art-collect-btn');
+  const owned = state.discoveredArtifacts.includes(artifact.id);
+  btn.textContent = owned ? '✓ In Collection' : 'Add to Collection';
+  btn.style.opacity = owned ? '0.5' : '1';
+  btn.disabled = owned;
+  
+  document.getElementById('artifact-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function collectCurrentArtifact(){
+  if(!currentArtifact || state.discoveredArtifacts.includes(currentArtifact.id)) return;
+  state.discoveredArtifacts.push(currentArtifact.id);
+  
+  const xpMap = {legendary:150,epic:100,rare:60,common:30};
+  const xpGain = xpMap[currentArtifact.rarity] || 30;
+  state.xp += xpGain;
+  saveState();
+  
+  closeModal('artifact-modal');
+  showXPPopup(xpGain);
+  showToast(`${currentArtifact.title} added to collection!`, true);
+  checkAchievements();
+  
+  // Update chip
+  document.querySelectorAll('.artifact-chip').forEach(c=>{
+    if(c.textContent === currentArtifact.title) c.classList.add('discovered');
+  });
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ===== QUIZ ===== */
+function startQuiz(){
+  if(!currentEra) return;
+  quizState = {era: currentEra, qi: 0, correct: 0};
+  
+  document.getElementById('quiz-era-label').textContent = currentEra.name;
+  document.getElementById('quiz-result').classList.remove('show');
+  document.querySelectorAll('.quiz-options, .quiz-header').forEach(el=>el.style.display='');
+  
+  renderQuizQuestion();
+  goToScreen('quiz');
+}
+
+function renderQuizQuestion(){
+  const {era, qi} = quizState;
+  const q = era.quiz[qi];
+  
+  // Progress pips
+  const prog = document.getElementById('quiz-progress');
+  prog.innerHTML = era.quiz.map((_,i)=>`<div class="quiz-pip${i<qi?' done':i===qi?' current':''}"></div>`).join('');
+  
+  document.getElementById('quiz-q-num').textContent = `Question ${qi+1} of ${era.quiz.length}`;
+  document.getElementById('quiz-question').textContent = q.q;
+  
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  q.opts.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function answerQuiz(idx, btn){
+  const {era, qi} = quizState;
+  const q = era.quiz[qi];
+  const correct = idx === q.a;
+  
+  document.querySelectorAll('.quiz-option').forEach(b=>b.onclick=null);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if(!correct){
+    document.querySelectorAll('.quiz-option')[q.a].classList.add('correct');
+  }
+  if(correct) quizState.correct++;
+  
+  setTimeout(()=>{
+    quizState.qi++;
+    if(quizState.qi < era.quiz.length){
+      renderQuizQuestion();
+    } else {
+      showQuizResult();
+    }
+  }, 900);
+}
+
+function showQuizResult(){
+  const {era, correct} = quizState;
+  const total = era.quiz.length;
+  const perfect = correct === total;
+  const xpEarned = correct * 50 + (perfect ? 100 : 0);
+  
+  state.xp += xpEarned;
+  if(perfect){
+    state.quizStreak = (state.quizStreak||0) + 1;
+    if(!state.completedEras.includes(era.id)){
+      state.completedEras.push(era.id);
+    }
+  }
+  saveState();
+  
+  document.getElementById('quiz-q-num').style.display = 'none';
+  document.getElementById('quiz-question').style.display = 'none';
+  document.getElementById('quiz-options').style.display = 'none';
+  
+  const icons = ['😔','😐','😊','🎉'];
+  const pct = correct/total;
+  document.getElementById('quiz-result-icon').textContent = icons[Math.min(Math.floor(pct*3+0.5),3)];
+  document.getElementById('quiz-result-title').textContent = perfect ? 'Perfect Score!' : correct > 1 ? 'Well Done!' : 'Keep Exploring';
+  document.getElementById('quiz-result-sub').textContent = `You got ${correct} out of ${total} correct.${perfect?' Era complete!':''}`;
+  document.getElementById('quiz-xp-earned').textContent = '+' + xpEarned;
+  document.getElementById('quiz-result').classList.add('show');
+  
+  showXPPopup(xpEarned);
+  checkAchievements();
+}
+
+function finishQuiz(){
+  document.getElementById('quiz-q-num').style.display = '';
+  document.getElementById('quiz-question').style.display = '';
+  goToScreen('map');
+}
+
+/* ===== PASSPORT ===== */
+function renderPassport(){
+  const pct = Math.round((state.completedEras.length / ERAS.length) * 100);
+  document.getElementById('passport-pct').textContent = pct + '%';
+  document.getElementById('passport-fill').style.width = pct + '%';
+  
+  const grid = document.getElementById('stamps-grid');
+  grid.innerHTML = ERAS.map(era=>`
+    <div class="stamp${state.completedEras.includes(era.id)?' earned':''}" onclick="${!state.completedEras.includes(era.id) ? `openEra('${era.id}')` : ''}">
+      <div class="stamp-emoji">${era.emoji}</div>
+      <div class="stamp-label">${era.name.split(' ')[0]}</div>
+    </div>
+  `).join('');
+  
+  const stats = document.getElementById('passport-stats');
+  stats.innerHTML = `
+    <div class="pstat"><div class="pstat-num">${state.xp}</div><div class="pstat-label">Total XP</div></div>
+    <div class="pstat"><div class="pstat-num">${state.completedEras.length}</div><div class="pstat-label">Eras Complete</div></div>
+    <div class="pstat"><div class="pstat-num">${state.discoveredArtifacts.length}</div><div class="pstat-label">Artifacts</div></div>
+    <div class="pstat"><div class="pstat-num">${state.hiddenFound||0}</div><div class="pstat-label">Hidden Found</div></div>
+  `;
+}
+
+/* ===== COLLECTION ===== */
+let collectionFilter = 'all';
+function renderCollection(){
+  const collected = ARTIFACTS_DATA.filter(a=>state.discoveredArtifacts.includes(a.id));
+  document.getElementById('collection-count').textContent = `${collected.length} artifact${collected.length!==1?'s':''} collected`;
+  
+  const filtered = collectionFilter === 'all' ? collected : collected.filter(a=>a.rarity===collectionFilter);
+  
+  const grid = document.getElementById('collection-grid');
+  if(filtered.length === 0){
+    grid.innerHTML = `<div class="collection-empty" style="grid-column:1/-1">
+      <div class="collection-empty-icon">🎭</div>
+      <p>${collected.length === 0 ? 'Start exploring eras to discover and collect artifacts.' : 'No ' + collectionFilter + ' artifacts collected yet.'}</p>
+    </div>`;
+  } else {
+    grid.innerHTML = filtered.map(a=>`
+      <div class="collect-card" onclick="openArtifactModal(ARTIFACTS_DATA.find(x=>x.id==='${a.id}'))">
+        <div class="collect-card-art">
+          ${a.emoji}
+          <span class="collect-card-rarity rarity-${a.rarity}">${a.rarity}</span>
+        </div>
+        <div class="collect-card-info">
+          <div class="collect-card-title">${a.title}</div>
+          <div class="collect-card-era">${ERAS.find(e=>e.id===a.era)?.name}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function filterCollection(filter, btn){
+  collectionFilter = filter;
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderCollection();
+}
+
+/* ===== DNA ===== */
+function renderDNA(){
+  const explored = state.completedEras;
+  if(explored.length === 0){
+    document.getElementById('dna-title').innerHTML = 'Explore eras to<br>reveal your DNA';
+    document.getElementById('dna-bars').innerHTML = '<div style="font-size:13px;color:var(--dim)">Complete eras to build your Art DNA profile.</div>';
+    return;
+  }
+  
+  // Calculate DNA percentages based on completed eras
+  const total = explored.length;
+  const dnaData = explored.map(id=>{
+    const era = ERAS.find(e=>e.id===id);
+    return {name:era.name, color:era.color, pct:Math.round(100/total)};
+  }).sort((a,b)=>b.pct-a.pct).slice(0,5);
+  
+  // Normalize to 100
+  const sum = dnaData.reduce((s,d)=>s+d.pct,0);
+  if(dnaData.length>0) dnaData[0].pct += (100-sum);
+  
+  const topEra = dnaData[0];
+  document.getElementById('dna-title').innerHTML = `${topEra.pct}%<br>${topEra.name}`;
+  
+  document.getElementById('dna-bars').innerHTML = dnaData.map(d=>`
+    <div class="dna-bar-row">
+      <div class="dna-bar-label">${d.name.split(' ')[0]}</div>
+      <div class="dna-bar-track"><div class="dna-bar-fill" style="width:${d.pct}%;background:${d.color}"></div></div>
+      <div class="dna-bar-pct">${d.pct}%</div>
+    </div>
+  `).join('');
+}
+
+function exportDNA(){
+  // Canvas export
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 800;
+  const ctx = canvas.getContext('2d');
+  
+  ctx.fillStyle = '#0A0A0A';
+  ctx.fillRect(0,0,800,800);
+  
+  ctx.fillStyle = '#E6FF00';
+  ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+  ctx.fillText('YOUR ART DNA', 60, 80);
+  
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 72px "Space Grotesk", sans-serif';
+  ctx.fillText('ArtMap', 60, 160);
+  
+  ctx.fillStyle = '#B0B0B0';
+  ctx.font = '18px "Space Grotesk", sans-serif';
+  ctx.fillText('artmap.college', 60, 200);
+  
+  const explored = state.completedEras;
+  if(explored.length > 0){
+    let y = 280;
+    const total = explored.length;
+    explored.slice(0,5).forEach(id=>{
+      const era = ERAS.find(e=>e.id===id);
+      const pct = Math.round(100/total);
+      ctx.fillStyle = era.color;
+      ctx.fillRect(60, y, (680*pct/100), 28);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 16px "Space Grotesk", sans-serif';
+      ctx.fillText(era.name + ' — ' + pct + '%', 60, y+50);
+      y += 80;
+    });
+  } else {
+    ctx.fillStyle = '#B0B0B0';
+    ctx.font = '20px "Space Grotesk", sans-serif';
+    ctx.fillText('Start exploring to reveal your Art DNA', 60, 360);
+  }
+  
+  const link = document.createElement('a');
+  link.download = 'artmap-dna.png';
+  link.href = canvas.toDataURL();
+  link.click();
+  showToast('Art DNA exported!', true);
+}
+
+function confirmReset(){
+  if(confirm('Reset your entire journey? All progress will be lost.')){
+    state = {xp:0,completedEras:[],discoveredArtifacts:[],quizStreak:0,hiddenFound:0,lastDaily:null,dailyIdx:0};
+    saveState();
+    goToScreen('landing');
+    showToast('Journey reset.');
+  }
+}
+
+/* ===== ACHIEVEMENTS ===== */
+function renderAchievements(){
+  const grid = document.getElementById('achieve-grid');
+  grid.innerHTML = ACHIEVEMENTS.map(a=>{
+    const unlocked = isAchievementUnlocked(a);
+    return `
+      <div class="achieve-card${unlocked?' unlocked':' locked'}">
+        ${unlocked?'<div class="achieve-unlocked-tag">Earned</div>':''}
+        <div class="achieve-badge">${a.emoji}</div>
+        <div class="achieve-name">${a.name}</div>
+        <div class="achieve-desc">${a.desc}</div>
+      </div>
+    `;
+  }).join('');
+  
+  const hc = state.hiddenFound || 0;
+  document.getElementById('hidden-count').textContent = hc + '/10';
+  document.getElementById('hidden-dots').innerHTML = Array(10).fill(0).map((_,i)=>`<div class="hdot${i<hc?' found':''}"></div>`).join('');
+}
+
+function isAchievementUnlocked(a){
+  if(typeof a.req === 'number') return state.discoveredArtifacts.length >= a.req || state.completedEras.length >= a.req;
+  if(typeof a.req === 'string'){
+    if(a.req.startsWith('era:')) return state.completedEras.includes(a.req.split(':')[1]);
+    if(a.req.startsWith('quiz:')) return (state.quizStreak||0) >= parseInt(a.req.split(':')[1]);
+  }
+  return false;
+}
+
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    const unlocked = isAchievementUnlocked(a);
+    const key = 'ach_notified_' + a.id;
+    if(unlocked && !localStorage.getItem(key)){
+      localStorage.setItem(key,'1');
+      setTimeout(()=>showToast('🏆 Achievement: ' + a.name, true), 800);
+    }
+  });
+}
+
+/* ===== COMING SOON ===== */
+function renderComingSoon(){
+  document.getElementById('cs-list').innerHTML = COMING_SOON.map(c=>`
+    <div class="cs-item">
+      <div class="cs-icon">${c.icon}</div>
+      <div>
+        <div class="cs-title">${c.title}</div>
+        <div class="cs-sub">${c.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ===== DAILY ARTIFACT ===== */
+function openDailyArtifact(){
+  const today = new Date().toDateString();
+  const idx = Math.floor(Date.now() / 86400000) % DAILY_ARTIFACTS.length;
+  const daily = DAILY_ARTIFACTS[idx];
+  
+  document.getElementById('daily-title').textContent = daily.title;
+  document.getElementById('daily-era').textContent = daily.era;
+  document.getElementById('daily-art').textContent = daily.emoji;
+  document.getElementById('daily-fact').textContent = daily.fact;
+  
+  document.getElementById('daily-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  
+  // Bonus XP once per day
+  if(state.lastDaily !== today){
+    state.lastDaily = today;
+    state.xp += 25;
+    saveState();
+    setTimeout(()=>showToast('+25 XP — Daily Artifact viewed!', true), 600);
+  }
+}
+
+/* ===== LANDING CANVAS ===== */
+function initCanvas(){
+  const canvas = document.getElementById('landing-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes=[], particles=[];
+  
+  function resize(){
+    W = canvas.width = canvas.offsetWidth || window.innerWidth;
+    H = canvas.height = canvas.offsetHeight || window.innerHeight;
+    initNodes();
+  }
+  
+  function initNodes(){
+    nodes = Array(8).fill(0).map(()=>({
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+      r: Math.random()*3+2,
+      color: ['#E6FF00','#FFFFFF','#B0B0B0','#8B5E3C','#D4AF37'][Math.floor(Math.random()*5)]
+    }));
+  }
+  
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{
+      n.x += n.vx; n.y += n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    });
+    // Draw connections
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const d = Math.hypot(nodes[i].x-nodes[j].x, nodes[i].y-nodes[j].y);
+        if(d<220){
+          ctx.globalAlpha = (1-d/220)*0.12;
+          ctx.strokeStyle = '#E6FF00';
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    // Draw nodes
+    nodes.forEach(n=>{
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = n.color;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  
+  resize();
+  window.addEventListener('resize', resize);
+  frame();
+}
+
+/* ===== UTILS ===== */
+function showToast(msg, accent=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (accent?' accent':'');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.className='', 2800);
+}
+
+function showXPPopup(xp){
+  const p = document.getElementById('xp-popup');
+  document.getElementById('xp-popup-num').textContent = '+' + xp;
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'), 1600);
+}
+
+function updateLandingStats(){
+  document.getElementById('stat-artifacts').textContent = state.discoveredArtifacts.length;
+  document.getElementById('stat-xp').textContent = state.xp;
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  initCanvas();
+  updateLandingStats();
+  
+  // Close modals on backdrop click
+  document.getElementById('artifact-modal').addEventListener('click', e=>{
+    if(e.target===document.getElementById('artifact-modal')) closeModal('artifact-modal');
+  });
+  document.getElementById('daily-modal').addEventListener('click', e=>{
+    if(e.target===document.getElementById('daily-modal')) closeModal('daily-modal');
+  });
+  
+  // Coming soon in nav not needed — it's not in nav
+  // Add coming-soon trigger from DNA screen
+});
+</script>
+</body>
+</html>
