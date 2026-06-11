@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "rootDirectory": "artifacts/artmap-college",
   "installCommand": "cp package.vercel.json package.json && npm install --legacy-peer-deps",
   "buildCommand": "npx vite build --config vite.config.vercel.ts",
   "outputDirectory": "dist",
