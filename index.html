@@ -416,6 +416,25 @@ a{color:inherit;text-decoration:none}
 
 /* ABOUT/HOWTO padding fix for top nav */
 .about-header,.howto-header{padding-top:calc(80px + var(--sat)) !important}
+
+/* HOW IT WORKS SECTION */
+.hiw-section{padding:72px 24px 80px;display:flex;flex-direction:column;align-items:center;gap:48px;position:relative;z-index:1;background:linear-gradient(to bottom,transparent,rgba(10,10,10,0.98) 20%)}
+.hiw-label{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent)}
+.hiw-title{font-size:clamp(28px,7vw,40px);font-weight:700;letter-spacing:-0.03em;text-align:center;line-height:1.1}
+.hiw-steps{display:flex;flex-direction:column;gap:0;width:100%;max-width:420px}
+.hiw-step{display:flex;gap:20px;align-items:flex-start;padding:20px 0;position:relative}
+.hiw-step:not(:last-child)::after{content:'';position:absolute;left:19px;top:52px;bottom:0;width:2px;background:linear-gradient(to bottom,rgba(230,255,0,0.3),rgba(230,255,0,0.05))}
+.hiw-step-num{width:40px;height:40px;border-radius:50%;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--accent);flex-shrink:0;margin-top:2px}
+.hiw-step-body{flex:1}
+.hiw-step-title{font-size:17px;font-weight:700;letter-spacing:-0.01em;margin-bottom:6px}
+.hiw-step-desc{font-size:13px;color:var(--dim);line-height:1.6}
+.hiw-step-tag{display:inline-block;margin-top:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(230,255,0,0.07);padding:4px 10px;border-radius:20px;border:1px solid rgba(230,255,0,0.15)}
+.hiw-cta{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 40px;border-radius:var(--r);transition:opacity 0.15s;width:100%;max-width:320px}
+.hiw-cta:hover{opacity:0.88}
+
+/* HERO tweaks — remove stats, tighter layout */
+.landing-hero-clean{display:flex;flex-direction:column;gap:0;flex:1;justify-content:center;padding-bottom:40px}
+
 </style>
 </head>
 <body>
@@ -461,34 +480,53 @@ a{color:inherit;text-decoration:none}
 <!-- LANDING -->
 <div id="landing" class="screen active">
   <canvas id="landing-canvas"></canvas>
-  <div class="landing-content" style="padding-top:calc(100px + var(--sat))">
+  <div class="landing-content" style="padding-top:calc(80px + var(--sat))">
     <div>
       <div class="landing-logo">ART<span>MAP</span></div>
       <div class="landing-tagline">Navigate Human Creativity</div>
     </div>
     <div class="landing-hero-text">
       <div class="landing-headline">Explore 40,000 Years of Art</div>
-      <div class="landing-sub">Discover eras, collect artifacts, and uncover the hidden connections between art across time.</div>
-      <div class="landing-ctas">
-        <button class="btn-primary" onclick="launchApp()">Start Journey</button>
-        <button class="btn-secondary" onclick="goToScreen('howto')">How It Works</button>
-      </div>
-      <div class="landing-stats">
-        <div class="stat-item">
-          <div class="stat-num">12</div>
-          <div class="stat-label">Eras</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" id="stat-artifacts">0</div>
-          <div class="stat-label">Collected</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" id="stat-xp">0</div>
-          <div class="stat-label">XP</div>
-        </div>
+      <div class="landing-sub">Travel through human creativity — from cave paintings to AI art. Collect artifacts, ace quizzes, and build your Art DNA.</div>
+      <div class="landing-ctas" style="margin-bottom:0">
+        <button class="btn-primary" onclick="scrollToHIW()">How It Works</button>
+        <button class="btn-secondary" onclick="launchApp()">Open App</button>
       </div>
     </div>
   </div>
+  <!-- HOW IT WORKS -->
+  <div class="hiw-section" id="hiw-section">
+    <div class="hiw-label">How It Works</div>
+    <div class="hiw-title">Three steps to navigate<br>human creativity</div>
+    <div class="hiw-steps">
+      <div class="hiw-step">
+        <div class="hiw-step-num">1</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">Open the Map</div>
+          <div class="hiw-step-desc">Tap any of the 12 art eras — from 40,000-year-old Cave Art to today's AI Art. Each era unlocks a full chapter of history with 6 illustrated cards.</div>
+          <span class="hiw-step-tag">12 Eras to Explore</span>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-step-num">2</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">Collect &amp; Challenge</div>
+          <div class="hiw-step-desc">Discover artifacts hidden in each era — Common to Legendary rarity. Then take a 3-question quiz to earn XP and stamp your Art Passport.</div>
+          <span class="hiw-step-tag">Earn XP &amp; Artifacts</span>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-step-num">3</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">Build Your Art DNA</div>
+          <div class="hiw-step-desc">The more eras you complete, the richer your Art DNA profile becomes. Export it as a PNG and see which artistic periods define your creative identity.</div>
+          <span class="hiw-step-tag">Your Creative Identity</span>
+        </div>
+      </div>
+    </div>
+    <button class="hiw-cta" onclick="launchApp()">Start Exploring &rarr;</button>
+  </div>
+
   <!-- SITE FOOTER -->
   <footer class="site-footer">
     <div class="footer-logo">ART<span>MAP</span></div>
@@ -1255,6 +1293,11 @@ function goToScreen(id){
   });
 }
 
+function scrollToHIW(){
+  const el = document.getElementById('hiw-section');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 function launchApp(){
   if(state.completedEras.length > 0){
     const nextIdx = state.completedEras.length < ERAS.length ? state.completedEras.length : 0;
@@ -1870,8 +1913,7 @@ function showXPPopup(xp){
 }
 
 function updateLandingStats(){
-  document.getElementById('stat-artifacts').textContent = state.discoveredArtifacts.length;
-  document.getElementById('stat-xp').textContent = state.xp;
+  // Stats section removed from landing — no DOM targets needed
 }
 
 /* ===== INIT ===== */
