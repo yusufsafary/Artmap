@@ -71,7 +71,6 @@ a{color:inherit;text-decoration:none}
 .stat-item{display:flex;flex-direction:column;gap:4px}
 .stat-num{font-size:28px;font-weight:700;color:var(--accent);letter-spacing:-0.02em}
 .stat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
-.daily-badge{position:absolute;top:32px;right:24px;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.3);color:var(--accent);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:8px 12px;border-radius:var(--r);cursor:pointer;z-index:2}
 
 /* MAP SCREEN */
 #map{background:var(--bg);padding-top:0}
@@ -301,16 +300,6 @@ a{color:inherit;text-decoration:none}
 .xp-popup-num{font-size:72px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;line-height:1}
 .xp-popup-label{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;margin-top:4px}
 
-/* DAILY MODAL */
-#daily-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
-#daily-modal.open{display:flex}
-.daily-sheet{background:#111;border-radius:28px 28px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)}
-.daily-label{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.daily-title{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
-.daily-era{font-size:13px;color:var(--dim);margin-bottom:20px}
-.daily-art{width:100%;aspect-ratio:16/9;background:rgba(255,255,255,0.04);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:72px;margin-bottom:20px}
-.daily-fact{font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r);border-left:2px solid var(--accent)}
-.daily-close{width:100%;padding:16px;border-radius:var(--r);font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,0.1);color:var(--dim);background:transparent;cursor:pointer}
 
 
 /* ABOUT */
@@ -403,18 +392,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- DAILY MODAL -->
-<div id="daily-modal">
-  <div class="daily-sheet">
-    <div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 28px"></div>
-    <div class="daily-label">Daily Artifact</div>
-    <div class="daily-title" id="daily-title"></div>
-    <div class="daily-era" id="daily-era"></div>
-    <div class="daily-art" id="daily-art"></div>
-    <div class="daily-fact" id="daily-fact"></div>
-    <button class="daily-close" onclick="closeModal('daily-modal')">Close</button>
-  </div>
-</div>
 
 <!-- ARTIFACT MODAL -->
 <div id="artifact-modal">
@@ -440,7 +417,6 @@ a{color:inherit;text-decoration:none}
       <div class="landing-logo">ART<span>MAP</span></div>
       <div class="landing-tagline">Navigate Human Creativity</div>
     </div>
-    <button class="daily-badge" onclick="openDailyArtifact()">✦ Daily Artifact</button>
     <div class="landing-hero-text">
       <div class="landing-headline">Explore 40,000 Years of Art</div>
       <div class="landing-sub">Discover eras, collect artifacts, and uncover the hidden connections between art across time.</div>
@@ -706,10 +682,6 @@ a{color:inherit;text-decoration:none}
     </div>
     <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Guide</div>
     <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">How to Play</div>
-  </div>
-  <div class="howto-tip">
-    <div class="howto-tip-label">✦ Daily Artifact</div>
-    <div class="howto-tip-text">A new artifact drops every day. Tap <strong style="color:var(--fg)">Daily Artifact</strong> on the home screen to view it and earn +25 XP.</div>
   </div>
   <div class="howto-steps">
     <div class="howto-step">
@@ -1085,15 +1057,6 @@ const COMING_SOON = [
   {icon:'🏛️',title:'Museum Challenges',desc:'Partner with real museums for exclusive challenge drops'},
 ];
 
-const DAILY_ARTIFACTS = [
-  {title:'Starry Night',era:'Post-Impressionism · 1889',emoji:'🌌',fact:'Van Gogh painted Starry Night from memory while at the Saint-Paul-de-Mausole asylum, looking out from his window. The swirling sky is not a literal view, but an emotional state rendered as cosmic energy.'},
-  {title:'Guernica',era:'Modernism · 1937',emoji:'🕊️',fact:'Picasso refused to allow Guernica to return to Spain until the restoration of democracy. It lived in New York\'s MoMA for 44 years as a statement against fascism.'},
-  {title:'Mona Lisa',era:'Renaissance · c. 1503',emoji:'🎨',fact:'The Mona Lisa has no eyebrows. This was fashionable at the time — women plucked them. Da Vinci also used sfumato so subtly that the infamous smile changes depending on where you look.'},
-  {title:'The Birth of Venus',era:'Renaissance · c. 1485',emoji:'🐚',fact:'Botticelli\'s Venus stands on a giant scallop shell, measuring nearly 6 feet tall. The painting was so ahead of its time that it disappeared into storage and wasn\'t rediscovered for centuries.'},
-  {title:'The Great Wave off Kanagawa',era:'Japanese Edo · 1831',emoji:'🌊',fact:'Hokusai created The Great Wave when he was in his 70s. He created over 30,000 artworks in his lifetime, and considered his early work merely preparation for what was to come.'},
-  {title:'Girl with a Pearl Earring',era:'Baroque · c. 1665',emoji:'💎',fact:'Vermeer\'s "Mona Lisa of the North" is technically a tronie — a study of a type of person rather than a portrait of a specific individual. The identity of the girl remains unknown.'},
-  {title:'The Persistence of Memory',era:'Surrealism · 1931',emoji:'⏰',fact:'Dalí painted The Persistence of Memory in just two hours. He got the idea while staring at a melting piece of Camembert cheese after lunch.'},
-];
 
 /* ===== STATE ===== */
 const STATE_KEY = 'artmap_v1';
@@ -1103,8 +1066,7 @@ let state = JSON.parse(localStorage.getItem(STATE_KEY) || 'null') || {
   discoveredArtifacts: [],
   quizStreak: 0,
   hiddenFound: 0,
-  lastDaily: null,
-  dailyIdx: 0,
+
 };
 function saveState(){localStorage.setItem(STATE_KEY, JSON.stringify(state))}
 
@@ -1443,9 +1405,6 @@ function renderPassport(){
   document.querySelector('.passport-big-label') && (document.querySelector('.passport-big-label').textContent = pct === 100 ? 'Complete! 🎉' : 'Explored');
   document.getElementById('passport-fill').style.width = pct + '%';
   
-  // Update passport name
-  const userNameEl = document.querySelector('.passport-name');
-  if(userNameEl) userNameEl.textContent = getUsername() + "'s Passport";
   const grid = document.getElementById('stamps-grid');
   grid.innerHTML = ERAS.map(era=>`
     <div class="stamp${state.completedEras.includes(era.id)?' earned':''}" onclick="openEra('${era.id}')">
@@ -1597,7 +1556,7 @@ function exportDNA(){
 
 function confirmReset(){
   if(confirm('Reset your entire journey? All progress will be lost.')){
-    state = {xp:0,completedEras:[],discoveredArtifacts:[],quizStreak:0,hiddenFound:0,lastDaily:null,dailyIdx:0};
+    state = {xp:0,completedEras:[],discoveredArtifacts:[],quizStreak:0,hiddenFound:0};
     saveState();
     goToScreen('landing');
     showToast('Journey reset.');
@@ -1674,27 +1633,6 @@ function renderComingSoon(){
   `).join('');
 }
 
-/* ===== DAILY ARTIFACT ===== */
-function openDailyArtifact(){
-  const today = new Date().toDateString();
-  const idx = Math.floor(Date.now() / 86400000) % DAILY_ARTIFACTS.length;
-  const daily = DAILY_ARTIFACTS[idx];
-  
-  document.getElementById('daily-title').textContent = daily.title;
-  document.getElementById('daily-era').textContent = daily.era;
-  document.getElementById('daily-art').textContent = daily.emoji;
-  document.getElementById('daily-fact').textContent = daily.fact;
-  
-  document.getElementById('daily-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  
-  // Bonus XP once per day
-  if(state.lastDaily !== today){
-    state.lastDaily = today;
-    state.xp += 25;
-    saveState();
-    setTimeout(()=>showToast('+25 XP — Daily Artifact viewed!', true), 600);
-  }
 }
 
 /* ===== LANDING CANVAS ===== */
@@ -1787,9 +1725,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // Close modals on backdrop click
   document.getElementById('artifact-modal').addEventListener('click', e=>{
     if(e.target===document.getElementById('artifact-modal')) closeModal('artifact-modal');
-  });
-  document.getElementById('daily-modal').addEventListener('click', e=>{
-    if(e.target===document.getElementById('daily-modal')) closeModal('daily-modal');
   });
   
   // Coming soon in nav not needed — it's not in nav
