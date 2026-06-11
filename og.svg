@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D0D0D"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6FF00" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#E6FF00" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Accent glow -->
+  <rect width="600" height="630" fill="url(#glow)"/>
+  <!-- Grid lines -->
+  <line x1="80" y1="0" x2="80" y2="630" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="0" y1="80" x2="1200" y2="80" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="0" y1="550" x2="1200" y2="550" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="1120" y1="0" x2="1120" y2="630" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <!-- Era dots decorative -->
+  <circle cx="980" cy="200" r="120" fill="none" stroke="rgba(230,255,0,0.06)" stroke-width="1"/>
+  <circle cx="980" cy="200" r="80" fill="none" stroke="rgba(230,255,0,0.04)" stroke-width="1"/>
+  <circle cx="980" cy="200" r="40" fill="rgba(230,255,0,0.04)" stroke="none"/>
+  <circle cx="980" cy="200" r="6" fill="#E6FF00" opacity="0.6"/>
+  <!-- Era timeline dots -->
+  <circle cx="900" cy="380" r="4" fill="rgba(139,94,60,0.8)"/>
+  <circle cx="940" cy="360" r="4" fill="rgba(212,175,55,0.8)"/>
+  <circle cx="980" cy="350" r="4" fill="rgba(212,197,169,0.8)"/>
+  <circle cx="1020" cy="370" r="4" fill="rgba(139,0,0,0.8)"/>
+  <circle cx="1060" cy="345" r="4" fill="rgba(139,38,53,0.8)"/>
+  <circle cx="1100" cy="355" r="4" fill="rgba(200,164,192,0.8)"/>
+  <line x1="900" y1="380" x2="940" y2="360" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <line x1="940" y1="360" x2="980" y2="350" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <line x1="980" y1="350" x2="1020" y2="370" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <line x1="1020" y1="370" x2="1060" y2="345" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <line x1="1060" y1="345" x2="1100" y2="355" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <!-- ART label -->
+  <text x="80" y="260" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="164" fill="#FFFFFF" letter-spacing="-8" opacity="0.95">ART</text>
+  <!-- MAP with accent -->
+  <text x="80" y="420" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="164" fill="#E6FF00" letter-spacing="-8">MAP</text>
+  <!-- Separator line -->
+  <rect x="80" y="450" width="480" height="2" fill="rgba(255,255,255,0.12)" rx="1"/>
+  <!-- Tagline -->
+  <text x="80" y="496" font-family="Arial, sans-serif" font-weight="400" font-size="22" fill="rgba(176,176,176,1)" letter-spacing="4">NAVIGATE HUMAN CREATIVITY</text>
+  <!-- URL -->
+  <text x="80" y="540" font-family="Arial, sans-serif" font-weight="600" font-size="18" fill="rgba(230,255,0,0.7)" letter-spacing="1">artmap.college</text>
+  <!-- Stats -->
+  <rect x="80" y="566" width="1" height="40" fill="rgba(255,255,255,0.1)"/>
+  <text x="100" y="580" font-family="Arial, sans-serif" font-weight="700" font-size="16" fill="#FFFFFF">12 Eras</text>
+  <text x="100" y="598" font-family="Arial, sans-serif" font-weight="400" font-size="13" fill="rgba(176,176,176,0.7)">40,000 years of art</text>
+  <!-- Decorative era tags -->
+  <rect x="800" y="480" width="100" height="28" rx="14" fill="rgba(139,94,60,0.2)" stroke="rgba(139,94,60,0.5)" stroke-width="1"/>
+  <text x="850" y="499" font-family="Arial, sans-serif" font-size="12" fill="#8B5E3C" text-anchor="middle">Cave Art</text>
+  <rect x="912" y="480" width="120" height="28" rx="14" fill="rgba(139,38,53,0.2)" stroke="rgba(139,38,53,0.5)" stroke-width="1"/>
+  <text x="972" y="499" font-family="Arial, sans-serif" font-size="12" fill="#C06478" text-anchor="middle">Renaissance</text>
+  <rect x="1044" y="480" width="76" height="28" rx="14" fill="rgba(123,47,190,0.2)" stroke="rgba(123,47,190,0.5)" stroke-width="1"/>
+  <text x="1082" y="499" font-family="Arial, sans-serif" font-size="12" fill="#9B5FD0" text-anchor="middle">AI Art</text>
+</svg>
