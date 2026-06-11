@@ -4,7 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ArtMap — Navigate Human Creativity</title>
-<meta name="description" content="Explore 40,000 years of art history through an interactive visual map.">
+<meta name="description" content="Explore 40,000 years of art history through an interactive visual map. Collect artifacts, build your Art DNA, and earn achievements.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<meta name="theme-color" content="#0A0A0A">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://artmap.college/og.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ArtMap">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@arthousebase">
+<meta name="twitter:creator" content="@arthousebase">
+<meta name="twitter:title" content="ArtMap — Navigate Human Creativity">
+<meta name="twitter:description" content="Explore 40,000 years of art history. Collect artifacts, build your Art DNA, and uncover hidden connections between art across time.">
+<meta name="twitter:image" content="https://artmap.college/og.svg">
 <meta property="og:title" content="ArtMap — Navigate Human Creativity">
 <meta property="og:description" content="Explore 40,000 years of art history through an interactive visual map.">
 <meta property="og:url" content="https://artmap.college">
@@ -286,6 +300,78 @@ a{color:inherit;text-decoration:none}
 .daily-fact{font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r);border-left:2px solid var(--accent)}
 .daily-close{width:100%;padding:16px;border-radius:var(--r);font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,0.1);color:var(--dim);background:transparent;cursor:pointer}
 
+
+/* PROFILE MODAL */
+#profile-modal{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px)}
+#profile-modal.open{display:flex}
+.profile-sheet{background:#111;border-radius:28px 28px 0 0;padding:36px 24px 48px;width:100%;max-width:480px;animation:slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.profile-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 32px}
+.profile-title{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px}
+.profile-sub{font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:28px}
+.profile-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:var(--r);padding:16px 18px;font-size:16px;font-weight:500;color:var(--fg);font-family:var(--font);outline:none;transition:border-color 0.2s;margin-bottom:12px}
+.profile-input:focus{border-color:var(--accent)}
+.profile-save-btn{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%;transition:transform 0.15s;margin-bottom:10px}
+.profile-save-btn:active{transform:scale(0.97)}
+.profile-skip{width:100%;padding:14px;font-size:13px;color:var(--dim);background:transparent;border:none;cursor:pointer}
+
+/* ABOUT */
+#about{background:var(--bg);overflow-y:auto}
+.about-header{padding:calc(52px + var(--sat)) 24px 24px}
+.about-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
+.about-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.founder-card{margin:0 24px 20px;background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:28px;border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden}
+.founder-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(230,255,0,0.06) 0%,transparent 70%)}
+.founder-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#E6FF00,#7B2FBE);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#000;margin-bottom:16px;flex-shrink:0}
+.founder-name{font-size:20px;font-weight:700;letter-spacing:-0.01em;margin-bottom:4px}
+.founder-handle{font-size:13px;color:var(--accent);margin-bottom:12px;font-weight:500}
+.founder-bio{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:20px}
+.founder-links{display:flex;flex-direction:column;gap:8px}
+.founder-link{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r);border:1px solid rgba(255,255,255,0.08);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--fg)}
+.founder-link:hover,.founder-link:active{border-color:rgba(230,255,0,0.3);background:rgba(230,255,0,0.05);color:var(--accent)}
+.founder-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.about-section{padding:0 24px 20px}
+.about-section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:var(--dim);margin-bottom:16px;font-weight:600}
+.about-mission{font-size:15px;color:var(--fg);line-height:1.7;margin-bottom:24px;padding:20px;background:rgba(230,255,0,0.04);border-radius:var(--r);border-left:2px solid var(--accent)}
+.tech-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.tech-chip{padding:6px 12px;border-radius:50px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--dim);letter-spacing:0.05em;text-transform:uppercase}
+.ecosystem-badge{display:flex;align-items:center;gap:12px;padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r);border:1px solid rgba(255,255,255,0.07);margin-bottom:8px}
+.ecosystem-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ecosystem-name{font-size:13px;font-weight:600}
+.ecosystem-desc{font-size:11px;color:var(--dim);margin-top:2px}
+.orynth-section{padding:0 24px 40px}
+.orynth-wrapper{display:flex;justify-content:center;padding:20px 0 8px}
+.orynth-wrapper img{border-radius:var(--r);opacity:0.85;transition:opacity 0.2s}
+.orynth-wrapper img:hover{opacity:1}
+.orynth-credit{text-align:center;font-size:11px;color:var(--dim);margin-top:8px}
+
+/* HOW TO */
+#howto{background:var(--bg);overflow-y:auto}
+.howto-header{padding:calc(52px + var(--sat)) 24px 24px}
+.howto-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
+.howto-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.howto-steps{padding:0 24px 40px;display:flex;flex-direction:column;gap:12px}
+.howto-step{background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:24px;border:1px solid rgba(255,255,255,0.06);display:flex;gap:16px;align-items:flex-start}
+.howto-num{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#000;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.howto-step-title{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em}
+.howto-step-desc{font-size:13px;color:var(--dim);line-height:1.6}
+.howto-tip{margin:0 24px 24px;padding:16px 20px;background:rgba(230,255,0,0.05);border-radius:var(--r);border:1px solid rgba(230,255,0,0.15)}
+.howto-tip-label{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.howto-tip-text{font-size:13px;color:var(--dim);line-height:1.5}
+.howto-start-btn{margin:0 24px 40px;background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:calc(100% - 48px);transition:transform 0.15s}
+.howto-start-btn:active{transform:scale(0.97)}
+
+/* LANDING FOOTER LINKS */
+.landing-footer{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06)}
+.landing-footer-links{display:flex;gap:24px;align-items:center}
+.landing-footer-link{font-size:12px;color:var(--dim);font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:color 0.2s;text-decoration:none}
+.landing-footer-link:hover{color:var(--fg)}
+.landing-orynth{display:flex;justify-content:center}
+.landing-orynth img{border-radius:8px;opacity:0.7;transition:opacity 0.2s;height:32px;width:auto}
+.landing-orynth img:hover{opacity:1}
+.landing-profile-btn{position:absolute;top:calc(32px + var(--sat));right:24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--dim);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:8px 12px;border-radius:var(--r);cursor:pointer;z-index:2;display:flex;align-items:center;gap:6px;transition:all 0.2s}
+.landing-profile-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--fg)}
+.landing-profile-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
 /* RESPONSIVE */
 @media(min-width:640px){
   .collection-grid{grid-template-columns:repeat(3,1fr)}
@@ -359,6 +445,10 @@ a{color:inherit;text-decoration:none}
       <div class="landing-tagline">Navigate Human Creativity</div>
     </div>
     <button class="daily-badge" onclick="openDailyArtifact()">✦ Daily Artifact</button>
+    <button class="landing-profile-btn" onclick="document.getElementById('profile-modal').classList.add('open')" style="top:calc(72px + var(--sat))">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span id="landing-username">Profile</span>
+    </button>
     <div class="landing-hero-text">
       <div class="landing-headline">Explore 40,000 Years of Art</div>
       <div class="landing-sub">Discover eras, collect artifacts, and uncover the hidden connections between art across time.</div>
@@ -378,6 +468,20 @@ a{color:inherit;text-decoration:none}
         <div class="stat-item">
           <div class="stat-num" id="stat-xp">0</div>
           <div class="stat-label">XP</div>
+        </div>
+      </div>
+          <div class="landing-footer">
+        <div class="landing-footer-links">
+          <span class="landing-footer-link" onclick="goToScreen('howto')">How to Play</span>
+          <span style="color:rgba(255,255,255,0.15)">·</span>
+          <span class="landing-footer-link" onclick="goToScreen('about')">About</span>
+          <span style="color:rgba(255,255,255,0.15)">·</span>
+          <a class="landing-footer-link" href="https://x.com/arthousebase" target="_blank" rel="noopener">@arthousebase</a>
+        </div>
+        <div class="landing-orynth">
+          <a href="https://orynth.dev/projects/artmap-college" target="_blank" rel="noopener">
+            <img src="https://orynth.dev/api/badge/artmap-college?theme=dark&style=default" alt="Featured on Orynth" width="130" height="40" loading="lazy"/>
+          </a>
         </div>
       </div>
     </div>
@@ -535,6 +639,150 @@ a{color:inherit;text-decoration:none}
     <div style="font-size:14px;color:var(--dim);margin-top:8px;line-height:1.5">The next chapter of<br>ArtMap is being written.</div>
   </div>
   <div class="cs-list" id="cs-list"></div>
+</div>
+
+
+<!-- ABOUT -->
+<div id="about" class="screen">
+  <div class="about-header">
+    <div class="about-back" onclick="goToScreen('_landing')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">About</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">The Story</div>
+  </div>
+  <div class="founder-card">
+    <div class="founder-avatar">A</div>
+    <div class="founder-name">Arthousebase</div>
+    <div class="founder-handle">@arthousebase</div>
+    <div class="founder-bio">Founder of ArtMap and bekajarbase.fun — building at the intersection of education, art history, and Web3. Active contributor to the Solana and Base ecosystems, creating tools that make learning accessible and on-chain.</div>
+    <div class="founder-links">
+      <a class="founder-link" href="https://x.com/arthousebase" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" stroke-width="2.5"/></svg>
+        @arthousebase on X
+      </a>
+      <a class="founder-link" href="https://bekajarbase.fun" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        bekajarbase.fun
+      </a>
+    </div>
+  </div>
+  <div class="about-section">
+    <div class="about-section-title">Mission</div>
+    <div class="about-mission">"ArtMap exists to make 40,000 years of human creativity navigable — turning art history from a textbook into an interactive journey anyone can explore, collect, and own."</div>
+    <div class="about-section-title">Ecosystem</div>
+    <div class="ecosystem-badge">
+      <div class="ecosystem-dot" style="background:#9945FF"></div>
+      <div><div class="ecosystem-name">Solana</div><div class="ecosystem-desc">Active contributor — fast, low-cost infrastructure for on-chain art</div></div>
+    </div>
+    <div class="ecosystem-badge">
+      <div class="ecosystem-dot" style="background:#0052FF"></div>
+      <div><div class="ecosystem-name">Base</div><div class="ecosystem-desc">Building on Base — Coinbase's L2 for the next generation of creators</div></div>
+    </div>
+    <div style="margin-top:20px">
+      <div class="about-section-title">Built With</div>
+      <div class="tech-chips">
+        <span class="tech-chip">HTML5</span>
+        <span class="tech-chip">Vanilla JS</span>
+        <span class="tech-chip">CSS3</span>
+        <span class="tech-chip">Canvas API</span>
+        <span class="tech-chip">LocalStorage</span>
+        <span class="tech-chip">Vercel</span>
+      </div>
+    </div>
+  </div>
+  <div class="orynth-section">
+    <div class="about-section-title">Featured On</div>
+    <div class="orynth-wrapper">
+      <a href="https://orynth.dev/projects/artmap-college" target="_blank" rel="noopener">
+        <img src="https://orynth.dev/api/badge/artmap-college?theme=dark&style=default" alt="Featured on Orynth" width="180" height="56" loading="lazy"/>
+      </a>
+    </div>
+    <div class="orynth-credit">Discover more projects at orynth.dev</div>
+  </div>
+</div>
+
+
+<!-- HOW TO -->
+<div id="howto" class="screen">
+  <div class="howto-header">
+    <div class="howto-back" onclick="goToScreen('_landing')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Guide</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">How to Play</div>
+  </div>
+  <div class="howto-tip">
+    <div class="howto-tip-label">✦ Daily Artifact</div>
+    <div class="howto-tip-text">A new artifact drops every day. Tap <strong style="color:var(--fg)">Daily Artifact</strong> on the home screen to view it and earn +25 XP.</div>
+  </div>
+  <div class="howto-steps">
+    <div class="howto-step">
+      <div class="howto-num">1</div>
+      <div>
+        <div class="howto-step-title">Explore the Map</div>
+        <div class="howto-step-desc">Open the <strong style="color:var(--fg)">Map</strong> tab and tap any era — from 40,000-year-old Cave Art to today's AI Art. Each era unlocks a full chapter of history.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">2</div>
+      <div>
+        <div class="howto-step-title">Swipe Through Art Cards</div>
+        <div class="howto-step-desc">Each era has 6 cards covering key artworks, figures, and innovations. Swipe horizontally to read each one. The dots at the bottom show your progress.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">3</div>
+      <div>
+        <div class="howto-step-title">Collect Artifacts</div>
+        <div class="howto-step-desc">Tap the artifact chips listed in each era to discover and collect them. Artifacts come in 4 rarities: Common, Rare, Epic, and Legendary. View your collection in the <strong style="color:var(--fg)">Collection</strong> tab.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">4</div>
+      <div>
+        <div class="howto-step-title">Take the Challenge</div>
+        <div class="howto-step-desc">Every era ends with a 3-question quiz. Answer correctly to earn XP — up to <strong style="color:var(--accent)">250 XP</strong> per perfect score. You need a perfect score to mark the era as complete.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">5</div>
+      <div>
+        <div class="howto-step-title">Build Your Art DNA</div>
+        <div class="howto-step-desc">As you complete eras, your <strong style="color:var(--fg)">Art DNA</strong> profile builds up — showing which art periods resonate most with you. Export it as a PNG to share.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">6</div>
+      <div>
+        <div class="howto-step-title">Stamp Your Passport</div>
+        <div class="howto-step-desc">Complete an era to earn its passport stamp. Your <strong style="color:var(--fg)">Art Passport</strong> tracks your journey and shows how much of human creativity you've explored.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">7</div>
+      <div>
+        <div class="howto-step-title">Unlock Badges</div>
+        <div class="howto-step-desc">Explore enough eras, collect enough artifacts, and keep your quiz streak alive to unlock achievement badges. Some are hidden — keep exploring to find them.</div>
+      </div>
+    </div>
+  </div>
+  <button class="howto-start-btn" onclick="startJourney()">Start Exploring →</button>
+</div>
+
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal">
+  <div class="profile-sheet">
+    <div class="profile-handle"></div>
+    <div class="profile-title">Welcome to ArtMap</div>
+    <div class="profile-sub">What should we call you? Your name will appear on your Art Passport.</div>
+    <input class="profile-input" id="profile-name-input" type="text" placeholder="Your name or explorer alias" maxlength="30" autocomplete="off"/>
+    <button class="profile-save-btn" onclick="saveProfileName()">Begin My Journey</button>
+    <button class="profile-skip" onclick="skipProfile()">Skip for now</button>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -885,6 +1133,8 @@ let currentCard = 0;
 let quizState = {era:null,qi:0,correct:0};
 
 function goToScreen(id){
+  if(id==='_landing'){ id='landing'; document.getElementById('nav').classList.remove('visible'); }
+  if(id==='about'||id==='howto'){ document.getElementById('nav').classList.remove('visible'); }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>{
@@ -1198,12 +1448,47 @@ function finishQuiz(){
   goToScreen('map');
 }
 
+
+/* ===== PROFILE ===== */
+function initProfile(){
+  const seen = localStorage.getItem('artmap_profile_seen');
+  if(!seen){
+    setTimeout(()=>{
+      document.getElementById('profile-modal').classList.add('open');
+      document.body.style.overflow='hidden';
+    },1200);
+  }
+}
+
+function saveProfileName(){
+  const val = document.getElementById('profile-name-input').value.trim();
+  const name = val || 'Explorer';
+  localStorage.setItem('artmap_username', name);
+  localStorage.setItem('artmap_profile_seen','1');
+  closeModal('profile-modal');
+  showToast('Welcome, ' + name + '! 👋', true);
+  renderPassport();
+}
+
+function skipProfile(){
+  localStorage.setItem('artmap_profile_seen','1');
+  closeModal('profile-modal');
+}
+
+function getUsername(){
+  return localStorage.getItem('artmap_username') || 'Explorer';
+}
+
+
 /* ===== PASSPORT ===== */
 function renderPassport(){
   const pct = Math.round((state.completedEras.length / ERAS.length) * 100);
   document.getElementById('passport-pct').textContent = pct + '%';
   document.getElementById('passport-fill').style.width = pct + '%';
   
+  // Update passport name
+  const userNameEl = document.querySelector('.passport-name');
+  if(userNameEl) userNameEl.textContent = getUsername() + "'s Passport";
   const grid = document.getElementById('stamps-grid');
   grid.innerHTML = ERAS.map(era=>`
     <div class="stamp${state.completedEras.includes(era.id)?' earned':''}" onclick="openEra('${era.id}')">
@@ -1509,6 +1794,10 @@ function updateLandingStats(){
 document.addEventListener('DOMContentLoaded', ()=>{
   initCanvas();
   updateLandingStats();
+  initProfile();
+  const uname = getUsername();
+  const unameEl = document.getElementById('landing-username');
+  if(unameEl) unameEl.textContent = uname !== 'Explorer' ? uname : 'Profile';
   
   // Close modals on backdrop click
   document.getElementById('artifact-modal').addEventListener('click', e=>{
