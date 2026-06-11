@@ -377,6 +377,45 @@ a{color:inherit;text-decoration:none}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .era-node{transition:background 0.2s,transform 0.15s,border-color 0.2s}
 .era-node:not(.locked):hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+
+/* SITE NAV */
+#site-nav{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10,10,10,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.07);display:none;align-items:center;justify-content:space-between;padding:0 20px;z-index:150}
+#site-nav.visible{display:flex}
+.snav-logo{font-size:20px;font-weight:700;letter-spacing:-0.03em;color:var(--fg);cursor:pointer}
+.snav-logo span{color:var(--accent)}
+.snav-links{display:flex;gap:20px}
+.snav-link{font-size:12px;font-weight:500;color:var(--dim);cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:var(--font);letter-spacing:0.05em;padding:0}
+.snav-link:hover{color:var(--fg)}
+.snav-cta{background:var(--accent);color:#000;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 18px;border-radius:8px;transition:opacity 0.15s;font-family:var(--font);cursor:pointer;border:none}
+.snav-cta:hover{opacity:0.85}
+@media(max-width:400px){.snav-links{display:none}}
+
+/* SITE FOOTER */
+.site-footer{padding:48px 24px calc(48px + var(--sab));background:var(--bg);border-top:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;align-items:center;gap:24px;position:relative;z-index:1}
+.footer-logo{font-size:18px;font-weight:700;letter-spacing:-0.03em}
+.footer-logo span{color:var(--accent)}
+.footer-tagline{font-size:12px;color:var(--dim);text-align:center;line-height:1.6;max-width:280px}
+.footer-links-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 40px;text-align:center;width:100%;max-width:280px}
+.footer-link{font-size:12px;color:var(--dim);font-weight:500;cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:var(--font);text-decoration:none;letter-spacing:0.03em;padding:4px 0;display:block;width:100%;text-align:center}
+.footer-link:hover{color:var(--fg)}
+.footer-divider{width:100%;height:1px;background:rgba(255,255,255,0.05)}
+.footer-bottom{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2);text-align:center}
+.footer-orynth img{border-radius:6px;opacity:0.6;transition:opacity 0.2s;height:28px;width:auto}
+.footer-orynth img:hover{opacity:0.9}
+
+/* LEGAL / COOKIES */
+#legal,#cookies{background:var(--bg)}
+.info-header{padding:calc(80px + var(--sat)) 24px 24px}
+.info-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:20px;cursor:pointer;width:fit-content}
+.info-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.info-body{padding:0 24px 60px;display:flex;flex-direction:column;gap:20px}
+.info-section h3{font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px;font-weight:700}
+.info-section p{font-size:14px;color:var(--dim);line-height:1.7}
+.info-section ul{font-size:13px;color:var(--dim);line-height:1.8;padding-left:18px;margin-top:6px}
+
+/* ABOUT/HOWTO padding fix for top nav */
+.about-header,.howto-header{padding-top:calc(80px + var(--sat)) !important}
 </style>
 </head>
 <body>
@@ -409,10 +448,20 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- SITE NAV -->
+<header id="site-nav">
+  <div class="snav-logo" onclick="goToScreen('landing')">ART<span>MAP</span></div>
+  <div class="snav-links">
+    <button class="snav-link" onclick="goToScreen('howto')">How It Works</button>
+    <button class="snav-link" onclick="goToScreen('about')">About</button>
+  </div>
+  <button class="snav-cta" onclick="launchApp()">Open App</button>
+</header>
+
 <!-- LANDING -->
 <div id="landing" class="screen active">
   <canvas id="landing-canvas"></canvas>
-  <div class="landing-content">
+  <div class="landing-content" style="padding-top:calc(100px + var(--sat))">
     <div>
       <div class="landing-logo">ART<span>MAP</span></div>
       <div class="landing-tagline">Navigate Human Creativity</div>
@@ -421,8 +470,8 @@ a{color:inherit;text-decoration:none}
       <div class="landing-headline">Explore 40,000 Years of Art</div>
       <div class="landing-sub">Discover eras, collect artifacts, and uncover the hidden connections between art across time.</div>
       <div class="landing-ctas">
-        <button class="btn-primary" onclick="startJourney()">Start Journey</button>
-        <button class="btn-secondary" onclick="goToScreen('map')">Explore Map</button>
+        <button class="btn-primary" onclick="launchApp()">Start Journey</button>
+        <button class="btn-secondary" onclick="goToScreen('howto')">How It Works</button>
       </div>
       <div class="landing-stats">
         <div class="stat-item">
@@ -438,22 +487,30 @@ a{color:inherit;text-decoration:none}
           <div class="stat-label">XP</div>
         </div>
       </div>
-          <div class="landing-footer">
-        <div class="landing-footer-links">
-          <span class="landing-footer-link" onclick="goToScreen('howto')">How to Play</span>
-          <span style="color:rgba(255,255,255,0.15)">·</span>
-          <span class="landing-footer-link" onclick="goToScreen('about')">About</span>
-          <span style="color:rgba(255,255,255,0.15)">·</span>
-          <a class="landing-footer-link" href="https://x.com/arthousebase" target="_blank" rel="noopener">@arthousebase</a>
-        </div>
-        <div class="landing-orynth">
-          <a href="https://orynth.dev/projects/artmap-college" target="_blank" rel="noopener">
-            <img src="https://orynth.dev/api/badge/artmap-college?theme=dark&style=default" alt="Featured on Orynth" width="130" height="40" loading="lazy"/>
-          </a>
-        </div>
-      </div>
     </div>
   </div>
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-logo">ART<span>MAP</span></div>
+    <div class="footer-tagline">Making 40,000 years of human creativity navigable — one era at a time.</div>
+    <div class="footer-links-grid">
+      <button class="footer-link" onclick="goToScreen('about')">About</button>
+      <button class="footer-link" onclick="goToScreen('howto')">How It Works</button>
+      <button class="footer-link" onclick="goToScreen('legal')">Privacy &amp; Terms</button>
+      <button class="footer-link" onclick="goToScreen('cookies')">Cookie Policy</button>
+      <a class="footer-link" href="https://x.com/arthousebase" target="_blank" rel="noopener">@arthousebase</a>
+      <button class="footer-link" onclick="launchApp()">Launch App</button>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-orynth">
+        <a href="https://orynth.dev/projects/artmap-college" target="_blank" rel="noopener">
+          <img src="https://orynth.dev/api/badge/artmap-college?theme=dark&style=default" alt="Featured on Orynth" width="130" height="40" loading="lazy"/>
+        </a>
+      </div>
+      <div class="footer-copy">© 2025 ArtMap &middot; artmap.college &middot; All rights reserved.</div>
+    </div>
+  </footer>
 </div>
 
 <!-- MAP -->
@@ -737,6 +794,90 @@ a{color:inherit;text-decoration:none}
   <button class="howto-start-btn" onclick="startJourney()">Start Exploring →</button>
 </div>
 
+
+
+<!-- LEGAL -->
+<div id="legal" class="screen">
+  <div class="info-header">
+    <div class="info-back" onclick="goToScreen('landing')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Legal</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Privacy &amp; Terms</div>
+  </div>
+  <div class="info-body">
+    <div class="info-section">
+      <h3>Terms of Use</h3>
+      <p>By using ArtMap, you agree to use the platform for personal, non-commercial exploration of art history. You may not copy, reproduce, or redistribute any content from ArtMap without prior written permission.</p>
+    </div>
+    <div class="info-section">
+      <h3>Privacy</h3>
+      <p>ArtMap does not collect personally identifiable information. Your progress, XP, and collected artifacts are stored locally in your browser using <code style="color:var(--accent);font-size:12px">localStorage</code> and never transmitted to our servers.</p>
+    </div>
+    <div class="info-section">
+      <h3>Data We Store Locally</h3>
+      <ul>
+        <li>Your XP and quiz scores</li>
+        <li>Explored and completed eras</li>
+        <li>Collected artifacts</li>
+        <li>Achievement progress</li>
+      </ul>
+      <p style="margin-top:10px">To delete all local data, use the <strong style="color:var(--fg)">Reset Journey</strong> option inside the app.</p>
+    </div>
+    <div class="info-section">
+      <h3>Intellectual Property</h3>
+      <p>All art historical information, card content, and quiz questions are provided for educational purposes. Artwork references belong to their respective rights holders. ArtMap is an independent educational project.</p>
+    </div>
+    <div class="info-section">
+      <h3>Changes</h3>
+      <p>We may update these terms as ArtMap evolves. Continued use of the app means you accept any updated terms. Last updated: June 2025.</p>
+    </div>
+    <div class="info-section">
+      <h3>Contact</h3>
+      <p>Questions? Reach us at <a href="https://x.com/arthousebase" target="_blank" rel="noopener" style="color:var(--accent)">@arthousebase</a> on X.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COOKIES -->
+<div id="cookies" class="screen">
+  <div class="info-header">
+    <div class="info-back" onclick="goToScreen('landing')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Cookies</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Cookie Policy</div>
+  </div>
+  <div class="info-body">
+    <div class="info-section">
+      <h3>What We Use</h3>
+      <p>ArtMap uses browser <strong style="color:var(--fg)">localStorage</strong> — not cookies — to save your progress. This is entirely local to your device and is never sent to any external server.</p>
+    </div>
+    <div class="info-section">
+      <h3>Third-Party Services</h3>
+      <p>ArtMap embeds the following third-party resources that may set their own cookies:</p>
+      <ul>
+        <li><strong style="color:var(--fg)">Google Fonts</strong> — used for typography (Space Grotesk, Inter)</li>
+        <li><strong style="color:var(--fg)">Orynth.dev</strong> — badge displayed on the landing page</li>
+        <li><strong style="color:var(--fg)">Vercel</strong> — our hosting provider, which may log anonymized request data</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Analytics</h3>
+      <p>ArtMap does not currently use any analytics or tracking cookies. We do not track individual users or sell data to third parties.</p>
+    </div>
+    <div class="info-section">
+      <h3>Your Control</h3>
+      <p>You can clear all locally stored ArtMap data at any time by using the <strong style="color:var(--fg)">Reset Journey</strong> button in the app, or by clearing your browser's localStorage via browser settings.</p>
+    </div>
+    <div class="info-section">
+      <h3>Contact</h3>
+      <p>Cookie questions? Reach us at <a href="https://x.com/arthousebase" target="_blank" rel="noopener" style="color:var(--accent)">@arthousebase</a> on X.</p>
+    </div>
+  </div>
+</div>
 
 
 <!-- BOTTOM NAV -->
@@ -1076,9 +1217,19 @@ let currentEra = null;
 let currentCard = 0;
 let quizState = {era:null,qi:0,correct:0};
 
+const SITE_NAV_SCREENS = new Set(['landing','about','howto','legal','cookies']);
+
 function goToScreen(id){
-  if(id==='_landing'){ id='landing'; document.getElementById('nav').classList.remove('visible'); }
-  if(id==='about'||id==='howto'){ document.getElementById('nav').classList.remove('visible'); }
+  if(id==='_landing') id='landing';
+  const siteNav = document.getElementById('site-nav');
+  const bottomNav = document.getElementById('nav');
+  if(SITE_NAV_SCREENS.has(id)){
+    siteNav.classList.add('visible');
+    bottomNav.classList.remove('visible');
+  } else {
+    siteNav.classList.remove('visible');
+    bottomNav.classList.add('visible');
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>{
@@ -1086,10 +1237,8 @@ function goToScreen(id){
   });
   currentScreen = id;
   if(id==='landing'){
-    document.getElementById('nav').classList.remove('visible');
     updateLandingStats();
   } else {
-    document.getElementById('nav').classList.add('visible');
     if(id==='map') renderMap();
     if(id==='passport') renderPassport();
     if(id==='collection') renderCollection();
@@ -1097,7 +1246,6 @@ function goToScreen(id){
     if(id==='achievements') renderAchievements();
     if(id==='coming-soon') renderComingSoon();
   }
-  // Scroll to top — reset both window and any inner scroll on the active screen
   const _activeEl = document.getElementById(id);
   window.scrollTo(0, 0);
   if (_activeEl) _activeEl.scrollTop = 0;
@@ -1107,14 +1255,17 @@ function goToScreen(id){
   });
 }
 
-function startJourney(){
-  // Check if user has already started
+function launchApp(){
   if(state.completedEras.length > 0){
     const nextIdx = state.completedEras.length < ERAS.length ? state.completedEras.length : 0;
     openEra(ERAS[nextIdx].id);
   } else {
-    openEra('cave-art');
+    goToScreen('map');
   }
+}
+
+function startJourney(){
+  launchApp();
 }
 
 /* ===== MAP ===== */
@@ -1727,6 +1878,7 @@ function updateLandingStats(){
 document.addEventListener('DOMContentLoaded', ()=>{
   initCanvas();
   updateLandingStats();
+  document.getElementById('site-nav').classList.add('visible');
   
   // Close modals on backdrop click
   document.getElementById('artifact-modal').addEventListener('click', e=>{
