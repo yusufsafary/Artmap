@@ -440,6 +440,33 @@ a{color:inherit;text-decoration:none}
 /* HERO tweaks — remove stats, tighter layout */
 .landing-hero-clean{display:flex;flex-direction:column;gap:0;flex:1;justify-content:center;padding-bottom:40px}
 
+
+/* APP TOPBAR */
+#app-topbar{position:fixed;top:0;left:0;right:0;height:52px;padding-top:var(--sat);background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07);display:none;align-items:center;justify-content:space-between;padding-left:20px;padding-right:20px;z-index:120}
+#app-topbar.visible{display:flex}
+.atb-home{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--dim);letter-spacing:0.08em;text-transform:uppercase;background:none;border:none;font-family:var(--font);cursor:pointer;padding:0;transition:color 0.2s}
+.atb-home:hover{color:var(--fg)}
+.atb-home svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}
+.atb-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;color:var(--fg)}
+.atb-logo span{color:var(--accent)}
+.atb-about{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;padding:0;transition:color 0.2s}
+.atb-about:hover{color:var(--accent)}
+
+/* PREMIUM ERA CHIPS */
+.hero-eras{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:28px 0 12px}
+.hero-era-chip{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:default;transition:border-color 0.2s,background 0.2s;overflow:hidden;position:relative}
+.hero-era-chip::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--era-c)}
+.hero-era-chip:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14)}
+.era-chip-num{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--era-c);opacity:0.8}
+.era-chip-name{font-size:12px;font-weight:600;color:var(--fg);letter-spacing:-0.01em;line-height:1.2}
+.era-chip-period{font-size:9px;color:var(--dim);letter-spacing:0.02em;line-height:1.2;margin-top:1px}
+
+/* ADJUST app screen top padding for topbar */
+#map{padding-top:52px}
+#collection,#passport,#dna,#achievements,#coming-soon{padding-top:0}
+.map-header{padding-top:calc(20px + var(--sat)) !important}
+.passport-header,.collection-header,.dna-header,.achieve-header,.cs-header{padding-top:calc(20px + var(--sat)) !important}
+
 </style>
 </head>
 <body>
@@ -473,6 +500,15 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- SITE NAV -->
+<div id="app-topbar">
+  <button class="atb-home" onclick="goToScreen('landing')">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Home
+  </button>
+  <div class="atb-logo">ART<span>MAP</span></div>
+  <button class="atb-about" onclick="goToScreen('about')">About</button>
+</div>
+
 <header id="site-nav">
   <div class="snav-logo" onclick="goToScreen('landing')">ART<span>MAP</span></div>
   <button class="snav-cta" onclick="launchApp()">Open App</button>
@@ -487,18 +523,18 @@ a{color:inherit;text-decoration:none}
       <div class="landing-tagline">Navigate Human Creativity</div>
     </div>
     <div class="hero-eras">
-      <div class="hero-era-chip"><span>🦌</span>Cave Art</div>
-      <div class="hero-era-chip"><span>𓁚</span>Egypt</div>
-      <div class="hero-era-chip"><span>🏛️</span>Greece</div>
-      <div class="hero-era-chip"><span>🏺</span>Rome</div>
-      <div class="hero-era-chip"><span>📖</span>Medieval</div>
-      <div class="hero-era-chip"><span>🎨</span>Renaissance</div>
-      <div class="hero-era-chip"><span>🌙</span>Baroque</div>
-      <div class="hero-era-chip"><span>🌌</span>Impressionism</div>
-      <div class="hero-era-chip"><span>🕊️</span>Modernism</div>
-      <div class="hero-era-chip"><span>⚡</span>Bauhaus</div>
-      <div class="hero-era-chip"><span>💻</span>Digital</div>
-      <div class="hero-era-chip"><span>✦</span>AI Art</div>
+      <div class="hero-era-chip" style="--era-c:#8B5E3C"><div class="era-chip-num">01</div><div class="era-chip-name">Cave Art</div><div class="era-chip-period">40,000 BCE</div></div>
+      <div class="hero-era-chip" style="--era-c:#D4AF37"><div class="era-chip-num">02</div><div class="era-chip-name">Egypt</div><div class="era-chip-period">3000 BCE</div></div>
+      <div class="hero-era-chip" style="--era-c:#B0C4DE"><div class="era-chip-num">03</div><div class="era-chip-name">Greece</div><div class="era-chip-period">800 BCE</div></div>
+      <div class="hero-era-chip" style="--era-c:#C0392B"><div class="era-chip-num">04</div><div class="era-chip-name">Rome</div><div class="era-chip-period">509 BCE</div></div>
+      <div class="hero-era-chip" style="--era-c:#7B5EA7"><div class="era-chip-num">05</div><div class="era-chip-name">Medieval</div><div class="era-chip-period">500 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#C19A6B"><div class="era-chip-num">06</div><div class="era-chip-name">Renaissance</div><div class="era-chip-period">1400 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#4A6FA5"><div class="era-chip-num">07</div><div class="era-chip-name">Baroque</div><div class="era-chip-period">1600 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#7EC8E3"><div class="era-chip-num">08</div><div class="era-chip-name">Impressionism</div><div class="era-chip-period">1860 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#E05C5C"><div class="era-chip-num">09</div><div class="era-chip-name">Modernism</div><div class="era-chip-period">1900 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#E6FF00"><div class="era-chip-num">10</div><div class="era-chip-name">Bauhaus</div><div class="era-chip-period">1919 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#4FC3F7"><div class="era-chip-num">11</div><div class="era-chip-name">Digital</div><div class="era-chip-period">1990 CE</div></div>
+      <div class="hero-era-chip" style="--era-c:#CE93D8"><div class="era-chip-num">12</div><div class="era-chip-name">AI Art</div><div class="era-chip-period">2010 CE</div></div>
     </div>
     <div class="landing-hero-text">
       <div class="landing-headline">Explore 40,000 Years of Art</div>
@@ -560,11 +596,7 @@ a{color:inherit;text-decoration:none}
 <!-- MAP -->
 <div id="map" class="screen">
   <div class="map-header">
-    <div style="display:flex;flex-direction:column;gap:4px">
-      <button onclick="goToScreen('landing')" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;padding:0;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;width:fit-content">
-        <svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        Home
-      </button>
+    <div>
       <div class="map-title">World Art Map</div>
       <div class="map-sub">Your journey through human creativity</div>
     </div>
@@ -648,11 +680,7 @@ a{color:inherit;text-decoration:none}
     <div class="section-title">Explorer Stats</div>
   </div>
   <div class="passport-stats" id="passport-stats"></div>
-  <div style="display:flex;justify-content:center;gap:24px;padding:0 24px 48px">
-    <button onclick="goToScreen('howto')" style="font-size:12px;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;letter-spacing:0.05em;text-decoration:underline;text-underline-offset:3px">How It Works</button>
-    <button onclick="goToScreen('about')" style="font-size:12px;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;letter-spacing:0.05em;text-decoration:underline;text-underline-offset:3px">About</button>
-    <button onclick="goToScreen('legal')" style="font-size:12px;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;letter-spacing:0.05em;text-decoration:underline;text-underline-offset:3px">Legal</button>
-  </div>
+
 </div>
 
 <!-- COLLECTION -->
@@ -1271,17 +1299,26 @@ let currentCard = 0;
 let quizState = {era:null,qi:0,correct:0};
 
 const SITE_NAV_SCREENS = new Set(['landing','about','howto','legal','cookies']);
+const APP_SCREENS = new Set(['map','era','quiz','passport','collection','dna','achievements','coming-soon']);
 
 function goToScreen(id){
   if(id==='_landing') id='landing';
   const siteNav = document.getElementById('site-nav');
+  const appTopbar = document.getElementById('app-topbar');
   const bottomNav = document.getElementById('nav');
   if(SITE_NAV_SCREENS.has(id)){
     siteNav.classList.add('visible');
+    appTopbar.classList.remove('visible');
     bottomNav.classList.remove('visible');
-  } else {
+  } else if(APP_SCREENS.has(id)){
     siteNav.classList.remove('visible');
+    appTopbar.classList.add('visible');
     bottomNav.classList.add('visible');
+  } else {
+    // about/howto/legal/cookies accessed from inside app — keep topbar
+    appTopbar.classList.add('visible');
+    siteNav.classList.remove('visible');
+    bottomNav.classList.remove('visible');
   }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
