@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Link } from "wouter";
 import { useLang, LangProvider } from "./i18n/LangContext";
 import { WorldMap } from "./WorldMap";
 
@@ -599,31 +600,57 @@ function ArtistIcon({ artistId, size = 32 }: { artistId: string; size?: number }
 function TopBar({ onSearch }: { onSearch: () => void }) {
   const { lang, setLang } = useLang();
   return (
-    <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30, padding: "16px 16px 0", background: "linear-gradient(to bottom, rgba(4,8,15,0.90) 0%, transparent 100%)", pointerEvents: "none" }}>
+    <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30, padding: "14px 16px 0", background: "linear-gradient(to bottom, rgba(4,8,15,0.92) 0%, transparent 100%)", pointerEvents: "none" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", pointerEvents: "auto" }}>
-        <div>
-          <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "#D4AF37", textTransform: "uppercase", fontWeight: 700 }}>ArtMap</div>
-          <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.01em" }}>College</div>
-        </div>
+        {/* Logo — tappable back-to-home */}
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+          <AppLogoInline />
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.22em", color: "#D4AF37", textTransform: "uppercase", fontWeight: 800, lineHeight: 1 }}>ArtMap</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.01em" }}>College</div>
+          </div>
+        </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button
             onClick={() => setLang(lang === "en" ? "id" : "en")}
             title={lang === "en" ? "Switch to Bahasa Indonesia" : "Switch to English"}
-            style={{ height: 36, padding: "0 12px", borderRadius: 11, background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.28)", color: "#D4AF37", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, backdropFilter: "blur(12px)", fontSize: 11, fontWeight: 700, letterSpacing: "0.04em", transition: "all 0.18s" }}
+            style={{ height: 34, padding: "0 11px", borderRadius: 10, background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.28)", color: "#D4AF37", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, backdropFilter: "blur(12px)", fontSize: 11, fontWeight: 700, letterSpacing: "0.04em", transition: "all 0.18s" }}
           >
-            <IconGlobe size={14} color="#D4AF37" />
+            <IconGlobe size={13} color="#D4AF37" />
             {lang === "en" ? "EN" : "ID"}
           </button>
           <button
             onClick={onSearch}
             title="Search"
-            style={{ width: 36, height: 36, borderRadius: 11, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.75)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", transition: "all 0.18s" }}
+            style={{ width: 34, height: 34, borderRadius: 10, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.75)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", transition: "all 0.18s" }}
           >
-            <IconSearch size={17} color="rgba(255,255,255,0.75)" />
+            <IconSearch size={16} color="rgba(255,255,255,0.75)" />
           </button>
         </div>
       </div>
     </div>
+  );
+}
+
+function AppLogoInline() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="alg" cx="42%" cy="40%" r="58%">
+          <stop offset="0%" stopColor="#1e2b45" />
+          <stop offset="100%" stopColor="#0a1020" />
+        </radialGradient>
+        <clipPath id="alc"><circle cx="40" cy="40" r="29" /></clipPath>
+      </defs>
+      <circle cx="40" cy="40" r="29" fill="url(#alg)" />
+      <ellipse cx="40" cy="40" rx="29" ry="10.5" fill="none" stroke="#D4AF37" strokeWidth="1.2" opacity="0.35" clipPath="url(#alc)" />
+      <line x1="40" y1="11" x2="40" y2="69" stroke="#D4AF37" strokeWidth="1.2" opacity="0.35" clipPath="url(#alc)" />
+      <circle cx="40" cy="40" r="29" fill="none" stroke="#D4AF37" strokeWidth="1.8" />
+      <path d="M 18 22 Q 30 16 44 20 Q 55 24 62 18" fill="none" stroke="#D4AF37" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+      <path d="M 62 18 L 67 12 L 65 20 Z" fill="#D4AF37" opacity="0.75" />
+      <circle cx="49" cy="36" r="3.5" fill="#D4AF37" opacity="0.95" />
+      <circle cx="49" cy="36" r="5.5" fill="none" stroke="#D4AF37" strokeWidth="1.2" opacity="0.35" />
+    </svg>
   );
 }
 
