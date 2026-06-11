@@ -303,7 +303,7 @@ a{color:inherit;text-decoration:none}
 
 
 /* ABOUT */
-#about{background:var(--bg);overflow-y:auto}
+#about{background:var(--bg)}
 .about-header{padding:calc(52px + var(--sat)) 24px 24px}
 .about-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
 .about-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -333,7 +333,7 @@ a{color:inherit;text-decoration:none}
 .orynth-credit{text-align:center;font-size:11px;color:var(--dim);margin-top:8px}
 
 /* HOW TO */
-#howto{background:var(--bg);overflow-y:auto}
+#howto{background:var(--bg)}
 .howto-header{padding:calc(52px + var(--sat)) 24px 24px}
 .howto-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
 .howto-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -1097,7 +1097,14 @@ function goToScreen(id){
     if(id==='achievements') renderAchievements();
     if(id==='coming-soon') renderComingSoon();
   }
-  window.scrollTo(0,0);
+  // Scroll to top — reset both window and any inner scroll on the active screen
+  const _activeEl = document.getElementById(id);
+  window.scrollTo(0, 0);
+  if (_activeEl) _activeEl.scrollTop = 0;
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+    if (_activeEl) _activeEl.scrollTop = 0;
+  });
 }
 
 function startJourney(){
