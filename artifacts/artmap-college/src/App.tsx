@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useLang, LangProvider } from "./i18n/LangContext";
 import { WorldMap } from "./WorldMap";
 
 // ─── PREMIUM SVG ICONS ────────────────────────────────────────────────────────
@@ -596,19 +597,31 @@ function ArtistIcon({ artistId, size = 32 }: { artistId: string; size?: number }
 // ─── TOP BAR ──────────────────────────────────────────────────────────────────
 
 function TopBar({ onSearch }: { onSearch: () => void }) {
+  const { lang, setLang } = useLang();
   return (
-    <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30, padding: "16px 16px 0", background: "linear-gradient(to bottom, rgba(4,8,15,0.85) 0%, transparent 100%)", pointerEvents: "none" }}>
+    <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30, padding: "16px 16px 0", background: "linear-gradient(to bottom, rgba(4,8,15,0.90) 0%, transparent 100%)", pointerEvents: "none" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", pointerEvents: "auto" }}>
         <div>
           <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "#D4AF37", textTransform: "uppercase", fontWeight: 700 }}>ArtMap</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.01em" }}>College</div>
         </div>
-        <button
-          onClick={onSearch}
-          style={{ width: 40, height: 40, borderRadius: 13, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.75)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)" }}
-        >
-          <IconSearch size={18} color="rgba(255,255,255,0.75)" />
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            onClick={() => setLang(lang === "en" ? "id" : "en")}
+            title={lang === "en" ? "Switch to Bahasa Indonesia" : "Switch to English"}
+            style={{ height: 36, padding: "0 12px", borderRadius: 11, background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.28)", color: "#D4AF37", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, backdropFilter: "blur(12px)", fontSize: 11, fontWeight: 700, letterSpacing: "0.04em", transition: "all 0.18s" }}
+          >
+            <IconGlobe size={14} color="#D4AF37" />
+            {lang === "en" ? "EN" : "ID"}
+          </button>
+          <button
+            onClick={onSearch}
+            title="Search"
+            style={{ width: 36, height: 36, borderRadius: 11, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.75)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", transition: "all 0.18s" }}
+          >
+            <IconSearch size={17} color="rgba(255,255,255,0.75)" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -617,6 +630,7 @@ function TopBar({ onSearch }: { onSearch: () => void }) {
 // ─── TODAY CARD ───────────────────────────────────────────────────────────────
 
 function TodayCard({ onPress }: { onPress: () => void }) {
+  const { t } = useLang();
   return (
     <div style={{ position: "absolute", top: 72, left: 16, right: 16, zIndex: 20, pointerEvents: "none" }}>
       <button
@@ -627,9 +641,10 @@ function TodayCard({ onPress }: { onPress: () => void }) {
           <IconCalendar size={17} color={ARTWORKS[2].accentColor} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 9, color: "#D4AF37", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 2 }}>Today in Art History · {TODAY_FACT.date}</div>
+          <div style={{ fontSize: 9, color: "#D4AF37", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 2 }}>{t("today_title")} · {TODAY_FACT.date}</div>
           <div style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", lineHeight: 1.45, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{TODAY_FACT.fact}</div>
         </div>
+        <div style={{ flexShrink: 0, fontSize: 10, color: "rgba(212,175,55,0.7)", fontWeight: 700 }}>{t("today_learn")} →</div>
       </button>
     </div>
   );
@@ -638,10 +653,12 @@ function TodayCard({ onPress }: { onPress: () => void }) {
 // ─── SURPRISE BUTTON ──────────────────────────────────────────────────────────
 
 function SurpriseBtn({ onClick }: { onClick: () => void }) {
+  const { t } = useLang();
   return (
     <button
       onClick={onClick}
       className="float-btn"
+      title={t("surprise_tooltip")}
       style={{ position: "absolute", right: 16, bottom: 200, zIndex: 20, width: 52, height: 52, borderRadius: 16, background: "rgba(10,16,28,0.9)", backdropFilter: "blur(16px)", border: "1px solid rgba(212,175,55,0.25)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
     >
       <IconDice size={22} color="#D4AF37" />
@@ -698,6 +715,7 @@ function BottomSheet({
   discovered: string[];
 }) {
   const [saved, setSaved] = useState(false);
+  const { t } = useLang();
   const displayAW = artwork || (country?.artworks[0] ? getArtwork(country.artworks[0]) : null);
   const displayCountry = country || (artwork ? COUNTRIES.find((c) => c.id === artwork.country) : null);
 
@@ -757,7 +775,7 @@ function BottomSheet({
                   </div>
                 </div>
                 {discovered.includes(displayAW.artistId) && (
-                  <div style={{ padding: "4px 8px", borderRadius: 20, background: "rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)", fontSize: 9, color: "#D4AF37", fontWeight: 700, letterSpacing: "0.06em", flexShrink: 0 }}>DISCOVERED</div>
+                  <div style={{ padding: "4px 8px", borderRadius: 20, background: "rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)", fontSize: 9, color: "#D4AF37", fontWeight: 700, letterSpacing: "0.06em", flexShrink: 0 }}>{t("artwork_discovered")}</div>
                 )}
               </div>
 
@@ -771,7 +789,7 @@ function BottomSheet({
 
               {/* Art Genome */}
               <div style={{ marginBottom: 16 }}>
-                <div style={{ fontSize: 10, color: "#D4AF37", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>Art Genome</div>
+                <div style={{ fontSize: 10, color: "#D4AF37", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>{t("artwork_genome")}</div>
                 {displayAW.genome.map((g) => (
                   <div key={g.trait} style={{ marginBottom: 8 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
@@ -791,7 +809,7 @@ function BottomSheet({
                   onClick={() => onAIExplain(displayAW.id)}
                   style={{ flex: 1, background: "linear-gradient(135deg, #D4AF37 0%, #92400E 100%)", border: "none", borderRadius: 14, padding: "13px 16px", color: "#0A0A0A", fontWeight: 700, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}
                 >
-                  <IconSparkle size={16} color="#0A0A0A" /> AI Explain
+                  <IconSparkle size={16} color="#0A0A0A" /> {t("artwork_ai_explain")}
                 </button>
                 <button
                   onClick={() => setSaved(!saved)}
@@ -814,6 +832,7 @@ function AIGuideModal({ artworkId, onClose }: { artworkId: string | null; onClos
   const [level, setLevel] = useState<"beginner" | "student" | "expert">("student");
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(false);
+  const { t } = useLang();
   const artwork = artworkId ? getArtwork(artworkId) : null;
 
   const getText = () => {
@@ -851,7 +870,7 @@ function AIGuideModal({ artworkId, onClose }: { artworkId: string | null; onClos
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>AI Guide</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>{t("ai_guide")}</div>
               <div style={{ fontSize: 9, background: "linear-gradient(90deg, #D4AF37, #F59E0B)", borderRadius: 20, padding: "2px 8px", color: "#0A0A0A", fontWeight: 700, letterSpacing: "0.05em" }}>DEMO</div>
             </div>
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>{artwork.title}</div>
@@ -861,8 +880,8 @@ function AIGuideModal({ artworkId, onClose }: { artworkId: string | null; onClos
 
         <div style={{ display: "flex", gap: 6, marginBottom: 16, background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: 4 }}>
           {(["beginner", "student", "expert"] as const).map((l) => (
-            <button key={l} onClick={() => setLevel(l)} style={{ flex: 1, padding: "8px 4px", borderRadius: 9, border: "none", background: level === l ? "rgba(212,175,55,0.18)" : "none", color: level === l ? "#D4AF37" : "rgba(255,255,255,0.4)", fontWeight: level === l ? 700 : 500, fontSize: 12, cursor: "pointer", transition: "all 0.2s", textTransform: "capitalize" }}>
-              {l}
+            <button key={l} onClick={() => setLevel(l)} style={{ flex: 1, padding: "8px 4px", borderRadius: 9, border: "none", background: level === l ? "rgba(212,175,55,0.18)" : "none", color: level === l ? "#D4AF37" : "rgba(255,255,255,0.4)", fontWeight: level === l ? 700 : 500, fontSize: 12, cursor: "pointer", transition: "all 0.2s" }}>
+              {t(l === "beginner" ? "ai_beginner" : l === "student" ? "ai_student" : "ai_expert")}
             </button>
           ))}
         </div>
@@ -889,6 +908,7 @@ function AIGuideModal({ artworkId, onClose }: { artworkId: string | null; onClos
 function SearchOverlay({ open, onClose, onSelectArtwork }: { open: boolean; onClose: () => void; onSelectArtwork: (id: string) => void }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLang();
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 100);
@@ -910,16 +930,16 @@ function SearchOverlay({ open, onClose, onSelectArtwork }: { open: boolean; onCl
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(212,175,55,0.2)", borderRadius: 14, display: "flex", alignItems: "center", gap: 10, padding: "10px 14px" }}>
             <IconSearch size={16} color="rgba(255,255,255,0.4)" />
-            <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Artists, artworks, movements..." style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#fff", fontSize: 15, fontFamily: "inherit" }} />
+            <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("search_placeholder")} style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#fff", fontSize: 15, fontFamily: "inherit" }} />
           </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.55)", cursor: "pointer", fontSize: 15, fontWeight: 500, padding: "8px 4px" }}>Cancel</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.55)", cursor: "pointer", fontSize: 15, fontWeight: 500, padding: "8px 4px" }}>{t("search_cancel")}</button>
         </div>
       </div>
 
       <div className="scroll-y" style={{ flex: 1, padding: "0 16px" }}>
         {query.length === 0 && (
           <div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginBottom: 12, marginTop: 8, letterSpacing: "0.1em", textTransform: "uppercase" }}>Trending</div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginBottom: 12, marginTop: 8, letterSpacing: "0.1em", textTransform: "uppercase" }}>{t("search_trending")}</div>
             {["Starry Night", "Impressionism", "Renaissance Italy", "Hokusai", "Baroque"].map((s) => (
               <button key={s} onClick={() => setQuery(s)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "12px 0", background: "none", border: "none", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: 14, textAlign: "left" }}>
                 <IconSearch size={14} color="rgba(255,255,255,0.3)" /> {s}
@@ -952,8 +972,8 @@ function SearchOverlay({ open, onClose, onSelectArtwork }: { open: boolean; onCl
         {query.length > 0 && results.length === 0 && (
           <div style={{ textAlign: "center", padding: "48px 20px" }}>
             <IconSearch size={36} color="rgba(255,255,255,0.2)" />
-            <div style={{ fontSize: 15, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginTop: 12 }}>No results for "{query}"</div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>Try an artist name or movement</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginTop: 12 }}>{t("search_no_results")} "{query}"</div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>{t("search_try")}</div>
           </div>
         )}
       </div>
@@ -964,6 +984,7 @@ function SearchOverlay({ open, onClose, onSelectArtwork }: { open: boolean; onCl
 // ─── JOURNEY DETAIL MODAL ─────────────────────────────────────────────────────
 
 function JourneyDetailModal({ journey, onClose, onArtworkSelect }: { journey: typeof JOURNEYS[0] | null; onClose: () => void; onArtworkSelect: (id: string) => void }) {
+  const { t } = useLang();
   if (!journey) return null;
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 90, background: "rgba(0,0,0,0.78)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-end" }} onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -1008,7 +1029,7 @@ function JourneyDetailModal({ journey, onClose, onArtworkSelect }: { journey: ty
 
         {/* Featured artworks */}
         <div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>Featured Artworks</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>{t("journeys_featured")}</div>
           {journey.artworks.map((awId) => {
             const aw = getArtwork(awId);
             if (!aw) return null;
@@ -1029,7 +1050,7 @@ function JourneyDetailModal({ journey, onClose, onArtworkSelect }: { journey: ty
 
         {/* CTA */}
         <button style={{ width: "100%", marginTop: 12, padding: "14px", background: `linear-gradient(135deg, ${journey.accentColor}22, ${journey.accentColor}11)`, border: `1px solid ${journey.accentColor}44`, borderRadius: 16, color: journey.accentColor, fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          {journey.progress > 0 ? "Continue Journey" : "Begin Journey"} <IconArrow size={16} color={journey.accentColor} />
+          {journey.progress > 0 ? t("journeys_continue") : t("journeys_begin")} <IconArrow size={16} color={journey.accentColor} />
         </button>
       </div>
     </div>
@@ -1039,10 +1060,11 @@ function JourneyDetailModal({ journey, onClose, onArtworkSelect }: { journey: ty
 // ─── JOURNEYS TAB ─────────────────────────────────────────────────────────────
 
 function JourneysTab({ onJourneyPress }: { onJourneyPress: (id: string) => void }) {
+  const { t } = useLang();
   return (
     <div className="scroll-y page-enter" style={{ height: "100%", padding: "20px 16px 90px" }}>
-      <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 4 }}>Guided Journeys</div>
-      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 24 }}>Follow curated paths through art history</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{t("journeys_title")}</div>
+      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 24 }}>{t("journeys_subtitle")}</div>
 
       {JOURNEYS.map((journey, i) => (
         <button
@@ -1074,7 +1096,7 @@ function JourneysTab({ onJourneyPress }: { onJourneyPress: (id: string) => void 
             {journey.progress > 0 ? (
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>Progress</div>
+                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>{t("journeys_progress")}</div>
                   <div style={{ fontSize: 10, color: journey.accentColor, fontWeight: 700 }}>{journey.progress}%</div>
                 </div>
                 <div style={{ height: 4, background: "rgba(255,255,255,0.1)", borderRadius: 2, overflow: "hidden" }}>
@@ -1083,7 +1105,7 @@ function JourneysTab({ onJourneyPress }: { onJourneyPress: (id: string) => void 
               </div>
             ) : (
               <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, color: journey.accentColor, fontWeight: 700 }}>
-                Begin Journey <IconArrow size={12} color={journey.accentColor} />
+                {t("journeys_begin")} <IconArrow size={12} color={journey.accentColor} />
               </div>
             )}
           </div>
@@ -1093,7 +1115,7 @@ function JourneysTab({ onJourneyPress }: { onJourneyPress: (id: string) => void 
               <IconCalendar size={11} color="rgba(255,255,255,0.3)" /> {journey.period}
             </div>
             <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
-              {journey.artists.length} artist{journey.artists.length > 1 ? "s" : ""} · {journey.artworks.length} artwork{journey.artworks.length > 1 ? "s" : ""}
+              {journey.artists.length} {t("journeys_artists")}{journey.artists.length > 1 ? "s" : ""} · {journey.artworks.length} {t("journeys_artworks_count")}{journey.artworks.length > 1 ? "s" : ""}
             </div>
           </div>
         </button>
@@ -1105,6 +1127,7 @@ function JourneysTab({ onJourneyPress }: { onJourneyPress: (id: string) => void 
 // ─── PASSPORT TAB ─────────────────────────────────────────────────────────────
 
 function PassportTab({ passport, discovered }: { passport: PassportEntry[]; discovered: ArtistDiscovered[] }) {
+  const { t } = useLang();
   const visitedCountries = passport.length;
   const totalCountries = COUNTRIES.length;
   const discoveredArtists = discovered.length;
@@ -1113,25 +1136,25 @@ function PassportTab({ passport, discovered }: { passport: PassportEntry[]; disc
   const totalMovements = Object.keys(MOVEMENTS_DESC).length;
 
   const achievements = [
-    { id: "first-step", title: "First Step", desc: "Visited your first country", icon: <IconGlobe size={20} color="#D4AF37" />, unlocked: visitedCountries >= 1 },
-    { id: "globe-trotter", title: "Globe Trotter", desc: "Visited 4 countries", icon: <IconPlane size={20} color="#87CEEB" />, unlocked: visitedCountries >= 4 },
-    { id: "art-lover", title: "Art Lover", desc: "Discovered your first artist", icon: <IconHeart size={20} color="#FF69B4" filled />, unlocked: discoveredArtists >= 1 },
-    { id: "connoisseur", title: "Connoisseur", desc: "Discovered 5 artists", icon: <IconTrophy size={20} color="#D4AF37" />, unlocked: discoveredArtists >= 5 },
-    { id: "renaissance", title: "Renaissance Soul", desc: "Explored the Renaissance movement", icon: <IconArtwork size={20} color="#C9A227" />, unlocked: movements.includes("Renaissance") },
-    { id: "impressionist", title: "Impressionist", desc: "Explored Impressionism", icon: <IconStar size={20} color="#87CEEB" filled />, unlocked: movements.includes("Impressionism") },
+    { id: "first-step", title: t("ach_first_step"), desc: t("ach_first_step_desc"), icon: <IconGlobe size={20} color="#D4AF37" />, unlocked: visitedCountries >= 1 },
+    { id: "globe-trotter", title: t("ach_globe_trotter"), desc: t("ach_globe_trotter_desc"), icon: <IconPlane size={20} color="#87CEEB" />, unlocked: visitedCountries >= 4 },
+    { id: "art-lover", title: t("ach_art_lover"), desc: t("ach_art_lover_desc"), icon: <IconHeart size={20} color="#FF69B4" filled />, unlocked: discoveredArtists >= 1 },
+    { id: "connoisseur", title: t("ach_connoisseur"), desc: t("ach_connoisseur_desc"), icon: <IconTrophy size={20} color="#D4AF37" />, unlocked: discoveredArtists >= 5 },
+    { id: "renaissance", title: t("ach_renaissance"), desc: t("ach_renaissance_desc"), icon: <IconArtwork size={20} color="#C9A227" />, unlocked: movements.includes("Renaissance") },
+    { id: "impressionist", title: t("ach_impressionist"), desc: t("ach_impressionist_desc"), icon: <IconStar size={20} color="#87CEEB" filled />, unlocked: movements.includes("Impressionism") },
   ];
 
   return (
     <div className="scroll-y page-enter" style={{ height: "100%", padding: "20px 16px 90px" }}>
-      <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 4 }}>Art Passport</div>
-      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 24 }}>Your journey through art history</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{t("passport_title")}</div>
+      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 24 }}>{t("passport_subtitle")}</div>
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 24 }}>
         {[
-          { label: "Countries", value: visitedCountries, total: totalCountries, icon: <IconGlobe size={20} color="#D4AF37" />, color: "#D4AF37" },
-          { label: "Artists", value: discoveredArtists, total: totalArtists, icon: <IconArtwork size={20} color="#87CEEB" />, color: "#87CEEB" },
-          { label: "Movements", value: movements.length, total: totalMovements, icon: <IconCompass size={20} color="#E05C5C" />, color: "#E05C5C" },
+          { label: t("passport_countries"), value: visitedCountries, total: totalCountries, icon: <IconGlobe size={20} color="#D4AF37" />, color: "#D4AF37" },
+          { label: t("passport_artists"), value: discoveredArtists, total: totalArtists, icon: <IconArtwork size={20} color="#87CEEB" />, color: "#87CEEB" },
+          { label: t("passport_movements"), value: movements.length, total: totalMovements, icon: <IconCompass size={20} color="#E05C5C" />, color: "#E05C5C" },
         ].map((stat) => (
           <div key={stat.label} style={{ background: "rgba(10,16,28,0.85)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "14px 10px", textAlign: "center" }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>{stat.icon}</div>
@@ -1146,7 +1169,7 @@ function PassportTab({ passport, discovered }: { passport: PassportEntry[]; disc
 
       {/* Countries visited */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Countries Explored</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>{t("passport_countries_explored")}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {COUNTRIES.map((country) => {
             const visited = passport.some((p) => p.countryId === country.id);
@@ -1161,7 +1184,7 @@ function PassportTab({ passport, discovered }: { passport: PassportEntry[]; disc
 
       {/* Achievements */}
       <div>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Achievements</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>{t("passport_achievements")}</div>
         {achievements.map((ach, i) => (
           <div key={ach.id} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px", marginBottom: 8, background: ach.unlocked ? "rgba(212,175,55,0.05)" : "rgba(255,255,255,0.02)", border: `1px solid ${ach.unlocked ? "rgba(212,175,55,0.18)" : "rgba(255,255,255,0.05)"}`, borderRadius: 16, opacity: ach.unlocked ? 1 : 0.5, animationDelay: `${i * 50}ms` }} className={ach.unlocked ? "achievement-unlock" : ""}>
             <div style={{ width: 44, height: 44, borderRadius: 12, background: ach.unlocked ? "rgba(212,175,55,0.08)" : "rgba(255,255,255,0.03)", border: `1px solid ${ach.unlocked ? "rgba(212,175,55,0.25)" : "rgba(255,255,255,0.05)"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -1188,12 +1211,13 @@ function PassportTab({ passport, discovered }: { passport: PassportEntry[]; disc
 function ProfileTab() {
   const [notifs, setNotifs] = useState(true);
   const [daily, setDaily] = useState(true);
+  const { t, lang, setLang } = useLang();
 
   const stats = [
-    { label: "Hours Exploring", value: "12.4" },
-    { label: "Artworks Viewed", value: "47" },
-    { label: "Notes Taken", value: "8" },
-    { label: "Journeys Started", value: "2" },
+    { label: t("profile_hours"), value: "12.4" },
+    { label: t("profile_artworks"), value: "47" },
+    { label: t("profile_notes"), value: "8" },
+    { label: t("profile_journeys"), value: "2" },
   ];
 
   return (
@@ -1203,8 +1227,8 @@ function ProfileTab() {
         <div style={{ width: 76, height: 76, borderRadius: "50%", background: "linear-gradient(135deg, #1a2540 0%, #2d3b60 100%)", margin: "0 auto 14px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 0 3px rgba(212,175,55,0.18), 0 0 28px rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)" }}>
           <IconUser size={30} color="#D4AF37" />
         </div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>Art Explorer</div>
-        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>Member since June 2026</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>{t("profile_title")}</div>
+        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>{t("profile_member")} June 2026</div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 10, background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.22)", borderRadius: 20, padding: "5px 14px", fontSize: 11, color: "#D4AF37", fontWeight: 700 }}>
           <IconStar size={12} color="#D4AF37" filled /> Renaissance Scholar
         </div>
@@ -1212,7 +1236,7 @@ function ProfileTab() {
 
       {/* Social links */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Community</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>{t("profile_community")}</div>
         <a
           href="https://x.com/arthousebase"
           target="_blank"
@@ -1224,7 +1248,7 @@ function ProfileTab() {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>@arthousebase</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Follow for daily art inspiration</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>{t("profile_follow")}</div>
           </div>
           <IconArrow size={14} color="rgba(255,255,255,0.3)" />
         </a>
@@ -1242,7 +1266,7 @@ function ProfileTab() {
 
       {/* Art Movements */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Art Movements</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>{t("profile_movements")}</div>
         {Object.entries(MOVEMENTS_DESC).slice(0, 4).map(([name, desc]) => (
           <div key={name} style={{ marginBottom: 10, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "12px 14px" }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "#D4AF37", marginBottom: 4 }}>{name}</div>
@@ -1253,11 +1277,11 @@ function ProfileTab() {
 
       {/* Preferences */}
       <div>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Preferences</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 12 }}>{t("profile_preferences")}</div>
         {[
-          { label: "Dark Mode", icon: <IconMoon size={18} color="rgba(255,255,255,0.6)" />, active: true, toggle: null },
-          { label: "Push Notifications", icon: <IconBell size={18} color="rgba(255,255,255,0.6)" />, active: notifs, toggle: () => setNotifs(!notifs) },
-          { label: "Daily Art History", icon: <IconCalendar size={18} color="rgba(255,255,255,0.6)" />, active: daily, toggle: () => setDaily(!daily) },
+          { label: t("profile_dark_mode"), icon: <IconMoon size={18} color="rgba(255,255,255,0.6)" />, active: true, toggle: null },
+          { label: t("profile_notifications"), icon: <IconBell size={18} color="rgba(255,255,255,0.6)" />, active: notifs, toggle: () => setNotifs(!notifs) },
+          { label: t("profile_daily"), icon: <IconCalendar size={18} color="rgba(255,255,255,0.6)" />, active: daily, toggle: () => setDaily(!daily) },
         ].map((pref) => (
           <div key={pref.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1272,6 +1296,20 @@ function ProfileTab() {
             </button>
           </div>
         ))}
+        {/* Language row */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <IconGlobe size={18} color="rgba(255,255,255,0.6)" />
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.8)" }}>{t("profile_language")}</span>
+          </div>
+          <div style={{ display: "flex", gap: 6 }}>
+            {(["en", "id"] as const).map((l) => (
+              <button key={l} onClick={() => setLang(l)} style={{ padding: "5px 12px", borderRadius: 8, border: `1px solid ${lang === l ? "rgba(212,175,55,0.5)" : "rgba(255,255,255,0.1)"}`, background: lang === l ? "rgba(212,175,55,0.14)" : "rgba(255,255,255,0.04)", color: lang === l ? "#D4AF37" : "rgba(255,255,255,0.45)", fontWeight: 700, fontSize: 11, cursor: "pointer", transition: "all 0.18s" }}>
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1280,21 +1318,22 @@ function ProfileTab() {
 // ─── BOTTOM NAV ───────────────────────────────────────────────────────────────
 
 function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
+  const { t } = useLang();
   const tabs = [
-    { id: "explore" as Tab, icon: (active: boolean) => <IconGlobe size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: "Explore" },
-    { id: "journeys" as Tab, icon: (active: boolean) => <IconMap size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: "Journeys" },
-    { id: "passport" as Tab, icon: (active: boolean) => <IconPassport size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: "Passport" },
-    { id: "profile" as Tab, icon: (active: boolean) => <IconUser size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: "Profile" },
+    { id: "explore" as Tab, icon: (active: boolean) => <IconGlobe size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: t("nav_explore") },
+    { id: "journeys" as Tab, icon: (active: boolean) => <IconMap size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: t("nav_journeys") },
+    { id: "passport" as Tab, icon: (active: boolean) => <IconPassport size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: t("nav_passport") },
+    { id: "profile" as Tab, icon: (active: boolean) => <IconUser size={22} color={active ? "#D4AF37" : "rgba(255,255,255,0.35)"} />, label: t("nav_profile") },
   ];
 
   return (
     <div className="nav-glass" style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 40, display: "flex", padding: "8px 0 20px" }}>
-      {tabs.map((t) => (
-        <button key={t.id} onClick={() => onChange(t.id)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", padding: "6px 0", transition: "all 0.2s" }}>
-          <div style={{ transform: tab === t.id ? "scale(1.08)" : "scale(1)", transition: "transform 0.2s", filter: tab === t.id ? "drop-shadow(0 0 7px rgba(212,175,55,0.55))" : "none" }}>
-            {t.icon(tab === t.id)}
+      {tabs.map((navItem) => (
+        <button key={navItem.id} onClick={() => onChange(navItem.id)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", padding: "6px 0", transition: "all 0.2s" }}>
+          <div style={{ transform: tab === navItem.id ? "scale(1.08)" : "scale(1)", transition: "transform 0.2s", filter: tab === navItem.id ? "drop-shadow(0 0 7px rgba(212,175,55,0.55))" : "none" }}>
+            {navItem.icon(tab === navItem.id)}
           </div>
-          <span style={{ fontSize: 9, fontWeight: tab === t.id ? 700 : 500, color: tab === t.id ? "#D4AF37" : "rgba(255,255,255,0.3)", letterSpacing: "0.05em", textTransform: "uppercase", transition: "color 0.2s" }}>{t.label}</span>
+          <span style={{ fontSize: 9, fontWeight: tab === navItem.id ? 700 : 500, color: tab === navItem.id ? "#D4AF37" : "rgba(255,255,255,0.3)", letterSpacing: "0.05em", textTransform: "uppercase", transition: "color 0.2s" }}>{navItem.label}</span>
         </button>
       ))}
     </div>
@@ -1303,7 +1342,7 @@ function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) 
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
-export default function App() {
+function AppInner() {
   const [tab, setTab] = useState<Tab>("explore");
   const [year, setYear] = useState(1500);
   const [selectedCountry, setSelectedCountry] = useState<typeof COUNTRIES[0] | null>(null);
@@ -1429,5 +1468,13 @@ export default function App() {
         onArtworkSelect={(id) => { handleSelectArtwork(id); setTab("explore"); }}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LangProvider>
+      <AppInner />
+    </LangProvider>
   );
 }
