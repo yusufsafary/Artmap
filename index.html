@@ -646,6 +646,175 @@ html{scroll-behavior:smooth}
 .hero-era-chip{transition:transform 0.22s cubic-bezier(.22,1,.36,1),border-color 0.2s,box-shadow 0.25s}
 .hero-era-chip:hover{box-shadow:0 0 18px -4px var(--era-c)}
 
+
+/* ======= DESIGN UPGRADE v2 ======= */
+
+/* Ambient glow behind hero canvas */
+#landing::after{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:min(700px,130vw);height:440px;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(230,255,0,0.065) 0%,transparent 68%);pointer-events:none;z-index:0}
+
+/* Hero number — gradient text for drama */
+.landing-years-num{background:linear-gradient(155deg,#ffffff 25%,rgba(230,255,0,0.72) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Hero label — tighter kerning */
+.landing-years-label{letter-spacing:-0.03em;color:rgba(255,255,255,0.9)}
+
+/* Sub text */
+.landing-sub{color:rgba(255,255,255,0.55);font-size:14.5px;max-width:310px}
+
+/* Typewriter prefix */
+.landing-type-prefix{color:rgba(255,255,255,0.32);font-size:11px}
+
+/* Primary CTA — sharper presence */
+.btn-primary{box-shadow:0 0 0 1px rgba(230,255,0,0.32),0 8px 40px rgba(230,255,0,0.16),0 2px 8px rgba(0,0,0,0.5);letter-spacing:0.12em}
+.btn-primary:hover{box-shadow:0 0 0 1px rgba(230,255,0,0.5),0 12px 48px rgba(230,255,0,0.24),0 2px 8px rgba(0,0,0,0.5);opacity:1}
+
+/* Secondary button */
+.btn-secondary{background:rgba(255,255,255,0.035);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
+
+/* Product Hunt badge */
+.ph-link{background:rgba(255,255,255,0.025);border-color:rgba(255,255,255,0.09);box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
+
+/* Stats bar — framed panel */
+.land-stats{background:rgba(255,255,255,0.02);border-radius:14px;border:1px solid rgba(255,255,255,0.06);padding:14px 8px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
+.land-stat-n{font-size:21px;letter-spacing:-0.04em}
+.land-stat-l{font-size:8.5px;letter-spacing:0.12em;opacity:0.5}
+.land-stat-div{background:rgba(255,255,255,0.07);height:26px}
+
+/* Quote block */
+.landing-quote-wrap{margin:28px 0 0;padding:18px 18px 18px 22px;border-radius:var(--r);border-left:2px solid rgba(230,255,0,0.3);background:rgba(230,255,0,0.025)}
+.landing-quote-mark{font-size:36px;line-height:1;color:rgba(230,255,0,0.22);font-family:Georgia,serif;margin-bottom:-6px;display:block}
+.landing-quote-text{font-size:13.5px;color:rgba(255,255,255,0.6);line-height:1.65;font-style:italic;display:block}
+.landing-quote-attr{font-size:10.5px;color:rgba(255,255,255,0.28);margin-top:10px;letter-spacing:0.05em;display:block}
+
+/* Section label — with trailing line */
+.land-section-label{font-size:8.5px;letter-spacing:0.25em;color:rgba(255,255,255,0.18);display:flex;align-items:center;gap:12px}
+.land-section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.05)}
+
+/* Era chips — enhanced depth */
+.hero-era-chip{box-shadow:0 4px 28px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.07)}
+.hero-era-chip:hover{box-shadow:0 0 0 1px var(--era-c),0 8px 40px rgba(0,0,0,0.6),0 0 24px rgba(0,0,0,0.4)}
+.era-chip-overlay{background:linear-gradient(to top,rgba(0,0,0,0.94) 0%,rgba(0,0,0,0.38) 55%,rgba(0,0,0,0.04) 100%)}
+.era-chip-name{font-size:13px;font-weight:700;letter-spacing:-0.02em}
+.era-chip-period{font-size:9px;color:rgba(255,255,255,0.38);margin-top:2px}
+.era-chip-num{font-weight:700;opacity:0.8}
+
+/* Marquee — slightly brighter */
+.marquee-item{color:rgba(255,255,255,0.2)}
+.marquee-item:hover{color:rgba(230,255,0,0.85)}
+
+/* HIW inline — polished */
+.hiw-inline{border-top:1px solid rgba(255,255,255,0.045)}
+.hiw-inline-label{color:rgba(230,255,0,0.4);font-size:8.5px;letter-spacing:0.25em}
+.hiw-inline-step{background:rgba(255,255,255,0.012);border-color:rgba(255,255,255,0.045)}
+.hiw-inline-step:hover{border-color:rgba(230,255,0,0.22);background:rgba(230,255,0,0.022);box-shadow:0 4px 24px rgba(0,0,0,0.45),0 0 0 1px rgba(230,255,0,0.1);transform:translateY(-2px)}
+.hiw-inline-num{box-shadow:0 0 14px rgba(230,255,0,0.08)}
+.hiw-inline-icon{background:rgba(230,255,0,0.03);border-color:rgba(230,255,0,0.09)}
+
+/* Site header nav — refined glass */
+#site-nav.visible{background:rgba(7,7,7,0.88);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-bottom:1px solid rgba(255,255,255,0.055);box-shadow:0 1px 0 rgba(230,255,0,0.035),0 4px 28px rgba(0,0,0,0.35)}
+.snav-logo{font-size:18px;letter-spacing:-0.04em;font-weight:800}
+
+/* App topbar — accent border bottom */
+#app-topbar.visible{background:rgba(6,7,6,0.97);border-bottom:1px solid rgba(230,255,0,0.09);box-shadow:0 2px 14px rgba(0,0,0,0.45)}
+.atb-logo{letter-spacing:-0.03em;font-size:16px}
+
+/* Bottom nav — active glow */
+.nav-btn.active{color:var(--accent);text-shadow:0 0 14px rgba(230,255,0,0.5)}
+.nav-btn.active svg{filter:drop-shadow(0 0 4px rgba(230,255,0,0.45))}
+#nav.visible{background:rgba(7,7,7,0.97);box-shadow:0 -1px 0 rgba(255,255,255,0.05),0 -4px 24px rgba(0,0,0,0.5)}
+
+/* Era node — elevated hover */
+.era-node:not(.locked):hover{background:rgba(255,255,255,0.045);border-color:rgba(255,255,255,0.1);box-shadow:0 4px 24px rgba(0,0,0,0.4)}
+.era-node.completed:not(.locked):hover{border-color:rgba(230,255,0,0.28);box-shadow:0 4px 24px rgba(230,255,0,0.07)}
+
+/* Map progress fill — glow */
+.map-progress-fill{box-shadow:0 0 10px rgba(230,255,0,0.55)}
+
+/* XP badge — subtle glow ring */
+.xp-badge{box-shadow:0 0 0 1px rgba(230,255,0,0.14),0 0 14px rgba(230,255,0,0.07)}
+
+/* Filter pills */
+.filter-pill.active,.filter-pill:hover{box-shadow:0 0 0 1px rgba(230,255,0,0.22),0 0 14px rgba(230,255,0,0.07)}
+
+/* Collection cards */
+.collect-card:hover{border-color:rgba(255,255,255,0.1);box-shadow:0 8px 36px rgba(0,0,0,0.45)}
+
+/* Art cards */
+.art-card{box-shadow:0 4px 28px rgba(0,0,0,0.45)}
+.art-card:hover{box-shadow:0 8px 44px rgba(0,0,0,0.55)}
+
+/* Artifact sheet modal */
+.artifact-sheet{background:#0D0D0D;border-top:1px solid rgba(255,255,255,0.07);box-shadow:0 -8px 48px rgba(0,0,0,0.55)}
+.artifact-sheet-handle{background:rgba(255,255,255,0.11)}
+
+/* Footer — premium feel */
+.footer-logo{font-size:20px;letter-spacing:-0.04em;font-weight:800}
+.footer-tagline{color:rgba(255,255,255,0.28);font-size:11.5px;letter-spacing:0.02em}
+.footer-copy{color:rgba(255,255,255,0.16);font-size:10.5px;letter-spacing:0.04em}
+
+/* Toast — polished */
+#toast{box-shadow:0 4px 28px rgba(0,0,0,0.55);border-radius:10px;border:1px solid rgba(255,255,255,0.07)}
+#toast.accent{box-shadow:0 4px 28px rgba(230,255,0,0.18);border-color:rgba(230,255,0,0.28)}
+
+/* Passport cover */
+.passport-cover{box-shadow:0 8px 44px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,215,0,0.07)}
+
+/* DNA card */
+.dna-card{box-shadow:0 4px 36px rgba(0,0,0,0.45),inset 0 1px 0 rgba(230,255,0,0.04)}
+
+/* Achievement cards */
+.achieve-card{transition:all 0.3s cubic-bezier(.22,1,.36,1)}
+.achieve-card.unlocked:hover{box-shadow:0 8px 36px rgba(230,255,0,0.1);border-color:rgba(230,255,0,0.32);transform:translateY(-2px)}
+
+/* XP popup */
+.xp-popup-inner{box-shadow:0 0 0 1px rgba(230,255,0,0.18),0 8px 44px rgba(230,255,0,0.14),0 0 60px rgba(230,255,0,0.07)}
+
+/* Artifact chips */
+.artifact-chip.discovered{box-shadow:0 0 0 1px rgba(230,255,0,0.28),0 0 12px rgba(230,255,0,0.07)}
+
+/* Era quiz button */
+.era-quiz-btn{box-shadow:0 4px 28px rgba(230,255,0,0.18),0 0 0 1px rgba(230,255,0,0.18)}
+.era-quiz-btn:hover{box-shadow:0 8px 44px rgba(230,255,0,0.28),0 0 0 1px rgba(230,255,0,0.28);opacity:1}
+
+/* Connector filled glow */
+.connector.filled{box-shadow:0 0 10px rgba(230,255,0,0.18)}
+
+/* Passport progress glow */
+.passport-progress-fill{box-shadow:0 0 8px rgba(230,255,0,0.45)}
+
+/* How to play hover */
+.howto-step{transition:border-color 0.2s,background 0.2s,box-shadow 0.25s}
+.howto-step:hover{border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);box-shadow:0 4px 20px rgba(0,0,0,0.35)}
+
+/* Custom scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.09);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.18)}
+
+/* Stamp earned hover */
+.stamp.earned:hover{border-color:rgba(230,255,0,0.35);box-shadow:0 0 16px rgba(230,255,0,0.1);transform:scale(1.04)}
+.stamp{transition:all 0.25s cubic-bezier(.22,1,.36,1)}
+
+/* Quiz options */
+.quiz-option{transition:all 0.18s cubic-bezier(.22,1,.36,1)}
+.quiz-option:hover{border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.035);transform:translateX(3px)}
+
+/* Coming soon cards */
+.cs-item{transition:border-color 0.2s,background 0.2s}
+
+/* Pstat cards */
+.pstat{transition:border-color 0.25s,background 0.25s}
+.pstat:hover{border-color:rgba(230,255,0,0.15);background:rgba(230,255,0,0.03)}
+
+/* About founder card */
+.founder-card{box-shadow:0 4px 28px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04)}
+
+/* Ecosystem badges */
+.ecosystem-badge{transition:border-color 0.2s,background 0.2s}
+.ecosystem-badge:hover{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.04)}
+
+/* ======= END UPGRADE v2 ======= */
 </style>
 </head>
 <body>
