@@ -477,6 +477,21 @@ a{color:inherit;text-decoration:none}
 .map-header{padding-top:calc(20px + var(--sat)) !important}
 .passport-header,.collection-header,.dna-header,.achieve-header,.cs-header{padding-top:calc(20px + var(--sat)) !important}
 
+
+/* ─── Landing stat bar ─── */
+.land-stats{display:flex;align-items:center;justify-content:center;padding:20px 0 8px;gap:0}
+.land-stat{flex:1;text-align:center}
+.land-stat-n{font-size:28px;font-weight:800;letter-spacing:-0.03em;color:var(--accent);line-height:1}
+.land-stat-l{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin-top:4px;font-weight:500}
+.land-stat-div{width:1px;height:32px;background:rgba(255,255,255,0.1);flex-shrink:0}
+/* ─── Howto stats bar ─── */
+.howto-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 24px 28px}
+.hwstat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 8px;text-align:center}
+.hwstat-n{font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-0.02em;line-height:1}
+.hwstat-l{font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);margin-top:3px;font-weight:500}
+/* ─── Info page lists ─── */
+.info-body ul{padding-left:16px;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.info-body ul li{font-size:14px;color:var(--dim);line-height:1.5}
 </style>
 </head>
 <body>
@@ -549,6 +564,13 @@ a{color:inherit;text-decoration:none}
       <div class="hero-era-chip" style="--era-c:#4FC3F7"><div class="era-chip-num">11</div><div class="era-chip-name">Digital</div><div class="era-chip-period">1990 CE</div></div>
       <div class="hero-era-chip" style="--era-c:#CE93D8"><div class="era-chip-num">12</div><div class="era-chip-name">AI Art</div><div class="era-chip-period">2010 CE</div></div>
     </div></div>
+    <div class="land-stats">
+      <div class="land-stat"><div class="land-stat-n">12</div><div class="land-stat-l">Art Eras</div></div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat"><div class="land-stat-n">36+</div><div class="land-stat-l">Artifacts</div></div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat"><div class="land-stat-n">250</div><div class="land-stat-l">XP per Era</div></div>
+    </div>
     <div class="landing-hero-text">
       <div class="landing-headline">Explore 40,000 Years of Art</div>
       <div class="landing-sub">Travel through human creativity — from cave paintings to AI art. Collect artifacts, ace quizzes, and build your Art DNA.</div>
@@ -743,15 +765,15 @@ a{color:inherit;text-decoration:none}
     <div class="founder-avatar">A</div>
     <div class="founder-name">Arthousebase</div>
     <div class="founder-handle">@arthousebase</div>
-    <div class="founder-bio">Founder of ArtMap and bekajarbase.fun — building at the intersection of education, art history, and Web3. Active contributor to the Solana and Base ecosystems, creating tools that make learning accessible and on-chain.</div>
+    <div class="founder-bio">Founder of ArtMap and belajarbase.fun — building at the intersection of education, art history, and Web3. Active contributor to the Solana and Base ecosystems, creating tools that make learning accessible and on-chain.</div>
     <div class="founder-links">
       <a class="founder-link" href="https://x.com/arthousebase" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" stroke-width="2.5"/></svg>
         @arthousebase on X
       </a>
-      <a class="founder-link" href="https://bekajarbase.fun" target="_blank" rel="noopener">
+      <a class="founder-link" href="https://belajarbase.fun" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        bekajarbase.fun
+        belajarbase.fun
       </a>
     </div>
   </div>
@@ -788,6 +810,9 @@ a{color:inherit;text-decoration:none}
     </div>
     <div class="orynth-credit">Discover more projects at orynth.dev</div>
   </div>
+  <div style="padding:0 24px 48px">
+    <button class="btn-primary" onclick="launchApp()" style="width:100%;max-width:360px;display:block;margin:0 auto">Open App →</button>
+  </div>
 </div>
 
 
@@ -801,6 +826,12 @@ a{color:inherit;text-decoration:none}
     </div>
     <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:10px;font-weight:600">Guide</div>
     <div style="font-size:34px;font-weight:800;letter-spacing:-0.03em;line-height:1.1">How to Play</div>
+  </div>
+  <div class="howto-stats">
+    <div class="hwstat"><div class="hwstat-n">12</div><div class="hwstat-l">Eras</div></div>
+    <div class="hwstat"><div class="hwstat-n">72</div><div class="hwstat-l">Art Cards</div></div>
+    <div class="hwstat"><div class="hwstat-n">36+</div><div class="hwstat-l">Artifacts</div></div>
+    <div class="hwstat"><div class="hwstat-n">3000</div><div class="hwstat-l">Max XP</div></div>
   </div>
   <div class="howto-steps">
     <div class="howto-step">
@@ -859,9 +890,10 @@ a{color:inherit;text-decoration:none}
 
 
 <!-- LEGAL -->
-<div id="legal" class="screen">
+<div id="legal" class="screen" style="background:#0A0A0E">
+  <div style="height:3px;background:linear-gradient(90deg,#C0392B 0%,rgba(192,57,43,0.3) 60%,transparent 100%)"></div>
   <div class="info-header">
-    <div class="info-back" onclick="goToScreen('landing')">
+    <div class="info-back" onclick="goBack()">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </div>
@@ -903,9 +935,10 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- COOKIES -->
-<div id="cookies" class="screen">
+<div id="cookies" class="screen" style="background:#0A0B0F">
+  <div style="height:3px;background:linear-gradient(90deg,#4FC3F7 0%,rgba(79,195,247,0.3) 60%,transparent 100%)"></div>
   <div class="info-header">
-    <div class="info-back" onclick="goToScreen('landing')">
+    <div class="info-back" onclick="goBack()">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </div>
@@ -914,25 +947,37 @@ a{color:inherit;text-decoration:none}
   </div>
   <div class="info-body">
     <div class="info-section">
-      <h3>What We Use</h3>
-      <p>ArtMap uses browser <strong style="color:var(--fg)">localStorage</strong> — not cookies — to save your progress. This is entirely local to your device and is never sent to any external server.</p>
+      <h3>What Are Cookies?</h3>
+      <p>Cookies are small text files stored on your device when you visit a website. They help sites remember your preferences and provide a smoother experience.</p>
     </div>
     <div class="info-section">
-      <h3>Third-Party Services</h3>
-      <p>ArtMap embeds the following third-party resources that may set their own cookies:</p>
+      <h3>ArtMap Uses localStorage, Not Cookies</h3>
+      <p>ArtMap does <strong style="color:var(--fg)">not</strong> use tracking cookies. Your progress is saved entirely on your device using your browser's <code style="color:var(--accent);font-size:12px;background:rgba(230,255,0,0.08);padding:2px 6px;border-radius:4px">localStorage</code>. This data is:</p>
       <ul>
-        <li><strong style="color:var(--fg)">Google Fonts</strong> — used for typography (Space Grotesk, Inter)</li>
-        <li><strong style="color:var(--fg)">Orynth.dev</strong> — badge displayed on the landing page</li>
-        <li><strong style="color:var(--fg)">Vercel</strong> — our hosting provider, which may log anonymized request data</li>
+        <li>Never sent to any server</li>
+        <li>Never shared with third parties</li>
+        <li>Stored only on your device</li>
+        <li>Fully under your control</li>
       </ul>
     </div>
     <div class="info-section">
-      <h3>Analytics</h3>
-      <p>ArtMap does not currently use any analytics or tracking cookies. We do not track individual users or sell data to third parties.</p>
+      <h3>What Gets Stored</h3>
+      <ul>
+        <li>Your XP, level, and quiz scores</li>
+        <li>Completed and explored eras</li>
+        <li>Collected artifacts and their rarities</li>
+        <li>Achievement badges unlocked</li>
+        <li>Your Art DNA profile data</li>
+      </ul>
     </div>
     <div class="info-section">
-      <h3>Your Control</h3>
-      <p>You can clear all locally stored ArtMap data at any time by using the <strong style="color:var(--fg)">Reset Journey</strong> button in the app, or by clearing your browser's localStorage via browser settings.</p>
+      <h3>Third-Party Hosting</h3>
+      <p>ArtMap is hosted on <strong style="color:var(--fg)">Vercel</strong>, which may collect standard server logs (IP address, browser type, pages visited) for infrastructure and security purposes. See <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent)">Vercel's Privacy Policy</a> for details.</p>
+      <p style="margin-top:10px">ArtMap also uses <strong style="color:var(--fg)">Google Fonts</strong> for typography, which may process your IP when loading font files. ArtMap does not use any analytics or tracking pixels.</p>
+    </div>
+    <div class="info-section">
+      <h3>Clearing Your Data</h3>
+      <p>Delete all ArtMap data anytime via the <strong style="color:var(--fg)">Reset Journey</strong> option inside the app, or by clearing localStorage in your browser settings (Settings → Privacy → Clear browsing data).</p>
     </div>
     <div class="info-section">
       <h3>Contact</h3>
