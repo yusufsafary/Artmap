@@ -815,6 +815,72 @@ html{scroll-behavior:smooth}
 .ecosystem-badge:hover{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.04)}
 
 /* ======= END UPGRADE v2 ======= */
+
+/* ── ACCENT TOP BAR (v3) ── */
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0%,#E6FF00 20%,#E6FF00 80%,transparent 100%);z-index:9999;pointer-events:none;opacity:0.9}
+
+/* ── Hero glow pulse ── */
+.landing-years-num{
+  background:linear-gradient(150deg,#fff 20%,#E6FF00 100%) !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  background-clip:text !important;
+  filter:drop-shadow(0 0 40px rgba(230,255,0,0.18));
+}
+
+/* ── Landing section top glow (more dramatic) ── */
+#landing{position:relative}
+#landing::before{content:'';position:absolute;top:0;left:0;right:0;height:50vh;background:radial-gradient(ellipse 90% 50% at 50% 0%,rgba(230,255,0,0.09) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* ── Typewriter era text — neon color ── */
+.landing-type-era{color:#E6FF00 !important;font-weight:700 !important;letter-spacing:0.08em !important}
+.landing-type-cursor{background:#E6FF00 !important}
+
+/* ── Stats numbers bolder ── */
+.land-stat-n{color:#E6FF00 !important;font-size:24px !important;font-weight:900 !important;letter-spacing:-0.05em !important}
+
+/* ── Primary CTA — glowing lime ── */
+.btn-primary{background:#E6FF00 !important;color:#000 !important;box-shadow:0 0 0 1px #E6FF00,0 0 32px rgba(230,255,0,0.4),0 8px 40px rgba(230,255,0,0.2) !important;font-weight:800 !important;letter-spacing:0.1em !important}
+.btn-primary:hover{box-shadow:0 0 0 2px #E6FF00,0 0 48px rgba(230,255,0,0.55),0 12px 48px rgba(230,255,0,0.28) !important;transform:translateY(-1px)}
+
+/* ── Site nav logo — accent dot ── */
+.snav-logo::after{content:'•';color:#E6FF00;margin-left:4px;font-size:12px;vertical-align:middle;opacity:0.7}
+
+/* ── Era chip hover — more vivid ── */
+.hero-era-chip:hover{transform:translateY(-4px) scale(1.03) !important;box-shadow:0 0 0 1.5px var(--era-c),0 12px 40px rgba(0,0,0,0.65),0 0 20px rgba(0,0,0,0.4) !important}
+
+/* ── HIW step hover — glow ring ── */
+.hiw-inline-step:hover{background:rgba(230,255,0,0.035) !important;border-color:rgba(230,255,0,0.3) !important;box-shadow:0 0 0 1px rgba(230,255,0,0.15),0 8px 32px rgba(0,0,0,0.5) !important;transform:translateY(-3px) !important}
+
+/* ── Footer logo neon ── */
+.footer-logo span{color:#E6FF00;text-shadow:0 0 20px rgba(230,255,0,0.4)}
+.snav-logo span{color:#E6FF00;text-shadow:0 0 16px rgba(230,255,0,0.35)}
+.atb-logo span{color:#E6FF00;text-shadow:0 0 12px rgba(230,255,0,0.4)}
+
+/* ── App topbar accent line stronger ── */
+#app-topbar.visible{border-bottom:1.5px solid rgba(230,255,0,0.2) !important;box-shadow:0 0 20px rgba(230,255,0,0.07),0 2px 14px rgba(0,0,0,0.45) !important}
+
+/* ── Bottom nav active item ── */
+.nav-btn.active .nav-icon{color:#E6FF00}
+.nav-btn.active{color:#E6FF00 !important;text-shadow:0 0 18px rgba(230,255,0,0.6) !important}
+.nav-btn.active svg{filter:drop-shadow(0 0 6px rgba(230,255,0,0.55)) !important}
+
+/* ── Map era node ── */
+.era-node:not(.locked):active{background:rgba(230,255,0,0.08);border-color:rgba(230,255,0,0.3)}
+.era-node.completed{border-left-color:rgba(230,255,0,0.5) !important}
+
+/* ── Marquee items accent ── */
+.marquee-sep{background:#E6FF00 !important;opacity:0.6 !important}
+
+/* ── Passport fill glow ── */
+.passport-progress-fill,.map-progress-fill{box-shadow:0 0 12px rgba(230,255,0,0.7) !important}
+
+/* ── XP badge ── */
+.xp-badge{background:rgba(230,255,0,0.12) !important;border-color:rgba(230,255,0,0.3) !important;color:#E6FF00 !important;font-weight:800 !important}
+
+/* ── Achieve card unlocked ── */
+.achieve-card.unlocked{background:rgba(230,255,0,0.04) !important}
+/* ── END v3 ── */
 </style>
 </head>
 <body>
