@@ -63,11 +63,11 @@ a{color:inherit;text-decoration:none}
 /* LANDING */
 #landing{padding:0}
 #landing-canvas{position:absolute;inset:0;z-index:0}
-.landing-content{position:relative;z-index:1;padding:calc(68px + var(--sat)) 24px 0}
-.landing-logo{font-size:clamp(22px,6vw,34px);font-weight:800;letter-spacing:-0.04em;line-height:0.9;color:var(--fg)}
-.landing-logo span{color:var(--accent)}
-.landing-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:4px}
-.landing-live-badge{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#000;background:var(--accent);padding:3px 8px;border-radius:4px;margin-top:1px}
+.landing-content{position:relative;z-index:1;padding:calc(60px + var(--sat)) 24px 0}
+
+/* Scroll-reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.55s cubic-bezier(.22,1,.36,1),transform 0.55s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:none}
 
 /* Hero main block */
 .landing-hero-main{padding-top:12px;padding-bottom:0}
@@ -106,16 +106,20 @@ a{color:inherit;text-decoration:none}
 @keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* How it works inline */
-.hiw-inline{padding:40px 0 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:32px}
+.hiw-inline{padding:40px 0 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:40px}
 .hiw-inline-label{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:20px}
-.hiw-inline-steps{display:flex;flex-direction:column;gap:16px}
-.hiw-inline-step{display:flex;align-items:center;gap:16px;padding:16px;background:rgba(255,255,255,0.02);border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);transition:border-color 0.25s,background 0.25s}
-.hiw-inline-step:hover{border-color:rgba(230,255,0,0.2);background:rgba(230,255,0,0.03)}
+.hiw-inline-steps{display:flex;flex-direction:column;gap:12px}
+.hiw-inline-step{display:flex;align-items:center;gap:16px;padding:18px 16px;background:rgba(255,255,255,0.02);border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);transition:border-color 0.3s,background 0.3s,transform 0.3s;opacity:0;transform:translateY(16px)}
+.hiw-inline-step.visible{opacity:1;transform:none}
+.hiw-inline-step:hover{border-color:rgba(230,255,0,0.22);background:rgba(230,255,0,0.03);transform:translateY(-1px)}
 .hiw-inline-num{width:36px;height:36px;border-radius:50%;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--accent);flex-shrink:0}
 .hiw-inline-body{flex:1}
 .hiw-inline-title{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin-bottom:3px}
 .hiw-inline-desc{font-size:12px;color:var(--dim);line-height:1.5}
 .hiw-inline-icon{font-size:22px;flex-shrink:0}
+
+/* Smooth scroll */
+html{scroll-behavior:smooth}
 
 /* Stat row */
 .stat-item{display:flex;flex-direction:column;gap:4px}
@@ -615,12 +619,6 @@ a{color:inherit;text-decoration:none}
   <canvas id="landing-canvas"></canvas>
   <div class="landing-content">
 
-    <!-- Logo row -->
-    <div class="landing-logo-row">
-      <div class="landing-logo">ART<span>MAP</span></div>
-      <div class="landing-live-badge">LIVE</div>
-    </div>
-
     <!-- Hero main -->
     <div class="landing-hero-main">
       <div class="landing-years-num">40,000</div>
@@ -640,7 +638,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- Animated stats -->
-    <div class="land-stats">
+    <div class="land-stats reveal" style="margin-top:28px">
       <div class="land-stat">
         <div class="land-stat-n" id="stat-eras">12</div>
         <div class="land-stat-l">Art Eras</div>
@@ -663,8 +661,8 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- Era chips -->
-    <div class="land-section-label">EXPLORE ALL 12 ERAS</div>
-    <div class="hero-eras-wrap"><div class="hero-eras" id="hero-eras-row">
+    <div class="land-section-label reveal">EXPLORE ALL 12 ERAS</div>
+    <div class="hero-eras-wrap reveal"><div class="hero-eras" id="hero-eras-row">
       <div class="hero-era-chip" style="--era-c:#8B5E3C" onclick="launchApp()">
         <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg" alt="Cave Art" loading="lazy" onerror="this.style.opacity=0">
         <div class="era-chip-overlay"></div>
@@ -776,7 +774,7 @@ a{color:inherit;text-decoration:none}
     </div></div>
 
     <!-- Artworks marquee ticker -->
-    <div class="artwork-marquee-wrap" style="margin-top:20px">
+    <div class="artwork-marquee-wrap reveal" style="margin-top:20px">
       <div class="artwork-marquee">
         <div class="artwork-marquee-half">
           <span class="marquee-item">Mona Lisa</span><span class="marquee-sep"></span>
@@ -818,7 +816,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- How it works inline -->
-    <div class="hiw-inline">
+    <div class="hiw-inline reveal">
       <div class="hiw-inline-label">HOW IT WORKS</div>
       <div class="hiw-inline-steps">
         <div class="hiw-inline-step">
@@ -849,7 +847,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- Footer -->
-    <footer class="site-footer">
+    <footer class="site-footer reveal">
       <div class="footer-logo">ART<span>MAP</span></div>
       <div class="footer-tagline">Google Earth for Art History. Navigate 40,000 years of human creativity.</div>
       <div class="footer-links-grid">
@@ -2333,7 +2331,6 @@ function initLanding(){
   const eraEl = document.getElementById('landing-type-era');
   if(eraEl){
     function nextEra(){
-      if(!eraEl) return;
       eraEl.style.opacity = '0';
       setTimeout(()=>{
         eraIdx = (eraIdx + 1) % ERA_NAMES.length;
@@ -2356,12 +2353,52 @@ function initLanding(){
     }
     requestAnimationFrame(step);
   }
-  setTimeout(()=>{
-    animateCount(document.getElementById('stat-eras'),     12,   '',  900);
-    animateCount(document.getElementById('stat-artifacts'), 36,  '+', 1100);
-    animateCount(document.getElementById('stat-years'),    40,   'k', 1300);
-    animateCount(document.getElementById('stat-xp'),       250,  '',  1600);
-  }, 600);
+
+  // Scroll-reveal via IntersectionObserver
+  const revealObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.12});
+
+  document.querySelectorAll('.reveal').forEach((el, i)=>{
+    el.style.transitionDelay = (i * 0.06) + 's';
+    revealObserver.observe(el);
+  });
+
+  // Staggered hiw steps
+  const stepObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const steps = entry.target.querySelectorAll('.hiw-inline-step');
+        steps.forEach((step, i)=>{
+          step.style.transition = 'opacity 0.45s '+((i*0.12)+0.05)+'s cubic-bezier(.22,1,.36,1), transform 0.45s '+((i*0.12)+0.05)+'s cubic-bezier(.22,1,.36,1), border-color 0.3s, background 0.3s';
+          setTimeout(()=>step.classList.add('visible'), i * 120 + 50);
+        });
+        stepObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.2});
+  const hiwEl = document.querySelector('.hiw-inline');
+  if(hiwEl) stepObserver.observe(hiwEl);
+
+  // Stat counters fire when stats row becomes visible
+  const statsEl = document.querySelector('.land-stats');
+  if(statsEl){
+    const statsObserver = new IntersectionObserver((entries)=>{
+      if(entries[0].isIntersecting){
+        animateCount(document.getElementById('stat-eras'),      12,  '',   900);
+        animateCount(document.getElementById('stat-artifacts'), 36,  '+', 1100);
+        animateCount(document.getElementById('stat-years'),     40,  'k', 1300);
+        animateCount(document.getElementById('stat-xp'),       250,  '',  1600);
+        statsObserver.unobserve(statsEl);
+      }
+    }, {threshold: 0.5});
+    statsObserver.observe(statsEl);
+  }
 }
 
 /* ===== INIT ===== */
