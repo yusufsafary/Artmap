@@ -95,6 +95,13 @@ a{color:inherit;text-decoration:none}
 .era-node.completed{border-color:rgba(230,255,0,0.2)}
 .era-node.completed::before{opacity:0.1}
 .era-node.locked{opacity:0.4;cursor:not-allowed}
+.era-node-thumb{width:64px;height:64px;border-radius:12px;border:2px solid transparent;overflow:hidden;position:relative;flex-shrink:0;background:rgba(255,255,255,0.05)}
+.era-node-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.era-node-thumb-bg{position:absolute;inset:0}
+.era-node-thumb-emoji{position:absolute;bottom:3px;right:4px;font-size:14px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.8))}
+.era-thumb-stamp{position:absolute;top:3px;right:4px;font-size:11px;font-weight:700;color:#fff;background:var(--accent);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px}
+.era-node-num{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1px}
+/* ── KEEP old era-node-icon for any other use ── */
 .era-node-icon{width:52px;height:52px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative}
 .era-node-icon .stamp{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(230,255,0,0.2);border-radius:var(--r);border:2px solid var(--accent);opacity:0;transition:opacity 0.3s}
 .era-node.completed .stamp{opacity:1}
@@ -399,9 +406,15 @@ a{color:inherit;text-decoration:none}
 .hero-eras-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,#0A0A0A);pointer-events:none;z-index:1}
 .hero-eras{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:visible;padding:4px 0 16px;scrollbar-width:none;-ms-overflow-style:none}
 .hero-eras::-webkit-scrollbar{display:none}
-.hero-era-chip{flex-shrink:0;display:flex;flex-direction:column;gap:3px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);min-width:105px;cursor:default;transition:border-color 0.2s,background 0.2s;overflow:hidden;position:relative}
-.hero-era-chip::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--era-c)}
-.hero-era-chip:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14)}
+/* ── Era chips with artwork image ── */
+.hero-era-chip{flex-shrink:0;min-width:120px;height:160px;border-radius:14px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);cursor:pointer;overflow:hidden;position:relative;transition:transform 0.22s cubic-bezier(.22,1,.36,1),border-color 0.2s}
+.hero-era-chip:hover{transform:translateY(-3px) scale(1.02);border-color:var(--era-c)}
+.hero-era-chip:active{transform:scale(0.97)}
+.era-chip-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.38;transition:opacity 0.3s;display:block}
+.hero-era-chip:hover .era-chip-bg{opacity:0.52}
+.era-chip-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.4) 55%,rgba(0,0,0,0.1) 100%)}
+.era-chip-overlay::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--era-c)}
+.era-chip-text{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;z-index:1}
 .era-chip-num{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--era-c);opacity:0.85}
 .era-chip-name{font-size:12px;font-weight:600;color:var(--fg);letter-spacing:-0.01em;line-height:1.2}
 .era-chip-period{font-size:9px;color:var(--dim);letter-spacing:0.02em;margin-top:1px}
@@ -492,6 +505,23 @@ a{color:inherit;text-decoration:none}
 /* ─── Info page lists ─── */
 .info-body ul{padding-left:16px;margin:10px 0;display:flex;flex-direction:column;gap:8px}
 .info-body ul li{font-size:14px;color:var(--dim);line-height:1.5}
+
+/* ─── Landing smoothness ─── */
+.landing-content{animation:landingFadeUp 0.7s cubic-bezier(.22,1,.36,1) both}
+@keyframes landingFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.landing-logo{animation:landingFadeUp 0.6s 0.05s cubic-bezier(.22,1,.36,1) both}
+.landing-tagline{animation:landingFadeUp 0.6s 0.12s cubic-bezier(.22,1,.36,1) both}
+.hero-eras-wrap{animation:landingFadeUp 0.6s 0.2s cubic-bezier(.22,1,.36,1) both}
+.land-stats{animation:landingFadeUp 0.6s 0.28s cubic-bezier(.22,1,.36,1) both}
+.landing-hero-text{animation:landingFadeUp 0.6s 0.36s cubic-bezier(.22,1,.36,1) both}
+
+/* ─── Era chip scroll snap ─── */
+.hero-eras{scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.hero-era-chip{scroll-snap-align:start}
+
+/* ─── Map node hover polish ─── */
+.era-node{transition:background 0.2s,transform 0.18s cubic-bezier(.22,1,.36,1),box-shadow 0.2s}
+.era-node:hover{transform:translateX(3px)}
 </style>
 </head>
 <body>
@@ -551,7 +581,115 @@ a{color:inherit;text-decoration:none}
       <div class="landing-tagline">Navigate Human Creativity</div>
     </div>
     <div class="hero-eras-wrap"><div class="hero-eras">
-      <div class="hero-era-chip" style="--era-c:#8B5E3C"><div class="era-chip-num">01</div><div class="era-chip-name">Cave Art</div><div class="era-chip-period">40,000 BCE</div></div>
+      <div class="hero-era-chip" style="--era-c:#8B5E3C" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg" alt="Cave Art" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">01</div>
+          <div class="era-chip-name">Cave Art</div>
+          <div class="era-chip-period">40,000 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#D4AF37" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg" alt="Egypt" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">02</div>
+          <div class="era-chip-name">Egypt</div>
+          <div class="era-chip-period">3000 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#B0C4DE" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VenusMilloLouvre.jpg/400px-VenusMilloLouvre.jpg" alt="Greece" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">03</div>
+          <div class="era-chip-name">Greece</div>
+          <div class="era-chip-period">800 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#C0392B" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Statue_of_Augustus_of_Prima_Porta.JPG/400px-Statue_of_Augustus_of_Prima_Porta.JPG" alt="Rome" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">04</div>
+          <div class="era-chip-name">Rome</div>
+          <div class="era-chip-period">509 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#7B5EA7" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg" alt="Medieval" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">05</div>
+          <div class="era-chip-name">Medieval</div>
+          <div class="era-chip-period">500 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#C19A6B" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg" alt="Renaissance" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">06</div>
+          <div class="era-chip-name">Renaissance</div>
+          <div class="era-chip-period">1400 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#4A6FA5" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg" alt="Baroque" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">07</div>
+          <div class="era-chip-name">Baroque</div>
+          <div class="era-chip-period">1600 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#7EC8E3" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/400px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" alt="Impressionism" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">08</div>
+          <div class="era-chip-name">Impressionism</div>
+          <div class="era-chip-period">1860 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#E05C5C" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg" alt="Modernism" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">09</div>
+          <div class="era-chip-name">Modernism</div>
+          <div class="era-chip-period">1900 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#E6FF00" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/400px-Bauhaus-Dessau.JPG" alt="Bauhaus" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">10</div>
+          <div class="era-chip-name">Bauhaus</div>
+          <div class="era-chip-period">1919 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#4FC3F7" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/400px-Spacewar%21-PDP-1-20070512.jpg" alt="Digital" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">11</div>
+          <div class="era-chip-name">Digital</div>
+          <div class="era-chip-period">1990 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#CE93D8" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png" alt="AI Art" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">12</div>
+          <div class="era-chip-name">AI Art</div>
+          <div class="era-chip-period">2010 CE</div>
+        </div>
+      </div>
+    </div></div>
       <div class="hero-era-chip" style="--era-c:#D4AF37"><div class="era-chip-num">02</div><div class="era-chip-name">Egypt</div><div class="era-chip-period">3000 BCE</div></div>
       <div class="hero-era-chip" style="--era-c:#B0C4DE"><div class="era-chip-num">03</div><div class="era-chip-name">Greece</div><div class="era-chip-period">800 BCE</div></div>
       <div class="hero-era-chip" style="--era-c:#C0392B"><div class="era-chip-num">04</div><div class="era-chip-name">Rome</div><div class="era-chip-period">509 BCE</div></div>
@@ -1013,6 +1151,21 @@ a{color:inherit;text-decoration:none}
 
 <script>
 /* ===== DATA ===== */
+const ERA_IMAGES = {
+  'cave-art':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg',
+  'egypt':        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
+  'greece':       'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VenusMilloLouvre.jpg/400px-VenusMilloLouvre.jpg',
+  'rome':         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Statue_of_Augustus_of_Prima_Porta.JPG/400px-Statue_of_Augustus_of_Prima_Porta.JPG',
+  'medieval':     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'renaissance':  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  'baroque':      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg',
+  'impressionism':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/400px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+  'modernism':    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  'bauhaus':      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/400px-Bauhaus-Dessau.JPG',
+  'digital':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/400px-Spacewar%21-PDP-1-20070512.jpg',
+  'ai-art':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+};
+
 const ERAS = [
   {
     id:'cave-art',name:'Cave Art',period:'40,000–10,000 BCE',num:'01',emoji:'🦌',
@@ -1424,11 +1577,14 @@ function renderMap(){
     
     const isNext = !completed && (i===0 || state.completedEras.includes(ERAS[i-1].id));
     node.innerHTML = `
-      <div class="era-node-icon" style="background:${era.color}22;border:1px solid ${completed?era.color+'44':'transparent'}">
-        <span style="font-size:22px">${era.emoji}</span>
-        <div class="stamp">✓</div>
+      <div class="era-node-thumb" style="border-color:${completed?era.color+'66':'transparent'}">
+        <img src="${ERA_IMAGES[era.id]||''}" alt="${era.name}" loading="lazy" onerror="this.style.display='none'">
+        <div class="era-node-thumb-bg" style="background:${era.color}33"></div>
+        <div class="era-node-thumb-emoji">${era.emoji}</div>
+        ${completed ? '<div class="era-thumb-stamp">✓</div>' : ''}
       </div>
       <div class="era-node-info">
+        <div class="era-node-num" style="color:${era.color}">${era.num}</div>
         <div class="era-node-name">${era.name}</div>
         <div class="era-node-date">${era.period}</div>
         <div class="era-node-meta">
