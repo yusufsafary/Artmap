@@ -1867,7 +1867,7 @@ const APP_SCREENS = new Set(['map','era','quiz','passport','collection','dna','a
 // Track whether user has launched the app in this session
 let appLaunched = false;
 
-function goToScreen(id){
+function goToScreen(id, _noPush){
   if(id==='_landing') id='landing';
   const siteNav = document.getElementById('site-nav');
   const appTopbar = document.getElementById('app-topbar');
@@ -1908,14 +1908,28 @@ function goToScreen(id){
   }
   const _activeEl = document.getElementById(id);
   if (_activeEl) _activeEl.scrollTop = 0;
+  if(!_noPush){
+    const _url = (id==='landing') ? '/' : '/' + id;
+    history.pushState({screen:id, appLaunched:appLaunched}, '', _url);
+  }
 }
 
 function scrollToHIW(){ goToScreen('howto'); }
 
 function goBack(){
-  if(appLaunched) goToScreen('map');
+  if(history.length > 1){ history.back(); }
+  else if(appLaunched) goToScreen('map');
   else goToScreen('landing');
 }
+
+window.addEventListener('popstate', function(e){
+  if(e.state && e.state.screen){
+    appLaunched = !!e.state.appLaunched;
+    goToScreen(e.state.screen, true);
+  } else {
+    goToScreen('landing', true);
+  }
+});
 
 function launchApp(){
   if(state.completedEras.length > 0){
@@ -2668,6 +2682,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initCanvas();
   initLanding();
   document.getElementById('site-nav').classList.add('visible');
+
+  (function restoreFromURL(){
+    const _path = location.pathname.replace(/^\//, '').replace(/\/$/, '') || 'landing';
+    const _valid = new Set(['landing','map','era','quiz','passport','collection','dna',
+                            'achievements','coming-soon','about','howto','legal','cookies']);
+    if(_path !== 'landing' && _valid.has(_path)){
+      if(APP_SCREENS && APP_SCREENS.has(_path)) appLaunched = true;
+      goToScreen(_path, true);
+      history.replaceState({screen:_path, appLaunched:appLaunched}, '', location.pathname);
+    } else {
+      history.replaceState({screen:'landing', appLaunched:false}, '', '/');
+    }
+  })();
 
   // Close modals on backdrop click
   document.getElementById('artifact-modal').addEventListener('click', e=>{
