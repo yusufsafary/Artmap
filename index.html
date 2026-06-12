@@ -116,7 +116,7 @@ a{color:inherit;text-decoration:none}
 .hiw-inline-body{flex:1}
 .hiw-inline-title{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin-bottom:3px}
 .hiw-inline-desc{font-size:12px;color:var(--dim);line-height:1.5}
-.hiw-inline-icon{font-size:22px;flex-shrink:0}
+.hiw-inline-icon{width:44px;height:44px;border-radius:10px;background:rgba(230,255,0,0.05);border:1px solid rgba(230,255,0,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
 
 /* Smooth scroll */
 html{scroll-behavior:smooth}
@@ -627,7 +627,7 @@ html{scroll-behavior:smooth}
         <span class="landing-type-prefix">Now exploring →</span>
         <span class="landing-type-era" id="landing-type-era">CAVE ART</span><span class="landing-type-cursor"></span>
       </div>
-      <p class="landing-sub">Travel through 12 art eras — from Lascaux to AI. Collect legendary artifacts, ace quizzes, and build your unique Art DNA.</p>
+      <p class="landing-sub">Travel through 12 art eras, from Lascaux to AI. Collect legendary artifacts, ace quizzes, and build your unique Art DNA.</p>
       <div class="landing-ctas">
         <button class="btn-primary btn-glow" onclick="launchApp()">
           <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -823,9 +823,14 @@ html{scroll-behavior:smooth}
           <div class="hiw-inline-num">1</div>
           <div class="hiw-inline-body">
             <div class="hiw-inline-title">Choose an Era</div>
-            <div class="hiw-inline-desc">Pick from 12 art eras spanning 40,000 years — from prehistoric cave art to AI-generated masterpieces.</div>
+            <div class="hiw-inline-desc">Pick from 12 art eras spanning 40,000 years, from prehistoric cave art to AI-generated masterpieces.</div>
           </div>
-          <div class="hiw-inline-icon">🗺️</div>
+          <div class="hiw-inline-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+          </div>
         </div>
         <div class="hiw-inline-step">
           <div class="hiw-inline-num">2</div>
@@ -833,7 +838,13 @@ html{scroll-behavior:smooth}
             <div class="hiw-inline-title">Explore &amp; Collect</div>
             <div class="hiw-inline-desc">Swipe through insight cards, collect legendary artifacts, and discover hidden connections between art movements.</div>
           </div>
-          <div class="hiw-inline-icon">🖼️</div>
+          <div class="hiw-inline-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
         </div>
         <div class="hiw-inline-step">
           <div class="hiw-inline-num">3</div>
@@ -841,7 +852,12 @@ html{scroll-behavior:smooth}
             <div class="hiw-inline-title">Ace Quizzes &amp; Reveal Your DNA</div>
             <div class="hiw-inline-desc">Test your knowledge with era quizzes, earn XP, unlock badges, and build your unique Art DNA profile.</div>
           </div>
-          <div class="hiw-inline-icon">🧬</div>
+          <div class="hiw-inline-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="6"/>
+              <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
