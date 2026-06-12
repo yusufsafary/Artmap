@@ -619,6 +619,33 @@ html{scroll-behavior:smooth}
 .pp-edit{background:none;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:rgba(255,255,255,0.5);font-size:11px;padding:5px 11px;cursor:pointer;font-family:inherit;transition:all 0.2s;white-space:nowrap}
 .pp-edit:hover{border-color:rgba(255,255,255,0.35);color:#fff}
 
+
+/* === LANDING INTERACTIVE ENHANCEMENTS === */
+/* Era chip fact overlay */
+.era-chip-fact{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(to top,rgba(0,0,0,0.95) 60%,transparent);transform:translateY(100%);transition:transform 0.3s cubic-bezier(.22,1,.36,1);pointer-events:none;z-index:4}
+.hero-era-chip:hover .era-chip-fact{transform:translateY(0)}
+.era-chip-fact-text{font-size:9px;color:rgba(255,255,255,0.85);line-height:1.35;text-align:left;letter-spacing:0.01em}
+
+/* Art quotes rotator */
+.landing-quote-wrap{margin:24px 0 4px;min-height:80px;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;position:relative;overflow:hidden}
+.landing-quote-wrap::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--accent);border-radius:3px 0 0 3px;opacity:0.6}
+.landing-quote-mark{font-size:26px;line-height:1;color:var(--accent);opacity:0.35;font-family:Georgia,serif;margin-bottom:4px;line-height:0.8}
+.landing-quote-text{font-size:12.5px;color:rgba(255,255,255,0.82);line-height:1.55;font-style:italic;transition:opacity 0.45s ease,transform 0.45s ease;max-width:320px}
+.landing-quote-attr{font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:0.04em;transition:opacity 0.45s ease}
+.lq-fade{opacity:0;transform:translateY(6px)}
+
+/* Stat count-up pop */
+@keyframes statPop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.land-stat-n.stat-pop{animation:statPop 0.38s cubic-bezier(.34,1.56,.64,1)}
+
+/* Sparkle particles for CTA */
+@keyframes sparkFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:var(--sf-x,20px) var(--sf-y,-40px) scale(0)}}
+.btn-spark{position:absolute;width:5px;height:5px;border-radius:50%;pointer-events:none;animation:sparkFly 0.7s ease-out forwards}
+
+/* Enhanced era chip hover border glow */
+.hero-era-chip{transition:transform 0.22s cubic-bezier(.22,1,.36,1),border-color 0.2s,box-shadow 0.25s}
+.hero-era-chip:hover{box-shadow:0 0 18px -4px var(--era-c)}
+
 </style>
 </head>
 <body>
@@ -687,7 +714,7 @@ html{scroll-behavior:smooth}
       </div>
       <p class="landing-sub">Travel through 12 art eras, from Lascaux to AI. Collect legendary artifacts, ace quizzes, and build your unique Art DNA.</p>
       <div class="landing-ctas">
-        <button class="btn-primary btn-glow" onclick="launchApp()">
+        <button class="btn-primary btn-glow" onclick="spawnSparks(this);launchApp()" style="position:relative;overflow:hidden">
           <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Start Journey
         </button>
@@ -736,6 +763,14 @@ html{scroll-behavior:smooth}
     </div>
 
     <!-- Era chips -->
+    
+    <!-- Art quotes rotator -->
+    <div class="landing-quote-wrap reveal" id="landing-quotes">
+      <div class="landing-quote-mark">&ldquo;</div>
+      <div class="landing-quote-text" id="lq-text">Every artist dips his brush in his own soul, and paints his own nature into his pictures.</div>
+      <div class="landing-quote-attr" id="lq-attr">&mdash; Henry Ward Beecher</div>
+    </div>
+
     <div class="land-section-label reveal">EXPLORE ALL 12 ERAS</div>
     <div class="hero-eras-wrap reveal"><div class="hero-eras" id="hero-eras-row">
       <div class="hero-era-chip" style="--era-c:#8B5E3C" onclick="launchApp()">
@@ -745,7 +780,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">01</div>
           <div class="era-chip-name">Cave Art</div>
           <div class="era-chip-period">40,000 BCE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Ochre pigments still vivid after 40,000 years</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#D4AF37" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/eg/web-large/EG584.jpg" alt="Egypt" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -754,7 +790,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">02</div>
           <div class="era-chip-name">Egypt</div>
           <div class="era-chip-period">3000 BCE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Scribes trained for 12 years to master hieroglyphs</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#B0C4DE" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/gr/web-large/DT11659.jpg" alt="Greece" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -763,7 +800,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">03</div>
           <div class="era-chip-name">Greece</div>
           <div class="era-chip-period">800 BCE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Ancient statues were painted in vivid colors, not white</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#C0392B" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/gr/web-large/DP337262.jpg" alt="Rome" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -772,7 +810,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">04</div>
           <div class="era-chip-name">Rome</div>
           <div class="era-chip-period">509 BCE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">The Pantheon dome was the world's largest for 1,300 years</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#7B5EA7" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/md/web-large/DT5343.jpg" alt="Medieval" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -781,7 +820,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">05</div>
           <div class="era-chip-name">Medieval</div>
           <div class="era-chip-period">500 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Gold leaf in manuscripts cost more than the artist's wage</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#C19A6B" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/es/web-large/DP106672.jpg" alt="Renaissance" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -790,7 +830,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">06</div>
           <div class="era-chip-name">Renaissance</div>
           <div class="era-chip-period">1400 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Leonardo kept notebooks with mirror-writing for secrecy</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#4A6FA5" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/ep/web-large/DP355525.jpg" alt="Baroque" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -799,7 +840,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">07</div>
           <div class="era-chip-name">Baroque</div>
           <div class="era-chip-period">1600 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Rembrandt used up to 30 layers of glaze per painting</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#7EC8E3" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/ep/web-large/DT1396.jpg" alt="Impressionism" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -808,7 +850,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">08</div>
           <div class="era-chip-name">Impressionism</div>
           <div class="era-chip-period">1860 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Monet painted 250+ versions of his water lilies series</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#E05C5C" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/ep/web-large/DT10776.jpg" alt="Modernism" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -817,7 +860,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">09</div>
           <div class="era-chip-name">Modernism</div>
           <div class="era-chip-period">1900 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">Picasso created over 20,000 works in his lifetime</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#E6FF00" onclick="launchApp()">
         <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/ep/web-large/DT229079.jpg" alt="Bauhaus" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -826,16 +870,18 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">10</div>
           <div class="era-chip-name">Bauhaus</div>
           <div class="era-chip-period">1919 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">The school existed only 14 years yet changed design forever</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#4FC3F7" onclick="launchApp()">
-        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/400px-Spacewar%21-PDP-1-20070512.jpg" alt="Digital" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
+        <img class="era-chip-bg" src="https://images.metmuseum.org/CRDImages/ep/web-large/DT10776.jpg" alt="Digital" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
         <div class="era-chip-overlay"></div>
         <div class="era-chip-text">
           <div class="era-chip-num">11</div>
           <div class="era-chip-name">Digital</div>
           <div class="era-chip-period">1990 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">The first digital artwork was made in 1965 on an IBM computer</div></div></div>
       </div>
       <div class="hero-era-chip" style="--era-c:#CE93D8" onclick="launchApp()">
         <img class="era-chip-bg" src="" alt="AI Art" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">
@@ -844,7 +890,8 @@ html{scroll-behavior:smooth}
           <div class="era-chip-num">12</div>
           <div class="era-chip-name">AI Art</div>
           <div class="era-chip-period">2010 CE</div>
-        </div>
+        
+        <div class="era-chip-fact"><div class="era-chip-fact-text">AI art sold for $432,500 at Christie's in 2018</div></div></div>
       </div>
     </div></div>
 
@@ -2446,6 +2493,9 @@ function initCanvas(){
     nodes.forEach((n, i) => {
       n.cx = n.bx + Math.sin(t + n.phase) * 22 + Math.cos(t * 0.65 + i * 0.9) * 12;
       n.cy = n.by + Math.cos(t * 0.8 + n.phase) * 18 + Math.sin(t * 0.55 + i * 0.7) * 10;
+      // Cursor repulsion
+      if(mx > -9000){const dx=n.cx-mx,dy=n.cy-my,dd=Math.hypot(dx,dy);if(dd<90&&dd>0){const f=(90-dd)/90*18;n.cx+=(dx/dd)*f;n.cy+=(dy/dd)*f;}}
+
     });
 
     // Connections between all pairs within range
@@ -2497,6 +2547,18 @@ function initCanvas(){
 
   resize();
   window.addEventListener('resize', resize);
+  // Mouse / touch interaction
+  let mx = -9999, my = -9999;
+  canvas.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mx = e.clientX - r.left; my = e.clientY - r.top;
+  });
+  canvas.addEventListener('touchmove', e => {
+    const r = canvas.getBoundingClientRect();
+    mx = e.touches[0].clientX - r.left; my = e.touches[0].clientY - r.top;
+  }, {passive:true});
+  canvas.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
+
   frame();
 }
 
@@ -2520,20 +2582,38 @@ function updateLandingStats(){
   // handled by initLanding
 }
 
+
+/* ===== CTA SPARKLE ===== */
+function spawnSparks(btn){
+  const colors=['#E6FF00','#fff','#4FC3F7','#CE93D8'];
+  for(let i=0;i<12;i++){
+    const sp=document.createElement('div');
+    sp.className='btn-spark';
+    const angle=Math.random()*Math.PI*2;
+    const dist=30+Math.random()*50;
+    const x=Math.cos(angle)*dist, y=Math.sin(angle)*dist-20;
+    sp.style.cssText='left:50%;top:50%;background:'+colors[i%colors.length]+';--sf-x:translate('+x+'px,'+y+'px);animation-delay:'+Math.random()*0.12+'s';
+    btn.appendChild(sp);
+    setTimeout(()=>sp.remove(),900);
+  }
+}
+
 /* ===== LANDING ANIMATIONS ===== */
 function initLanding(){
   // Era typer — cycles through era names
   const ERA_NAMES = ['CAVE ART','EGYPT','ANCIENT GREECE','ROMAN EMPIRE','MEDIEVAL','RENAISSANCE','BAROQUE','IMPRESSIONISM','MODERNISM','BAUHAUS','DIGITAL ART','AI ART'];
+  const eraColors = ['#8B5E3C','#D4AF37','#B0C4DE','#C0392B','#7B5EA7','#C19A6B','#4A6FA5','#7EC8E3','#E05C5C','#E6FF00','#4FC3F7','#CE93D8'];
   let eraIdx = 0;
   const eraEl = document.getElementById('landing-type-era');
   if(eraEl){
     function nextEra(){
-      eraEl.style.opacity = '0';
+      eraEl.style.opacity='0';
       setTimeout(()=>{
-        eraIdx = (eraIdx + 1) % ERA_NAMES.length;
-        eraEl.textContent = ERA_NAMES[eraIdx];
-        eraEl.style.opacity = '1';
-      }, 300);
+        eraIdx=(eraIdx+1)%ERA_NAMES.length;
+        eraEl.textContent=ERA_NAMES[eraIdx];
+        eraEl.style.color=eraColors[eraIdx];
+        eraEl.style.opacity='1';
+      },300);
     }
     setInterval(nextEra, 2200);
   }
@@ -2595,6 +2675,60 @@ function initLanding(){
       }
     }, {threshold: 0.5});
     statsObserver.observe(statsEl);
+  }
+
+  // ── Stats count-up ──
+  const _statDefs = [
+    {id:'stat-eras', end:12, suffix:''},
+    {id:'stat-artifacts', end:36, suffix:'+'},
+    {id:'stat-years', end:40, suffix:'k'},
+    {id:'stat-xp', end:250, suffix:''},
+  ];
+  const _statsWrap = document.querySelector('.land-stats');
+  if(_statsWrap){
+    const _so = new IntersectionObserver(entries=>{
+      if(!entries[0].isIntersecting) return;
+      _so.disconnect();
+      _statDefs.forEach(s=>{
+        const el=document.getElementById(s.id); if(!el) return;
+        let cur=0; const duration=900; const start=performance.now();
+        function _tick(now){
+          const p=Math.min((now-start)/duration,1);
+          const ease=1-Math.pow(1-p,3);
+          cur=Math.round(ease*s.end);
+          el.textContent=cur+s.suffix;
+          if(p<1){requestAnimationFrame(_tick);}
+          else{el.textContent=s.end+s.suffix;el.classList.add('stat-pop');}
+        }
+        requestAnimationFrame(_tick);
+      });
+    },{threshold:0.3});
+    _so.observe(_statsWrap);
+  }
+
+  // ── Art quotes rotator ──
+  const _quotes = [
+    {q:"Every artist dips his brush in his own soul, and paints his own nature into his pictures.",a:"Henry Ward Beecher"},
+    {q:"Art is not what you see, but what you make others see.",a:"Edgar Degas"},
+    {q:"Creativity takes courage.",a:"Henri Matisse"},
+    {q:"The purpose of art is washing the dust of daily life off our souls.",a:"Pablo Picasso"},
+    {q:"Art enables us to find ourselves and lose ourselves at the same time.",a:"Thomas Merton"},
+    {q:"Every child is an artist. The problem is how to remain an artist once we grow up.",a:"Pablo Picasso"},
+    {q:"To create one\'s world in any of the arts takes courage.",a:"Georgia O\'Keeffe"},
+  ];
+  const _qt=document.getElementById('lq-text'), _qa=document.getElementById('lq-attr');
+  if(_qt&&_qa){
+    let _qi=0;
+    function _nextQ(){
+      _qt.classList.add('lq-fade'); _qa.classList.add('lq-fade');
+      setTimeout(()=>{
+        _qi=(_qi+1)%_quotes.length;
+        _qt.textContent=_quotes[_qi].q;
+        _qa.innerHTML='&mdash; '+_quotes[_qi].a;
+        _qt.classList.remove('lq-fade'); _qa.classList.remove('lq-fade');
+      },450);
+    }
+    setInterval(_nextQ, 4500);
   }
 }
 
