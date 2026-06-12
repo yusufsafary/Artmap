@@ -63,11 +63,11 @@ a{color:inherit;text-decoration:none}
 /* LANDING */
 #landing{display:flex;flex-direction:column;min-height:100%;padding:0}
 #landing-canvas{position:absolute;inset:0;z-index:0}
-.landing-content{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100%;padding:calc(40px + var(--sat)) 24px calc(40px + var(--sab))}
-.landing-logo{font-size:clamp(56px,14vw,120px);font-weight:700;letter-spacing:-0.04em;line-height:0.9;color:var(--fg)}
+.landing-content{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100%;padding:calc(68px + var(--sat)) 24px calc(32px + var(--sab))}
+.landing-logo{font-size:clamp(44px,11vw,120px);font-weight:700;letter-spacing:-0.04em;line-height:0.9;color:var(--fg)}
 .landing-logo span{color:var(--accent)}
-.landing-tagline{font-size:clamp(13px,3.5vw,16px);color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:16px;font-weight:400}
-.landing-hero-text{margin-top:auto;padding-top:60px}
+.landing-tagline{margin-bottom:0;font-size:clamp(13px,3.5vw,16px);color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:16px;font-weight:400}
+.landing-hero-text{margin-top:0;padding-top:28px}
 .landing-headline{font-size:clamp(32px,9vw,72px);font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:16px}
 .landing-sub{font-size:clamp(14px,3.5vw,18px);color:var(--dim);line-height:1.5;max-width:340px;margin-bottom:40px}
 .landing-ctas{display:flex;flex-direction:column;gap:12px}
@@ -469,14 +469,7 @@ a{color:inherit;text-decoration:none}
 .atb-about{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;padding:0;transition:color 0.2s}
 .atb-about:hover{color:var(--accent)}
 
-/* PREMIUM ERA CHIPS */
-.hero-eras{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:28px 0 12px}
-.hero-era-chip{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:default;transition:border-color 0.2s,background 0.2s;overflow:hidden;position:relative}
-.hero-era-chip::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--era-c)}
-.hero-era-chip:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14)}
-.era-chip-num{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--era-c);opacity:0.8}
-.era-chip-name{font-size:12px;font-weight:600;color:var(--fg);letter-spacing:-0.01em;line-height:1.2}
-.era-chip-period{font-size:9px;color:var(--dim);letter-spacing:0.02em;line-height:1.2;margin-top:1px}
+/* era chip styles merged into horizontal scroll block above */
 
 /* ADJUST app screen top padding for topbar */
 #map{padding-top:52px}
