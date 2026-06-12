@@ -1,0 +1,2569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ArtMap — Navigate Human Creativity</title>
+<meta name="description" content="Explore 40,000 years of art history through an interactive visual map. Collect artifacts, build your Art DNA, and earn achievements.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<meta name="theme-color" content="#0A0A0A">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://artmap.college/og.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ArtMap">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@arthousebase">
+<meta name="twitter:creator" content="@arthousebase">
+<meta name="twitter:title" content="ArtMap — Navigate Human Creativity">
+<meta name="twitter:description" content="Explore 40,000 years of art history. Collect artifacts, build your Art DNA, and uncover hidden connections between art across time.">
+<meta name="twitter:image" content="https://artmap.college/og.svg">
+<meta property="og:title" content="ArtMap — Navigate Human Creativity">
+<meta property="og:description" content="Explore 40,000 years of art history through an interactive visual map.">
+<meta property="og:url" content="https://artmap.college">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0A;--fg:#FFFFFF;--dim:#B0B0B0;--accent:#E6FF00;
+  --era-bg:#0A0A0A;--era-fg:#FFFFFF;--era-accent:#E6FF00;
+  --font:'Space Grotesk',Inter,sans-serif;
+  --r:12px;--r2:20px;--r3:32px;
+  --nav-h:72px;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+}
+html{font-size:16px;scroll-behavior:smooth}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:var(--font);border:none;background:none;color:inherit}
+input,select{font-family:var(--font)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* SCREENS */
+.screen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:var(--nav-h)}
+.screen.active{display:block;animation:pageEnter 0.28s cubic-bezier(0.22,1,0.36,1) both}
+@keyframes pageEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* info pages slide from right feel */
+#about.active,#howto.active,#legal.active,#cookies.active{animation:slideIn 0.3s cubic-bezier(0.22,1,0.36,1) both}
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+/* landing always fades cleanly */
+#landing.active{animation:fadePage 0.3s ease both}
+@keyframes fadePage{from{opacity:0}to{opacity:1}}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--sab));padding-bottom:var(--sab);background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-around;z-index:100;display:none}
+#nav.visible{display:flex}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;color:var(--dim);transition:color 0.2s;font-size:10px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase}
+.nav-btn.active{color:var(--accent)}
+.nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* LANDING */
+#landing{padding:0}
+#landing-canvas{position:absolute;inset:0;z-index:0}
+.landing-content{position:relative;z-index:1;padding:calc(60px + var(--sat)) 24px 0}
+
+/* Scroll-reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.55s cubic-bezier(.22,1,.36,1),transform 0.55s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:none}
+
+/* Hero main block */
+.landing-hero-main{padding-top:12px;padding-bottom:0}
+.landing-years-num{font-size:clamp(68px,19vw,130px);font-weight:800;letter-spacing:-0.05em;line-height:0.85;color:var(--fg);font-variant-numeric:tabular-nums;opacity:0;animation:heroNumIn 0.7s 0.15s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes heroNumIn{from{opacity:0;transform:translateY(24px) scale(0.94)}to{opacity:1;transform:none}}
+.landing-years-label{font-size:clamp(18px,5vw,28px);font-weight:700;letter-spacing:-0.02em;color:var(--fg);line-height:1.1;margin-top:4px;opacity:0;animation:heroNumIn 0.7s 0.28s cubic-bezier(.22,1,.36,1) forwards}
+.landing-type-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:16px;opacity:0;animation:heroNumIn 0.6s 0.42s cubic-bezier(.22,1,.36,1) forwards}
+.landing-type-prefix{font-size:12px;font-weight:500;color:var(--dim);letter-spacing:0.08em;text-transform:uppercase}
+.landing-type-era{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:0.05em;text-transform:uppercase;min-width:90px;transition:opacity 0.3s}
+.landing-type-cursor{display:inline-block;width:2px;height:14px;background:var(--accent);border-radius:1px;vertical-align:middle;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.landing-sub{font-size:14px;color:var(--dim);line-height:1.6;max-width:320px;margin-bottom:24px;opacity:0;animation:heroNumIn 0.6s 0.55s cubic-bezier(.22,1,.36,1) forwards}
+.landing-ctas{display:flex;flex-direction:row;gap:10px;flex-wrap:wrap;opacity:0;animation:heroNumIn 0.6s 0.65s cubic-bezier(.22,1,.36,1) forwards}
+.btn-primary{background:var(--accent);color:#000;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:16px 24px;border-radius:var(--r);display:flex;align-items:center;gap:8px;transition:transform 0.15s,box-shadow 0.3s}
+.btn-primary:active{transform:scale(0.97)}
+.btn-glow{box-shadow:0 0 0 0 rgba(230,255,0,0.5);animation:glowPulse 2.8s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(230,255,0,0.45)}50%{box-shadow:0 0 22px 6px rgba(230,255,0,0.22)}}
+.btn-secondary{background:rgba(255,255,255,0.06);color:var(--fg);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:16px 22px;border-radius:var(--r);border:1px solid rgba(255,255,255,0.13);transition:border-color 0.2s,background 0.2s}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1)}
+.btn-secondary:active{transform:scale(0.97)}
+
+/* Section label */
+.land-section-label{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:28px 0 10px;padding:0}
+
+/* Artwork marquee */
+.artwork-marquee-wrap{overflow:hidden;margin:0 -24px;position:relative}
+.artwork-marquee-wrap::before,.artwork-marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:40px;z-index:1;pointer-events:none}
+.artwork-marquee-wrap::before{left:0;background:linear-gradient(to right,#0A0A0A,transparent)}
+.artwork-marquee-wrap::after{right:0;background:linear-gradient(to left,#0A0A0A,transparent)}
+.artwork-marquee{display:flex;width:max-content;animation:marqueeScroll 45s linear infinite}
+.artwork-marquee:hover{animation-play-state:paused}
+.artwork-marquee-half{display:flex;align-items:center;gap:0;padding:10px 0;white-space:nowrap}
+.marquee-item{font-size:11px;font-weight:500;letter-spacing:0.06em;color:rgba(255,255,255,0.28);padding:0 16px;transition:color 0.2s;cursor:pointer;text-transform:uppercase}
+.marquee-item:hover{color:var(--accent)}
+.marquee-sep{width:1px;height:10px;background:rgba(255,255,255,0.12);flex-shrink:0}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* How it works inline */
+.hiw-inline{padding:40px 0 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:40px}
+.hiw-inline-label{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:20px}
+.hiw-inline-steps{display:flex;flex-direction:column;gap:12px}
+.hiw-inline-step{display:flex;align-items:center;gap:16px;padding:18px 16px;background:rgba(255,255,255,0.02);border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);transition:border-color 0.3s,background 0.3s,transform 0.3s;opacity:0;transform:translateY(16px)}
+.hiw-inline-step.visible{opacity:1;transform:none}
+.hiw-inline-step:hover{border-color:rgba(230,255,0,0.22);background:rgba(230,255,0,0.03);transform:translateY(-1px)}
+.hiw-inline-num{width:36px;height:36px;border-radius:50%;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--accent);flex-shrink:0}
+.hiw-inline-body{flex:1}
+.hiw-inline-title{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin-bottom:3px}
+.hiw-inline-desc{font-size:12px;color:var(--dim);line-height:1.5}
+.hiw-inline-icon{width:44px;height:44px;border-radius:10px;background:rgba(230,255,0,0.05);border:1px solid rgba(230,255,0,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+
+/* Smooth scroll */
+html{scroll-behavior:smooth}
+
+/* Stat row */
+.stat-item{display:flex;flex-direction:column;gap:4px}
+.stat-num{font-size:28px;font-weight:700;color:var(--accent);letter-spacing:-0.02em}
+.stat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+
+/* MAP SCREEN */
+#map{background:var(--bg);padding-top:0}
+.map-header{padding:calc(56px + var(--sat)) 24px 24px;display:flex;justify-content:space-between;align-items:flex-start}
+.map-title{font-size:32px;font-weight:700;letter-spacing:-0.02em}
+.map-sub{font-size:13px;color:var(--dim);margin-top:4px}
+.xp-badge{background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.2);padding:8px 14px;border-radius:50px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent)}
+.map-progress-bar{margin:0 24px 32px;background:rgba(255,255,255,0.05);border-radius:4px;height:4px;overflow:hidden}
+.map-progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1)}
+.map-nodes{padding:0 24px 32px;display:flex;flex-direction:column;gap:0}
+.era-node{position:relative;display:flex;align-items:center;gap:16px;padding:20px 20px;background:rgba(255,255,255,0.03);border-radius:var(--r2);margin-bottom:4px;cursor:pointer;transition:background 0.2s,transform 0.15s;border:1px solid transparent;overflow:hidden}
+.era-node::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--era-color,#444) 0%,transparent 60%);opacity:0.06;transition:opacity 0.2s}
+.era-node:active{transform:scale(0.98)}
+.era-node.completed{border-color:rgba(230,255,0,0.2)}
+.era-node.completed::before{opacity:0.1}
+.era-node.locked{opacity:0.4;cursor:not-allowed}
+.era-node-thumb{width:64px;height:64px;border-radius:12px;border:2px solid transparent;overflow:hidden;position:relative;flex-shrink:0;background:rgba(255,255,255,0.05)}
+.era-node-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.era-node-thumb-bg{position:absolute;inset:0}
+.era-node-thumb-emoji{position:absolute;bottom:3px;right:4px;font-size:14px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.8))}
+.era-thumb-stamp{position:absolute;top:3px;right:4px;font-size:11px;font-weight:700;color:#fff;background:var(--accent);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px}
+.era-node-num{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1px}
+/* ── KEEP old era-node-icon for any other use ── */
+.era-node-icon{width:52px;height:52px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative}
+.era-node-icon .stamp{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(230,255,0,0.2);border-radius:var(--r);border:2px solid var(--accent);opacity:0;transition:opacity 0.3s}
+.era-node.completed .stamp{opacity:1}
+.era-node-info{flex:1;min-width:0}
+.era-node-name{font-size:16px;font-weight:600;letter-spacing:-0.01em}
+.era-node-date{font-size:11px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em}
+.era-node-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.era-tag{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,0.07)}
+.era-xp{font-size:10px;font-weight:600;color:var(--accent)}
+.era-arrow{color:var(--dim);transition:transform 0.2s;flex-shrink:0}
+.connector{width:2px;height:24px;background:linear-gradient(to bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03));margin-left:46px;margin-bottom:4px}
+.connector.filled{background:linear-gradient(to bottom,rgba(230,255,0,0.4),rgba(230,255,0,0.1))}
+
+/* ERA EXPERIENCE */
+#era{background:var(--era-bg);transition:background 0.5s}
+.era-header{padding:calc(52px + var(--sat)) 24px 20px;position:relative}
+.era-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
+.era-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.era-num{font-size:clamp(56px,18vw,80px);font-weight:700;letter-spacing:-0.04em;line-height:0.85;color:rgba(255,255,255,0.06);position:absolute;top:48px;right:24px;pointer-events:none}
+.era-title{font-size:clamp(36px,10vw,64px);font-weight:700;letter-spacing:-0.03em;line-height:0.95}
+.era-period{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;margin-top:12px}
+.era-desc{font-size:14px;color:var(--dim);line-height:1.6;margin-top:16px;max-width:340px}
+
+/* CARDS */
+.cards-track{padding:0 24px;overflow-x:auto;display:flex;gap:16px;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.cards-track::-webkit-scrollbar{display:none}
+.art-card{min-width:min(calc(100vw - 64px),340px);max-width:360px;background:rgba(255,255,255,0.04);border-radius:var(--r2);border:1px solid rgba(255,255,255,0.06);overflow:hidden;scroll-snap-align:start;flex-shrink:0}
+.art-card-img{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:rgba(0,0,0,0.25)}
+.art-card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.45s cubic-bezier(.22,1,.36,1)}
+.art-card:hover .art-card-img img{transform:scale(1.05)}
+.art-card-img-bg{position:absolute;inset:0;z-index:0}
+.art-card-img-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0) 52%)}
+.art-card-era-tag{position:absolute;bottom:12px;left:12px;z-index:2;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;border:1px solid;backdrop-filter:blur(6px)}
+.art-card-art{display:none}
+.art-card-body{padding:20px}
+.art-card-title{font-size:20px;font-weight:700;letter-spacing:-0.02em}
+.art-card-insight{font-size:13px;color:var(--dim);line-height:1.5;margin-top:8px}
+.art-card-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)}
+.art-card-field label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);display:block;margin-bottom:4px}
+.art-card-field span{font-size:13px;font-weight:500}
+.cards-dots{display:flex;justify-content:center;gap:6px;padding:20px 0 8px}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s}
+.dot.active{background:var(--accent);width:20px;border-radius:3px}
+.era-artifacts{padding:24px}
+.era-artifacts-title{font-size:13px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:16px}
+.artifact-chips{display:flex;gap:8px;flex-wrap:wrap}
+.artifact-chip{padding:8px 14px;border-radius:50px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03)}
+.artifact-chip:hover{border-color:var(--accent);color:var(--accent)}
+.artifact-chip.discovered{border-color:rgba(230,255,0,0.4);background:rgba(230,255,0,0.08);color:var(--accent)}
+.era-quiz-btn{margin:0 24px 40px;background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:calc(100% - 48px);transition:transform 0.15s}
+.era-quiz-btn:active{transform:scale(0.97)}
+
+/* ARTIFACT MODAL */
+#artifact-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
+#artifact-modal.open{display:flex}
+.artifact-sheet{background:#111;border-radius:28px 28px 0 0;padding:32px 24px 48px;width:100%;max-width:480px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.artifact-sheet-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 28px}
+.artifact-rarity{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+.artifact-rarity.legendary{color:#FFD700}
+.artifact-rarity.epic{color:#C084FC}
+.artifact-rarity.rare{color:#60A5FA}
+.artifact-rarity.common{color:var(--dim)}
+.artifact-sheet-title{font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
+.artifact-sheet-year{font-size:13px;color:var(--dim);margin-bottom:24px}
+.artifact-sheet-art{width:100%;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;position:relative;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:24px}
+.artifact-sheet-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r)}
+.artifact-connections{margin-bottom:24px}
+.artifact-connections h3{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:12px}
+.connection-tags{display:flex;gap:8px;flex-wrap:wrap}
+.connection-tag{padding:6px 12px;border-radius:6px;font-size:12px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s}
+.connection-tag:hover{border-color:var(--accent);color:var(--accent)}
+.artifact-collect-btn{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%}
+
+.quiz-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:16px;cursor:pointer;width:fit-content}
+.quiz-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+/* QUIZ */
+#quiz{background:var(--bg)}
+.quiz-header{padding:calc(52px + var(--sat)) 24px 24px;position:relative}
+.quiz-era-label{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px}
+.quiz-q-num{font-size:13px;color:var(--dim);margin-bottom:24px}
+.quiz-question{font-size:clamp(22px,6vw,32px);font-weight:700;letter-spacing:-0.02em;line-height:1.2;margin-bottom:40px}
+.quiz-options{padding:0 24px 32px;display:flex;flex-direction:column;gap:12px}
+.quiz-option{padding:18px 20px;border-radius:var(--r);border:1px solid rgba(255,255,255,0.1);font-size:15px;font-weight:500;text-align:left;transition:all 0.2s;cursor:pointer;background:rgba(255,255,255,0.02)}
+.quiz-option:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04)}
+.quiz-option.correct{border-color:#4ADE80;background:rgba(74,222,128,0.1);color:#4ADE80}
+.quiz-option.wrong{border-color:#F87171;background:rgba(248,113,113,0.1);color:#F87171}
+.quiz-progress{display:flex;gap:6px;padding:0 24px 24px}
+.quiz-pip{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.1);transition:background 0.3s}
+.quiz-pip.done{background:var(--accent)}
+.quiz-pip.current{background:rgba(230,255,0,0.4)}
+.quiz-result{padding:56px 24px;text-align:center;display:none}
+.quiz-result.show{display:block}
+.quiz-result-icon{font-size:72px;margin-bottom:24px}
+.quiz-result-title{font-size:36px;font-weight:700;letter-spacing:-0.02em;margin-bottom:12px}
+.quiz-result-sub{font-size:15px;color:var(--dim);line-height:1.5;margin-bottom:32px}
+.quiz-xp{font-size:48px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.quiz-xp-label{font-size:13px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.quiz-continue-btn{margin-top:40px;background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%}
+
+/* PASSPORT */
+#passport{background:var(--bg)}
+.passport-header{padding:calc(56px + var(--sat)) 24px 28px}
+.passport-cover{margin:0 24px 32px;background:linear-gradient(135deg,#1a1400 0%,#0f0f0f 100%);border-radius:var(--r2);padding:32px;border:1px solid rgba(255,215,0,0.15);position:relative;overflow:hidden}
+.passport-cover::before{content:'ArtMap';position:absolute;bottom:-20px;right:-10px;font-size:100px;font-weight:700;color:rgba(255,215,0,0.03);letter-spacing:-0.04em;pointer-events:none;user-select:none}
+.passport-cover-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.passport-name{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,215,0,0.6)}
+.passport-org{font-size:11px;color:rgba(255,215,0,0.4)}
+.passport-big-num{font-size:72px;font-weight:700;letter-spacing:-0.04em;color:#FFD700;line-height:1}
+.passport-big-label{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,215,0,0.5);margin-top:4px}
+.passport-progress-bar{background:rgba(255,215,0,0.1);border-radius:4px;height:6px;margin-top:16px;overflow:hidden}
+.passport-progress-fill{height:100%;background:linear-gradient(90deg,#FFD700,#E6FF00);border-radius:4px;transition:width 1s cubic-bezier(0.34,1.56,0.64,1)}
+.passport-stamps{padding:0 24px}
+.section-title{font-size:13px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:16px}
+.stamps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:32px}
+.stamp{background:rgba(255,255,255,0.03);border-radius:var(--r);padding:14px 10px;text-align:center;border:1px solid transparent;transition:all 0.3s;cursor:pointer}
+.stamp.earned{border-color:rgba(230,255,0,0.2);background:rgba(230,255,0,0.05)}
+.stamp-emoji{font-size:28px;margin-bottom:6px;filter:grayscale(1);transition:filter 0.3s}
+.stamp.earned .stamp-emoji{filter:none}
+.stamp-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim)}
+.stamp.earned .stamp-label{color:var(--fg)}
+.passport-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 40px}
+.pstat{background:rgba(255,255,255,0.03);border-radius:var(--r);padding:18px}
+.pstat-num{font-size:36px;font-weight:700;letter-spacing:-0.02em;color:var(--accent)}
+.pstat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px}
+
+/* COLLECTION */
+#collection{background:var(--bg)}
+.collection-header{padding:calc(56px + var(--sat)) 24px 16px}
+.collection-filters{display:flex;gap:8px;padding:0 24px 24px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.collection-filters::-webkit-scrollbar{display:none}
+.filter-pill{padding:8px 16px;border-radius:50px;font-size:12px;font-weight:500;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);background:transparent;cursor:pointer;transition:all 0.2s}
+.filter-pill.active,.filter-pill:hover{border-color:var(--accent);background:rgba(230,255,0,0.08);color:var(--accent)}
+.collection-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 40px}
+.collect-card{background:rgba(255,255,255,0.03);border-radius:var(--r2);overflow:hidden;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform 0.15s,border-color 0.2s;position:relative}
+.collect-card:active{transform:scale(0.97)}
+.collect-card-art{aspect-ratio:1;position:relative;overflow:hidden;background:rgba(255,255,255,0.02)}
+.collect-card-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.4s cubic-bezier(.22,1,.36,1)}
+.collect-card:hover .collect-card-art img{transform:scale(1.08)}
+.collect-card-art-bg{position:absolute;inset:0;z-index:0}
+.collect-card-art::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent 60%);pointer-events:none;z-index:1}
+.collect-card-lock-overlay{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px)}
+.collect-card-rarity{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 7px;border-radius:4px}
+.rarity-legendary{background:rgba(255,215,0,0.2);color:#FFD700}
+.rarity-epic{background:rgba(192,132,252,0.2);color:#C084FC}
+.rarity-rare{background:rgba(96,165,250,0.2);color:#60A5FA}
+.rarity-common{background:rgba(255,255,255,0.1);color:var(--dim)}
+.collect-card-info{padding:12px}
+.collect-card-title{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:4px}
+.collect-card-era{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.08em}
+.collection-empty{padding:80px 24px;text-align:center;color:var(--dim)}
+.collection-empty-icon{font-size:64px;margin-bottom:16px;opacity:0.4}
+.collection-empty p{font-size:14px;line-height:1.6}
+.collect-card.undiscovered .collect-card-art{filter:grayscale(1);opacity:0.35}
+.collect-card.undiscovered .collect-card-info{opacity:0.4}
+.collect-card-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;opacity:0.25}
+.collect-card-era-tag{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;margin-top:4px;display:inline-block}
+.collection-summary{display:flex;gap:16px;padding:0 24px 20px;flex-wrap:wrap}
+.coll-stat{background:rgba(255,255,255,0.03);border-radius:var(--r);padding:14px 18px;flex:1;min-width:80px;border:1px solid rgba(255,255,255,0.06)}
+.coll-stat-num{font-size:24px;font-weight:700;color:var(--accent);letter-spacing:-0.02em}
+.coll-stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+
+/* DNA */
+#dna{background:var(--bg)}
+.dna-header{padding:calc(56px + var(--sat)) 24px 28px}
+.dna-card{margin:0 24px 24px;background:linear-gradient(135deg,rgba(230,255,0,0.05) 0%,rgba(0,0,0,0) 100%);border-radius:var(--r2);border:1px solid rgba(230,255,0,0.15);padding:32px;position:relative;overflow:hidden}
+.dna-card-label{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.dna-title{font-size:clamp(32px,9vw,56px);font-weight:700;letter-spacing:-0.03em;line-height:0.95;margin-bottom:24px}
+.dna-bars{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.dna-bar-row{display:flex;align-items:center;gap:12px}
+.dna-bar-label{font-size:12px;font-weight:500;width:90px;flex-shrink:0}
+.dna-bar-track{flex:1;background:rgba(255,255,255,0.05);border-radius:4px;height:8px;overflow:hidden}
+.dna-bar-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(0.34,1.56,0.64,1)}
+.dna-bar-pct{font-size:12px;font-weight:700;color:var(--accent);width:36px;text-align:right;flex-shrink:0}
+.dna-bar-row.dim .dna-bar-label{opacity:0.3}
+.dna-bar-row.dim .dna-bar-pct{opacity:0.2}
+.dna-preview-note{font-size:12px;color:var(--dim);padding:0 24px 16px;line-height:1.5}
+.dna-bar-label{font-size:11px;font-weight:500;width:90px;flex-shrink:0;letter-spacing:0;}
+.dna-actions{display:flex;flex-direction:column;gap:10px;padding:0 24px 40px}
+.dna-share-btn{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%}
+.dna-reset-btn{background:transparent;color:var(--dim);font-size:13px;font-weight:500;padding:14px;border-radius:var(--r);width:100%;border:1px solid rgba(255,255,255,0.08)}
+
+/* ACHIEVEMENTS */
+#achievements{background:var(--bg)}
+.achieve-header{padding:calc(56px + var(--sat)) 24px 28px}
+.achieve-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 16px}
+.achieve-card{background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:20px;border:1px solid transparent;transition:all 0.3s;position:relative;overflow:hidden}
+.achieve-card.unlocked{border-color:rgba(230,255,0,0.2);background:rgba(230,255,0,0.04)}
+.achieve-card.locked{opacity:0.4}
+.achieve-badge{font-size:36px;margin-bottom:12px}
+.achieve-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.achieve-desc{font-size:11px;color:var(--dim);line-height:1.4}
+.achieve-unlocked-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(230,255,0,0.1);padding:3px 6px;border-radius:4px}
+.hidden-section{padding:24px;margin:0 24px 40px;border-radius:var(--r2);border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02)}
+.hidden-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hidden-title{font-size:14px;font-weight:600}
+.hidden-count{font-size:24px;font-weight:700;color:var(--accent)}
+.hidden-sub{font-size:12px;color:var(--dim);margin-bottom:16px}
+.hidden-dots{display:flex;gap:6px;flex-wrap:wrap}
+.hdot{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s}
+.hdot.found{background:rgba(230,255,0,0.15);border-color:rgba(230,255,0,0.4)}
+
+/* COMING SOON */
+#coming-soon{background:var(--bg)}
+.cs-header{padding:calc(56px + var(--sat)) 24px 28px}
+.cs-list{padding:0 24px 40px;display:flex;flex-direction:column;gap:12px}
+.cs-item{background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:24px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:16px;opacity:0.6;cursor:not-allowed;position:relative;overflow:hidden}
+.cs-item::after{content:'COMING SOON';position:absolute;top:12px;right:16px;font-size:9px;font-weight:700;letter-spacing:0.15em;color:var(--dim);border:1px solid rgba(255,255,255,0.1);padding:3px 7px;border-radius:4px}
+.cs-icon{width:52px;height:52px;border-radius:var(--r);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.cs-title{font-size:16px;font-weight:600;margin-bottom:4px}
+.cs-sub{font-size:12px;color:var(--dim)}
+
+/* TOAST */
+#toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-100px);background:#111;border-radius:var(--r);padding:12px 20px;font-size:13px;font-weight:500;z-index:300;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;border:1px solid rgba(255,255,255,0.1);max-width:calc(100vw - 48px);text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.accent{color:#000;background:var(--accent);border-color:var(--accent)}
+
+/* XP POPUP */
+.xp-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:250;pointer-events:none;text-align:center;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.xp-popup.show{transform:translate(-50%,-50%) scale(1)}
+.xp-popup-inner{background:rgba(10,10,10,0.95);border:2px solid var(--accent);border-radius:var(--r2);padding:32px 48px}
+.xp-popup-num{font-size:72px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;line-height:1}
+.xp-popup-label{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;margin-top:4px}
+
+
+
+/* ABOUT */
+#about{background:#0C0C10}
+.about-header{padding:calc(52px + var(--sat)) 24px 24px}
+.about-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
+.about-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.founder-card{margin:0 24px 20px;background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:28px;border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden}
+.founder-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(230,255,0,0.06) 0%,transparent 70%)}
+.founder-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#E6FF00,#7B2FBE);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#000;margin-bottom:16px;flex-shrink:0}
+.founder-name{font-size:20px;font-weight:700;letter-spacing:-0.01em;margin-bottom:4px}
+.founder-handle{font-size:13px;color:var(--accent);margin-bottom:12px;font-weight:500}
+.founder-bio{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:20px}
+.founder-links{display:flex;flex-direction:column;gap:8px}
+.founder-link{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r);border:1px solid rgba(255,255,255,0.08);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--fg)}
+.founder-link:hover,.founder-link:active{border-color:rgba(230,255,0,0.3);background:rgba(230,255,0,0.05);color:var(--accent)}
+.founder-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.about-section{padding:0 24px 20px}
+.about-section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:var(--dim);margin-bottom:16px;font-weight:600}
+.about-mission{font-size:15px;color:var(--fg);line-height:1.7;margin-bottom:24px;padding:20px;background:rgba(230,255,0,0.04);border-radius:var(--r);border-left:2px solid var(--accent)}
+.tech-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.tech-chip{padding:6px 12px;border-radius:50px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--dim);letter-spacing:0.05em;text-transform:uppercase}
+.ecosystem-badge{display:flex;align-items:center;gap:12px;padding:16px;background:rgba(255,255,255,0.03);border-radius:var(--r);border:1px solid rgba(255,255,255,0.07);margin-bottom:8px}
+.ecosystem-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ecosystem-name{font-size:13px;font-weight:600}
+.ecosystem-desc{font-size:11px;color:var(--dim);margin-top:2px}
+.orynth-section{padding:0 24px 40px}
+.orynth-wrapper{display:flex;justify-content:center;padding:20px 0 8px}
+.orynth-wrapper img{border-radius:var(--r);opacity:0.85;transition:opacity 0.2s}
+.orynth-wrapper img:hover{opacity:1}
+.orynth-credit{text-align:center;font-size:11px;color:var(--dim);margin-top:8px}
+
+/* HOW TO */
+#howto{background:#0A0C0A}
+.howto-header{padding:calc(52px + var(--sat)) 24px 24px}
+.howto-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:24px;cursor:pointer;width:fit-content}
+.howto-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.howto-steps{padding:0 24px 40px;display:flex;flex-direction:column;gap:12px}
+.howto-step{background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:24px;border:1px solid rgba(255,255,255,0.06);display:flex;gap:16px;align-items:flex-start}
+.howto-num{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#000;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.howto-step-title{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em}
+.howto-step-desc{font-size:13px;color:var(--dim);line-height:1.6}
+.howto-tip{margin:0 24px 24px;padding:16px 20px;background:rgba(230,255,0,0.05);border-radius:var(--r);border:1px solid rgba(230,255,0,0.15)}
+.howto-tip-label{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.howto-tip-text{font-size:13px;color:var(--dim);line-height:1.5}
+.howto-start-btn{margin:0 24px 40px;background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:calc(100% - 48px);transition:transform 0.15s}
+.howto-start-btn:active{transform:scale(0.97)}
+
+/* LANDING FOOTER LINKS */
+.landing-footer{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06)}
+.landing-footer-links{display:flex;gap:24px;align-items:center}
+.landing-footer-link{font-size:12px;color:var(--dim);font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:color 0.2s;text-decoration:none}
+.landing-footer-link:hover{color:var(--fg)}
+.landing-orynth{display:flex;justify-content:center}
+.landing-orynth img{border-radius:8px;opacity:0.7;transition:opacity 0.2s;height:32px;width:auto}
+.landing-orynth img:hover{opacity:1}
+
+/* RESPONSIVE */
+@media(min-width:640px){
+  .collection-grid{grid-template-columns:repeat(3,1fr)}
+  .stamps-grid{grid-template-columns:repeat(4,1fr)}
+  .achieve-grid{grid-template-columns:repeat(3,1fr)}
+  .art-card{min-width:340px}
+  .landing-ctas{flex-direction:row}
+  .btn-primary,.btn-secondary{width:auto;min-width:180px}
+}
+@media(min-width:900px){
+  body{max-width:480px;margin:0 auto}
+  #landing-canvas{max-width:480px;margin:0 auto}
+  #nav{max-width:480px;left:50%;transform:translateX(-50%);border-radius:0 0 20px 20px;border-left:1px solid rgba(255,255,255,0.07);border-right:1px solid rgba(255,255,255,0.07)}
+}
+
+/* TRANSITIONS */
+.screen{animation:fadeInUp 0.3s ease both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.era-node{transition:background 0.2s,transform 0.15s,border-color 0.2s}
+.era-node:not(.locked):hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+
+/* SITE NAV */
+#site-nav{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10,10,10,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.07);display:none;align-items:center;justify-content:space-between;padding:0 20px;z-index:150}
+#site-nav.visible{display:flex}
+.snav-logo{font-size:20px;font-weight:700;letter-spacing:-0.03em;color:var(--fg);cursor:pointer}
+.snav-logo span{color:var(--accent)}
+.snav-links{display:flex;gap:20px}
+.snav-link{font-size:12px;font-weight:500;color:var(--dim);cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:var(--font);letter-spacing:0.05em;padding:0}
+.snav-link:hover{color:var(--fg)}
+/* era chips — horizontal scroll strip */
+.hero-eras-wrap{position:relative;margin:20px 0 0}
+.hero-eras-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,#0A0A0A);pointer-events:none;z-index:1}
+.hero-eras{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:visible;padding:4px 0 16px;scrollbar-width:none;-ms-overflow-style:none}
+.hero-eras::-webkit-scrollbar{display:none}
+/* ── Era chips with artwork image ── */
+.hero-era-chip{flex-shrink:0;min-width:120px;height:160px;border-radius:14px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);cursor:pointer;overflow:hidden;position:relative;transition:transform 0.22s cubic-bezier(.22,1,.36,1),border-color 0.2s}
+.hero-era-chip:hover{transform:translateY(-3px) scale(1.02);border-color:var(--era-c)}
+.hero-era-chip:active{transform:scale(0.97)}
+.era-chip-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.38;transition:opacity 0.3s;display:block}
+.hero-era-chip:hover .era-chip-bg{opacity:0.52}
+.era-chip-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.4) 55%,rgba(0,0,0,0.1) 100%)}
+.era-chip-overlay::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--era-c)}
+.era-chip-text{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;z-index:1}
+.era-chip-num{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--era-c);opacity:0.85}
+.era-chip-name{font-size:12px;font-weight:600;color:var(--fg);letter-spacing:-0.01em;line-height:1.2}
+.era-chip-period{font-size:9px;color:var(--dim);letter-spacing:0.02em;margin-top:1px}
+/* site-nav links */
+.snav-links{display:flex;align-items:center;gap:4px}
+.snav-link{font-size:13px;font-weight:500;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;padding:9px 14px;border-radius:8px;letter-spacing:0.01em;transition:color 0.2s,background 0.2s}
+.snav-link:hover{color:var(--fg);background:rgba(255,255,255,0.06)}
+.snav-app-btn{color:var(--fg) !important;background:rgba(255,255,255,0.07) !important;border:1px solid rgba(255,255,255,0.12) !important;font-weight:600 !important}
+.snav-app-btn:hover{background:rgba(255,255,255,0.12) !important}
+
+/* SITE FOOTER */
+.site-footer{padding:48px 24px calc(48px + var(--sab));background:var(--bg);border-top:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;align-items:center;gap:24px;position:relative;z-index:1}
+.footer-logo{font-size:18px;font-weight:700;letter-spacing:-0.03em}
+.footer-logo span{color:var(--accent)}
+.footer-tagline{font-size:12px;color:var(--dim);text-align:center;line-height:1.6;max-width:280px}
+.footer-links-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 40px;text-align:center;width:100%;max-width:280px}
+.footer-link{font-size:12px;color:var(--dim);font-weight:500;cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:var(--font);text-decoration:none;letter-spacing:0.03em;padding:4px 0;display:block;width:100%;text-align:center}
+.footer-link:hover{color:var(--fg)}
+.footer-divider{width:100%;height:1px;background:rgba(255,255,255,0.05)}
+.footer-bottom{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2);text-align:center}
+.footer-orynth img{border-radius:6px;opacity:0.6;transition:opacity 0.2s;height:28px;width:auto}
+.footer-orynth img:hover{opacity:0.9}
+
+/* LEGAL / COOKIES */
+#legal,#cookies{background:#0B0B0E}
+.info-header{padding:calc(80px + var(--sat)) 24px 24px}
+.info-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-bottom:20px;cursor:pointer;width:fit-content}
+.info-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.info-body{padding:0 24px 60px;display:flex;flex-direction:column;gap:20px}
+.info-section h3{font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px;font-weight:700}
+.info-section p{font-size:14px;color:var(--dim);line-height:1.7}
+.info-section ul{font-size:13px;color:var(--dim);line-height:1.8;padding-left:18px;margin-top:6px}
+
+/* ABOUT/HOWTO padding fix for top nav */
+.about-header,.howto-header{padding-top:calc(80px + var(--sat)) !important}
+
+/* HOW IT WORKS SECTION */
+.hiw-section{padding:72px 24px 80px;display:flex;flex-direction:column;align-items:center;gap:48px;position:relative;z-index:1;background:linear-gradient(to bottom,transparent,rgba(10,10,10,0.98) 20%)}
+.hiw-label{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent)}
+.hiw-title{font-size:clamp(28px,7vw,40px);font-weight:700;letter-spacing:-0.03em;text-align:center;line-height:1.1}
+.hiw-steps{display:flex;flex-direction:column;gap:0;width:100%;max-width:420px}
+.hiw-step{display:flex;gap:20px;align-items:flex-start;padding:20px 0;position:relative}
+.hiw-step:not(:last-child)::after{content:'';position:absolute;left:19px;top:52px;bottom:0;width:2px;background:linear-gradient(to bottom,rgba(230,255,0,0.3),rgba(230,255,0,0.05))}
+.hiw-step-num{width:40px;height:40px;border-radius:50%;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--accent);flex-shrink:0;margin-top:2px}
+.hiw-step-body{flex:1}
+.hiw-step-title{font-size:17px;font-weight:700;letter-spacing:-0.01em;margin-bottom:6px}
+.hiw-step-desc{font-size:13px;color:var(--dim);line-height:1.6}
+.hiw-step-tag{display:inline-block;margin-top:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(230,255,0,0.07);padding:4px 10px;border-radius:20px;border:1px solid rgba(230,255,0,0.15)}
+.hiw-cta{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:18px 40px;border-radius:var(--r);transition:opacity 0.15s;width:100%;max-width:320px}
+.hiw-cta:hover{opacity:0.88}
+
+/* HERO tweaks — remove stats, tighter layout */
+.landing-hero-clean{display:flex;flex-direction:column;gap:0;flex:1;justify-content:center;padding-bottom:40px}
+
+
+/* APP TOPBAR */
+#app-topbar{position:fixed;top:0;left:0;right:0;height:52px;padding-top:var(--sat);background:rgba(8,9,8,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(230,255,0,0.12);display:none;align-items:center;justify-content:space-between;padding-left:20px;padding-right:20px;z-index:120}
+#app-topbar.visible{display:flex}
+.atb-home{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--dim);letter-spacing:0.08em;text-transform:uppercase;background:none;border:none;font-family:var(--font);cursor:pointer;padding:0;transition:color 0.2s}
+.atb-home:hover{color:var(--fg)}
+.atb-home svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}
+.atb-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;color:var(--fg)}
+.atb-logo span{color:var(--accent)}
+.atb-about{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);background:none;border:none;font-family:var(--font);cursor:pointer;padding:0;transition:color 0.2s}
+.atb-about:hover{color:var(--accent)}
+
+/* era chip styles merged into horizontal scroll block above */
+
+/* ADJUST app screen top padding for topbar */
+#map{padding-top:52px}
+#collection,#passport,#dna,#achievements,#coming-soon{padding-top:0}
+.map-header{padding-top:calc(20px + var(--sat)) !important}
+.passport-header,.collection-header,.dna-header,.achieve-header,.cs-header{padding-top:calc(20px + var(--sat)) !important}
+
+
+/* ─── Landing stat bar ─── */
+.land-stats{display:flex;align-items:center;justify-content:center;padding:20px 0 8px;gap:0}
+.land-stat{flex:1;text-align:center}
+.land-stat-n{font-size:28px;font-weight:800;letter-spacing:-0.03em;color:var(--accent);line-height:1}
+.land-stat-l{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin-top:4px;font-weight:500}
+.land-stat-div{width:1px;height:32px;background:rgba(255,255,255,0.1);flex-shrink:0}
+/* ─── Howto stats bar ─── */
+.howto-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 24px 28px}
+.hwstat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 8px;text-align:center}
+.hwstat-n{font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-0.02em;line-height:1}
+.hwstat-l{font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--dim);margin-top:3px;font-weight:500}
+/* ─── Info page lists ─── */
+.info-body ul{padding-left:16px;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.info-body ul li{font-size:14px;color:var(--dim);line-height:1.5}
+
+/* ─── Landing smoothness ─── */
+/* landing fade — single clean animation on content wrapper */
+@keyframes landingFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#landing.screen.active .landing-content{animation:landingFadeUp 0.55s cubic-bezier(.22,1,.36,1) both}
+
+/* ─── Era chip scroll snap ─── */
+.hero-eras{scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.hero-era-chip{scroll-snap-align:start}
+
+/* ─── Map node hover polish ─── */
+.era-node{transition:background 0.2s,transform 0.18s cubic-bezier(.22,1,.36,1),box-shadow 0.2s}
+.era-node:hover{transform:translateX(3px)}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- XP POPUP -->
+<div class="xp-popup" id="xp-popup">
+  <div class="xp-popup-inner">
+    <div class="xp-popup-num" id="xp-popup-num">+100</div>
+    <div class="xp-popup-label">XP Earned</div>
+  </div>
+</div>
+
+
+<!-- ARTIFACT MODAL -->
+<div id="artifact-modal">
+  <div class="artifact-sheet">
+    <div class="artifact-sheet-handle"></div>
+    <div class="artifact-rarity" id="art-rarity"></div>
+    <div class="artifact-sheet-title" id="art-title"></div>
+    <div class="artifact-sheet-year" id="art-year"></div>
+    <div class="artifact-sheet-art" id="art-emoji"></div>
+    <div class="artifact-connections">
+      <h3>Art Connections</h3>
+      <div class="connection-tags" id="art-connections"></div>
+    </div>
+    <button class="artifact-collect-btn" id="art-collect-btn" onclick="collectCurrentArtifact()">Add to Collection</button>
+  </div>
+</div>
+
+<!-- SITE NAV -->
+<div id="app-topbar">
+  <button class="atb-home" onclick="goToScreen('landing')">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Home
+  </button>
+  <div class="atb-logo">ART<span>MAP</span></div>
+  <button class="atb-about" onclick="goToScreen('about')">About</button>
+</div>
+
+<header id="site-nav">
+  <div class="snav-logo" onclick="goToScreen('landing')">ART<span>MAP</span></div>
+  <nav class="snav-links">
+    <button class="snav-link" onclick="goToScreen('about')">About</button>
+    <button class="snav-link snav-app-btn" onclick="launchApp()">App ↗</button>
+  </nav>
+</header>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <canvas id="landing-canvas"></canvas>
+  <div class="landing-content">
+
+    <!-- Hero main -->
+    <div class="landing-hero-main">
+      <div class="landing-years-num">40,000</div>
+      <div class="landing-years-label">Years of Human Creativity</div>
+      <div class="landing-type-row">
+        <span class="landing-type-prefix">Now exploring →</span>
+        <span class="landing-type-era" id="landing-type-era">CAVE ART</span><span class="landing-type-cursor"></span>
+      </div>
+      <p class="landing-sub">Travel through 12 art eras, from Lascaux to AI. Collect legendary artifacts, ace quizzes, and build your unique Art DNA.</p>
+      <div class="landing-ctas">
+        <button class="btn-primary btn-glow" onclick="launchApp()">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Journey
+        </button>
+        <button class="btn-secondary" onclick="goToScreen('howto')">How it Works</button>
+      </div>
+    </div>
+
+    <!-- Animated stats -->
+    <div class="land-stats reveal" style="margin-top:28px">
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-eras">12</div>
+        <div class="land-stat-l">Art Eras</div>
+      </div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-artifacts">36+</div>
+        <div class="land-stat-l">Artifacts</div>
+      </div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-years">40k</div>
+        <div class="land-stat-l">Years</div>
+      </div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-xp">250</div>
+        <div class="land-stat-l">XP / Era</div>
+      </div>
+    </div>
+
+    <!-- Era chips -->
+    <div class="land-section-label reveal">EXPLORE ALL 12 ERAS</div>
+    <div class="hero-eras-wrap reveal"><div class="hero-eras" id="hero-eras-row">
+      <div class="hero-era-chip" style="--era-c:#8B5E3C" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg" alt="Cave Art" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">01</div>
+          <div class="era-chip-name">Cave Art</div>
+          <div class="era-chip-period">40,000 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#D4AF37" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg" alt="Egypt" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">02</div>
+          <div class="era-chip-name">Egypt</div>
+          <div class="era-chip-period">3000 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#B0C4DE" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VenusMilloLouvre.jpg/400px-VenusMilloLouvre.jpg" alt="Greece" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">03</div>
+          <div class="era-chip-name">Greece</div>
+          <div class="era-chip-period">800 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#C0392B" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Statue_of_Augustus_of_Prima_Porta.JPG/400px-Statue_of_Augustus_of_Prima_Porta.JPG" alt="Rome" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">04</div>
+          <div class="era-chip-name">Rome</div>
+          <div class="era-chip-period">509 BCE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#7B5EA7" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg" alt="Medieval" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">05</div>
+          <div class="era-chip-name">Medieval</div>
+          <div class="era-chip-period">500 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#C19A6B" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg" alt="Renaissance" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">06</div>
+          <div class="era-chip-name">Renaissance</div>
+          <div class="era-chip-period">1400 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#4A6FA5" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg" alt="Baroque" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">07</div>
+          <div class="era-chip-name">Baroque</div>
+          <div class="era-chip-period">1600 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#7EC8E3" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/400px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" alt="Impressionism" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">08</div>
+          <div class="era-chip-name">Impressionism</div>
+          <div class="era-chip-period">1860 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#E05C5C" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg" alt="Modernism" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">09</div>
+          <div class="era-chip-name">Modernism</div>
+          <div class="era-chip-period">1900 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#E6FF00" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/400px-Bauhaus-Dessau.JPG" alt="Bauhaus" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">10</div>
+          <div class="era-chip-name">Bauhaus</div>
+          <div class="era-chip-period">1919 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#4FC3F7" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/400px-Spacewar%21-PDP-1-20070512.jpg" alt="Digital" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">11</div>
+          <div class="era-chip-name">Digital</div>
+          <div class="era-chip-period">1990 CE</div>
+        </div>
+      </div>
+      <div class="hero-era-chip" style="--era-c:#CE93D8" onclick="launchApp()">
+        <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png" alt="AI Art" loading="lazy" onerror="this.style.opacity=0">
+        <div class="era-chip-overlay"></div>
+        <div class="era-chip-text">
+          <div class="era-chip-num">12</div>
+          <div class="era-chip-name">AI Art</div>
+          <div class="era-chip-period">2010 CE</div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- Artworks marquee ticker -->
+    <div class="artwork-marquee-wrap reveal" style="margin-top:20px">
+      <div class="artwork-marquee">
+        <div class="artwork-marquee-half">
+          <span class="marquee-item">Mona Lisa</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Starry Night</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Venus de Milo</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Guernica</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Sistine Chapel</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Birth of Venus</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Night Watch</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Girl with a Pearl Earring</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Lascaux Cave</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Nefertiti Bust</span><span class="marquee-sep"></span>
+          <span class="marquee-item">David</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Water Lilies</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Persistence of Memory</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Vitruvian Man</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Las Meninas</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Portrait of Edmond de Belamy</span><span class="marquee-sep"></span>
+        </div>
+        <div class="artwork-marquee-half" aria-hidden="true">
+          <span class="marquee-item">Mona Lisa</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Starry Night</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Venus de Milo</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Guernica</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Sistine Chapel</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Birth of Venus</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Night Watch</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Girl with a Pearl Earring</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Lascaux Cave</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Nefertiti Bust</span><span class="marquee-sep"></span>
+          <span class="marquee-item">David</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Water Lilies</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Persistence of Memory</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Vitruvian Man</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Las Meninas</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Portrait of Edmond de Belamy</span><span class="marquee-sep"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works inline -->
+    <div class="hiw-inline reveal">
+      <div class="hiw-inline-label">HOW IT WORKS</div>
+      <div class="hiw-inline-steps">
+        <div class="hiw-inline-step">
+          <div class="hiw-inline-num">1</div>
+          <div class="hiw-inline-body">
+            <div class="hiw-inline-title">Choose an Era</div>
+            <div class="hiw-inline-desc">Pick from 12 art eras spanning 40,000 years, from prehistoric cave art to AI-generated masterpieces.</div>
+          </div>
+          <div class="hiw-inline-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+          </div>
+        </div>
+        <div class="hiw-inline-step">
+          <div class="hiw-inline-num">2</div>
+          <div class="hiw-inline-body">
+            <div class="hiw-inline-title">Explore &amp; Collect</div>
+            <div class="hiw-inline-desc">Swipe through insight cards, collect legendary artifacts, and discover hidden connections between art movements.</div>
+          </div>
+          <div class="hiw-inline-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+        </div>
+        <div class="hiw-inline-step">
+          <div class="hiw-inline-num">3</div>
+          <div class="hiw-inline-body">
+            <div class="hiw-inline-title">Ace Quizzes &amp; Reveal Your DNA</div>
+            <div class="hiw-inline-desc">Test your knowledge with era quizzes, earn XP, unlock badges, and build your unique Art DNA profile.</div>
+          </div>
+          <div class="hiw-inline-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="6"/>
+              <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer reveal">
+      <div class="footer-logo">ART<span>MAP</span></div>
+      <div class="footer-tagline">Google Earth for Art History. Navigate 40,000 years of human creativity.</div>
+      <div class="footer-links-grid">
+        <button class="footer-link" onclick="goToScreen('about')">About</button>
+        <button class="footer-link" onclick="goToScreen('howto')">How It Works</button>
+        <button class="footer-link" onclick="goToScreen('legal')">Privacy</button>
+        <button class="footer-link" onclick="goToScreen('cookies')">Cookies</button>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2025 ArtMap · artmap.college</div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="map" class="screen">
+  <div class="map-header">
+    <div>
+      <div class="map-title">World Art Map</div>
+      <div class="map-sub">Your journey through human creativity</div>
+    </div>
+    <div class="xp-badge">
+      <span>⚡</span>
+      <span id="map-xp">0 XP</span>
+    </div>
+  </div>
+  <div class="map-progress-bar"><div class="map-progress-fill" id="map-progress-fill" style="width:0%"></div></div>
+  <div class="map-nodes" id="map-nodes"></div>
+</div>
+
+<!-- ERA -->
+<div id="era" class="screen">
+  <div class="era-header">
+    <div class="era-back" onclick="goToScreen('map')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      World Map
+    </div>
+    <div class="era-num" id="era-num"></div>
+    <div class="era-title" id="era-title"></div>
+    <div class="era-period" id="era-period"></div>
+    <div class="era-desc" id="era-desc"></div>
+  </div>
+  <div class="cards-track" id="cards-track"></div>
+  <div class="cards-dots" id="cards-dots"></div>
+  <div class="era-artifacts">
+    <div class="era-artifacts-title">Artifacts in this Era</div>
+    <div class="artifact-chips" id="artifact-chips"></div>
+  </div>
+  <button class="era-quiz-btn" id="era-quiz-btn" onclick="startQuiz()">Take the Challenge →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-back" onclick="goToScreen('era')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div class="quiz-era-label" id="quiz-era-label"></div>
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div class="quiz-q-num" id="quiz-q-num"></div>
+    <div class="quiz-question" id="quiz-question"></div>
+  </div>
+  <div class="quiz-options" id="quiz-options"></div>
+  <div class="quiz-result" id="quiz-result">
+    <div class="quiz-result-icon" id="quiz-result-icon"></div>
+    <div class="quiz-result-title" id="quiz-result-title"></div>
+    <div class="quiz-result-sub" id="quiz-result-sub"></div>
+    <div class="quiz-xp" id="quiz-xp-earned"></div>
+    <div class="quiz-xp-label">XP Earned</div>
+    <button class="quiz-continue-btn" onclick="finishQuiz()">Continue Exploring</button>
+  </div>
+</div>
+
+<!-- PASSPORT -->
+<div id="passport" class="screen">
+  <div class="passport-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Art Passport</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Your Creative Journey</div>
+  </div>
+  <div class="passport-cover">
+    <div class="passport-cover-top">
+      <div>
+        <div class="passport-name">ArtMap Passport</div>
+        <div class="passport-org">artmap.college</div>
+      </div>
+      <div style="text-align:right">
+        <div class="passport-big-num" id="passport-pct">0%</div>
+        <div class="passport-big-label">Explored</div>
+      </div>
+    </div>
+    <div class="passport-progress-bar">
+      <div class="passport-progress-fill" id="passport-fill" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="passport-stamps">
+    <div class="section-title">Era Stamps</div>
+    <div class="stamps-grid" id="stamps-grid"></div>
+    <div class="section-title">Explorer Stats</div>
+  </div>
+  <div class="passport-stats" id="passport-stats"></div>
+
+</div>
+
+<!-- COLLECTION -->
+<div id="collection" class="screen">
+  <div class="collection-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Collection</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Your Artifacts</div>
+    <div style="font-size:13px;color:var(--dim);margin-top:6px" id="collection-count">0 artifacts collected</div>
+  </div>
+  <div class="collection-summary" id="collection-summary"></div>
+  <div class="collection-filters">
+    <button class="filter-pill active" onclick="filterCollection('all',this)">All</button>
+    <button class="filter-pill" onclick="filterCollection('legendary',this)">Legendary</button>
+    <button class="filter-pill" onclick="filterCollection('epic',this)">Epic</button>
+    <button class="filter-pill" onclick="filterCollection('rare',this)">Rare</button>
+    <button class="filter-pill" onclick="filterCollection('common',this)">Common</button>
+  </div>
+  <div class="collection-grid" id="collection-grid"></div>
+</div>
+
+<!-- DNA -->
+<div id="dna" class="screen">
+  <div class="dna-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Art DNA</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Your Creative Identity</div>
+  </div>
+  <div class="dna-card">
+    <div class="dna-card-label">Your Art DNA</div>
+    <div class="dna-title" id="dna-title">Explore eras to<br>reveal your DNA</div>
+    <div class="dna-bars" id="dna-bars"></div>
+    <div style="font-size:11px;color:var(--dim);line-height:1.5">Based on your exploration history.<br>Complete quizzes to build your Art DNA.</div>
+  </div>
+  <div class="dna-actions">
+    <button class="dna-share-btn" onclick="exportDNA()">Export as PNG</button>
+    <button class="dna-reset-btn" onclick="confirmReset()">Reset Journey</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div id="achievements" class="screen">
+  <div class="achieve-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Achievements</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Badges &amp; Milestones</div>
+  </div>
+  <div class="achieve-grid" id="achieve-grid"></div>
+  <div class="hidden-section" style="margin-top:8px">
+    <div class="hidden-top">
+      <div>
+        <div class="hidden-title">Hidden Artifacts</div>
+        <div class="hidden-sub">Secret discoveries hidden throughout the app</div>
+      </div>
+      <div class="hidden-count" id="hidden-count">0/10</div>
+    </div>
+    <div class="hidden-dots" id="hidden-dots"></div>
+  </div>
+</div>
+
+<!-- COMING SOON -->
+<div id="coming-soon" class="screen">
+  <div class="cs-header">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px">Premium Features</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Coming Soon</div>
+    <div style="font-size:14px;color:var(--dim);margin-top:8px;line-height:1.5">The next chapter of<br>ArtMap is being written.</div>
+  </div>
+  <div class="cs-list" id="cs-list"></div>
+</div>
+
+
+<!-- ABOUT -->
+<div id="about" class="screen" style="background:#0C0C10">
+  <div style="height:3px;background:linear-gradient(90deg,var(--accent) 0%,rgba(230,255,0,0.3) 60%,transparent 100%)"></div>
+  <div class="about-header">
+    <div class="about-back" onclick="goBack()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:10px;font-weight:600">About</div>
+    <div style="font-size:34px;font-weight:800;letter-spacing:-0.03em;line-height:1.1">The Story</div>
+  </div>
+  <div class="founder-card">
+    <div class="founder-avatar">A</div>
+    <div class="founder-name">Arthousebase</div>
+    <div class="founder-handle">@arthousebase</div>
+    <div class="founder-bio">Founder of ArtMap and belajarbase.fun — building at the intersection of education, art history, and Web3. Active contributor to the Solana and Base ecosystems, creating tools that make learning accessible and on-chain.</div>
+    <div class="founder-links">
+      <a class="founder-link" href="https://x.com/arthousebase" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" stroke-width="2.5"/></svg>
+        @arthousebase on X
+      </a>
+      <a class="founder-link" href="https://belajarbase.fun" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        belajarbase.fun
+      </a>
+    </div>
+  </div>
+  <div class="about-section">
+    <div class="about-section-title">Mission</div>
+    <div class="about-mission">"ArtMap exists to make 40,000 years of human creativity navigable — turning art history from a textbook into an interactive journey anyone can explore, collect, and own."</div>
+    <div class="about-section-title">Ecosystem</div>
+    <div class="ecosystem-badge">
+      <div class="ecosystem-dot" style="background:#9945FF"></div>
+      <div><div class="ecosystem-name">Solana</div><div class="ecosystem-desc">Active contributor — fast, low-cost infrastructure for on-chain art</div></div>
+    </div>
+    <div class="ecosystem-badge">
+      <div class="ecosystem-dot" style="background:#0052FF"></div>
+      <div><div class="ecosystem-name">Base</div><div class="ecosystem-desc">Building on Base — Coinbase's L2 for the next generation of creators</div></div>
+    </div>
+    <div style="margin-top:20px">
+      <div class="about-section-title">Built With</div>
+      <div class="tech-chips">
+        <span class="tech-chip">HTML5</span>
+        <span class="tech-chip">Vanilla JS</span>
+        <span class="tech-chip">CSS3</span>
+        <span class="tech-chip">Canvas API</span>
+        <span class="tech-chip">LocalStorage</span>
+        <span class="tech-chip">Vercel</span>
+      </div>
+    </div>
+  </div>
+  <div class="orynth-section">
+    <div class="about-section-title">Featured On</div>
+    <div class="orynth-wrapper">
+      <a href="https://orynth.dev/projects/artmap-college" target="_blank" rel="noopener">
+        <img src="https://orynth.dev/api/badge/artmap-college?theme=dark&style=default" alt="Featured on Orynth" width="180" height="56" loading="lazy"/>
+      </a>
+    </div>
+    <div class="orynth-credit">Discover more projects at orynth.dev</div>
+  </div>
+  <div style="padding:0 24px 48px">
+    <button class="btn-primary" onclick="launchApp()" style="width:100%;max-width:360px;display:block;margin:0 auto">Open App →</button>
+  </div>
+</div>
+
+
+<!-- HOW TO -->
+<div id="howto" class="screen" style="background:#0A0C0A">
+  <div style="height:3px;background:linear-gradient(90deg,#4FC3F7 0%,var(--accent) 40%,#CE93D8 100%)"></div>
+  <div class="howto-header">
+    <div class="howto-back" onclick="goBack()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent);margin-bottom:10px;font-weight:600">Guide</div>
+    <div style="font-size:34px;font-weight:800;letter-spacing:-0.03em;line-height:1.1">How to Play</div>
+  </div>
+  <div class="howto-stats">
+    <div class="hwstat"><div class="hwstat-n">12</div><div class="hwstat-l">Eras</div></div>
+    <div class="hwstat"><div class="hwstat-n">72</div><div class="hwstat-l">Art Cards</div></div>
+    <div class="hwstat"><div class="hwstat-n">36+</div><div class="hwstat-l">Artifacts</div></div>
+    <div class="hwstat"><div class="hwstat-n">3000</div><div class="hwstat-l">Max XP</div></div>
+  </div>
+  <div class="howto-steps">
+    <div class="howto-step">
+      <div class="howto-num" style="background:#8B5E3C;color:#fff;border-color:#8B5E3C">1</div>
+      <div>
+        <div class="howto-step-title">Explore the Map</div>
+        <div class="howto-step-desc">Open the <strong style="color:var(--fg)">Map</strong> tab and tap any era — from 40,000-year-old Cave Art to today's AI Art. Each era unlocks a full chapter of history.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num" style="background:#D4AF37;color:#fff;border-color:#D4AF37">2</div>
+      <div>
+        <div class="howto-step-title">Swipe Through Art Cards</div>
+        <div class="howto-step-desc">Each era has 6 cards covering key artworks, figures, and innovations. Swipe horizontally to read each one. The dots at the bottom show your progress.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num" style="background:#B0C4DE;color:#fff;border-color:#B0C4DE">3</div>
+      <div>
+        <div class="howto-step-title">Collect Artifacts</div>
+        <div class="howto-step-desc">Tap the artifact chips listed in each era to discover and collect them. Artifacts come in 4 rarities: Common, Rare, Epic, and Legendary. View your collection in the <strong style="color:var(--fg)">Collection</strong> tab.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num" style="background:#C0392B;color:#fff;border-color:#C0392B">4</div>
+      <div>
+        <div class="howto-step-title">Take the Challenge</div>
+        <div class="howto-step-desc">Every era ends with a 3-question quiz. Answer correctly to earn XP — up to <strong style="color:var(--accent)">250 XP</strong> per perfect score. You need a perfect score to mark the era as complete.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num" style="background:#7B5EA7;color:#fff;border-color:#7B5EA7">5</div>
+      <div>
+        <div class="howto-step-title">Build Your Art DNA</div>
+        <div class="howto-step-desc">As you complete eras, your <strong style="color:var(--fg)">Art DNA</strong> profile builds up — showing which art periods resonate most with you. Export it as a PNG to share.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num" style="background:#C19A6B;color:#fff;border-color:#C19A6B">6</div>
+      <div>
+        <div class="howto-step-title">Stamp Your Passport</div>
+        <div class="howto-step-desc">Complete an era to earn its passport stamp. Your <strong style="color:var(--fg)">Art Passport</strong> tracks your journey and shows how much of human creativity you've explored.</div>
+      </div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num" style="background:#4A6FA5;color:#fff;border-color:#4A6FA5">7</div>
+      <div>
+        <div class="howto-step-title">Unlock Badges</div>
+        <div class="howto-step-desc">Explore enough eras, collect enough artifacts, and keep your quiz streak alive to unlock achievement badges. Some are hidden — keep exploring to find them.</div>
+      </div>
+    </div>
+  </div>
+  <button class="howto-start-btn" onclick="startJourney()">Start Exploring →</button>
+</div>
+
+
+
+<!-- LEGAL -->
+<div id="legal" class="screen" style="background:#0A0A0E">
+  <div style="height:3px;background:linear-gradient(90deg,#C0392B 0%,rgba(192,57,43,0.3) 60%,transparent 100%)"></div>
+  <div class="info-header">
+    <div class="info-back" onclick="goBack()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Legal</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Privacy &amp; Terms</div>
+  </div>
+  <div class="info-body">
+    <div class="info-section">
+      <h3>Terms of Use</h3>
+      <p>By using ArtMap, you agree to use the platform for personal, non-commercial exploration of art history. You may not copy, reproduce, or redistribute any content from ArtMap without prior written permission.</p>
+    </div>
+    <div class="info-section">
+      <h3>Privacy</h3>
+      <p>ArtMap does not collect personally identifiable information. Your progress, XP, and collected artifacts are stored locally in your browser using <code style="color:var(--accent);font-size:12px">localStorage</code> and never transmitted to our servers.</p>
+    </div>
+    <div class="info-section">
+      <h3>Data We Store Locally</h3>
+      <ul>
+        <li>Your XP and quiz scores</li>
+        <li>Explored and completed eras</li>
+        <li>Collected artifacts</li>
+        <li>Achievement progress</li>
+      </ul>
+      <p style="margin-top:10px">To delete all local data, use the <strong style="color:var(--fg)">Reset Journey</strong> option inside the app.</p>
+    </div>
+    <div class="info-section">
+      <h3>Intellectual Property</h3>
+      <p>All art historical information, card content, and quiz questions are provided for educational purposes. Artwork references belong to their respective rights holders. ArtMap is an independent educational project.</p>
+    </div>
+    <div class="info-section">
+      <h3>Changes</h3>
+      <p>We may update these terms as ArtMap evolves. Continued use of the app means you accept any updated terms. Last updated: June 2025.</p>
+    </div>
+    <div class="info-section">
+      <h3>Contact</h3>
+      <p>Questions? Reach us at <a href="https://x.com/arthousebase" target="_blank" rel="noopener" style="color:var(--accent)">@arthousebase</a> on X.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COOKIES -->
+<div id="cookies" class="screen" style="background:#0A0B0F">
+  <div style="height:3px;background:linear-gradient(90deg,#4FC3F7 0%,rgba(79,195,247,0.3) 60%,transparent 100%)"></div>
+  <div class="info-header">
+    <div class="info-back" onclick="goBack()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin-bottom:8px">Cookies</div>
+    <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em">Cookie Policy</div>
+  </div>
+  <div class="info-body">
+    <div class="info-section">
+      <h3>What Are Cookies?</h3>
+      <p>Cookies are small text files stored on your device when you visit a website. They help sites remember your preferences and provide a smoother experience.</p>
+    </div>
+    <div class="info-section">
+      <h3>ArtMap Uses localStorage, Not Cookies</h3>
+      <p>ArtMap does <strong style="color:var(--fg)">not</strong> use tracking cookies. Your progress is saved entirely on your device using your browser's <code style="color:var(--accent);font-size:12px;background:rgba(230,255,0,0.08);padding:2px 6px;border-radius:4px">localStorage</code>. This data is:</p>
+      <ul>
+        <li>Never sent to any server</li>
+        <li>Never shared with third parties</li>
+        <li>Stored only on your device</li>
+        <li>Fully under your control</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>What Gets Stored</h3>
+      <ul>
+        <li>Your XP, level, and quiz scores</li>
+        <li>Completed and explored eras</li>
+        <li>Collected artifacts and their rarities</li>
+        <li>Achievement badges unlocked</li>
+        <li>Your Art DNA profile data</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Third-Party Hosting</h3>
+      <p>ArtMap is hosted on <strong style="color:var(--fg)">Vercel</strong>, which may collect standard server logs (IP address, browser type, pages visited) for infrastructure and security purposes. See <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent)">Vercel's Privacy Policy</a> for details.</p>
+      <p style="margin-top:10px">ArtMap also uses <strong style="color:var(--fg)">Google Fonts</strong> for typography, which may process your IP when loading font files. ArtMap does not use any analytics or tracking pixels.</p>
+    </div>
+    <div class="info-section">
+      <h3>Clearing Your Data</h3>
+      <p>Delete all ArtMap data anytime via the <strong style="color:var(--fg)">Reset Journey</strong> option inside the app, or by clearing localStorage in your browser settings (Settings → Privacy → Clear browsing data).</p>
+    </div>
+    <div class="info-section">
+      <h3>Contact</h3>
+      <p>Cookie questions? Reach us at <a href="https://x.com/arthousebase" target="_blank" rel="noopener" style="color:var(--accent)">@arthousebase</a> on X.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- BOTTOM NAV -->
+<nav id="nav">
+  <button class="nav-btn active" onclick="goToScreen('map')" data-screen="map">
+    <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
+    Map
+  </button>
+  <button class="nav-btn" onclick="goToScreen('passport')" data-screen="passport">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="14" y2="14"/></svg>
+    Passport
+  </button>
+  <button class="nav-btn" onclick="goToScreen('collection')" data-screen="collection">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    Collection
+  </button>
+  <button class="nav-btn" onclick="goToScreen('dna')" data-screen="dna">
+    <svg viewBox="0 0 24 24"><path d="M2 12c0-4 4-8 8-8s8 4 8 8-4 8-8 8"/><path d="M12 4c4 0 8 4 8 8s-4 8-8 8-8-4-8-8"/></svg>
+    DNA
+  </button>
+  <button class="nav-btn" onclick="goToScreen('achievements')" data-screen="achievements">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M8 14l-2 8 6-3 6 3-2-8"/></svg>
+    Badges
+  </button>
+</nav>
+
+<script>
+/* ===== DATA ===== */
+const CARD_IMAGES = {
+  'Lascaux Cave':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'Hand Stencils':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Cueva_de_las_Manos_2005.jpg/600px-Cueva_de_las_Manos_2005.jpg',
+  'Chauvet Cave':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Chauvet_Cave%2C_paintings_of_horses.jpg/600px-Chauvet_Cave%2C_paintings_of_horses.jpg',
+  'Venus Figurines':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Venus_von_Willendorf_01.jpg/400px-Venus_von_Willendorf_01.jpg',
+  'Rock Engravings':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'Altamira Bison':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/AltamiraBison.jpg/600px-AltamiraBison.jpg',
+  'The Great Sphinx':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Great_Sphinx_of_Giza_-_20080716a.jpg/600px-Great_Sphinx_of_Giza_-_20080716a.jpg',
+  'Hieroglyphic Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Luxor_temple_Ramesses_II_colossus.jpg/600px-Luxor_temple_Ramesses_II_colossus.jpg',
+  'Tomb Paintings':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Nebamun_fowling.jpg/600px-Nebamun_fowling.jpg',
+  'The Book of the Dead':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/BD_Weighing_of_the_Heart.jpg/600px-BD_Weighing_of_the_Heart.jpg',
+  'Nefertiti Bust':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
+  'Amarna Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Akhenaten_Nefertiti_and_their_children.jpg/600px-Akhenaten_Nefertiti_and_their_children.jpg',
+  'Black-Figure Pottery':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Amphora_Achilles_Ajax_Louvre_F109.jpg/500px-Amphora_Achilles_Ajax_Louvre_F109.jpg',
+  'The Parthenon':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/600px-The_Parthenon_in_Athens.jpg',
+  'Contrapposto':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Doryphoros_MAN_Napoli_Inv6011-2.jpg/400px-Doryphoros_MAN_Napoli_Inv6011-2.jpg',
+  'Ideal Proportions':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Doryphoros_MAN_Napoli_Inv6011-2.jpg/400px-Doryphoros_MAN_Napoli_Inv6011-2.jpg',
+  'Red-Figure Vases':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Euphronios_krater_side_A_MET_L.2006.10.jpg/600px-Euphronios_krater_side_A_MET_L.2006.10.jpg',
+  'Hellenistic Realism':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Laocoon_and_His_Sons.jpg/400px-Laocoon_and_His_Sons.jpg',
+  'Portrait Realism':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Capitoline_Brutus_2.jpg/400px-Capitoline_Brutus_2.jpg',
+  'Triumphal Arches':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Arch_of_Titus_Rome.jpg/600px-Arch_of_Titus_Rome.jpg',
+  'Pompeii Frescoes':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Garden-fresco-Pompeii.jpg/600px-Garden-fresco-Pompeii.jpg',
+  'Roman Mosaic':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Alexander_and_Darius_mosaic.jpg/600px-Alexander_and_Darius_mosaic.jpg',
+  'The Pantheon':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Pantheon_Rome_2005May.jpg/600px-Pantheon_Rome_2005May.jpg',
+  'Column of Trajan':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Trajan%27s_Column_Rome.jpg/400px-Trajan%27s_Column_Rome.jpg',
+  'Illuminated Manuscripts':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'Byzantine Icons':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Virgin_of_Vladimir.jpg/400px-Virgin_of_Vladimir.jpg',
+  'Gothic Cathedral':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Notre-Dame_de_Paris_2013-07-24.jpg/600px-Notre-Dame_de_Paris_2013-07-24.jpg',
+  'Tapestry Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Bayeux_tapestry_-_Norman_fleet.jpg/600px-Bayeux_tapestry_-_Norman_fleet.jpg',
+  'Stained Glass':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'Fresco Cycles':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Giotto_di_Bondone_-_Nr.18_The_Lamentation_of_Christ_-_WGA09195.jpg/600px-Giotto_di_Bondone_-_Nr.18_The_Lamentation_of_Christ_-_WGA09195.jpg',
+  'Mona Lisa':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/400px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  'The Sistine Chapel':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/600px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg',
+  'Linear Perspective':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/600px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg',
+  'The Birth of Venus':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/600px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',
+  'Vitruvian Man':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Da_Vinci_Vitruve_Luc_Viatour.jpg/400px-Da_Vinci_Vitruve_Luc_Viatour.jpg',
+  'School of Athens':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/600px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg',
+  "Caravaggio's Tenebrism":'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/CARAVAGGIO_Judith.jpg/600px-CARAVAGGIO_Judith.jpg',
+  "Rembrandt's Portraits":'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg/400px-Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg',
+  "Vermeer's Light":'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg',
+  "Bernini's Ecstasy":'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Ecstasy_of_Saint_Teresa_epitome.jpg/400px-Ecstasy_of_Saint_Teresa_epitome.jpg',
+  'Velázquez Court Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/600px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg',
+  "Rubens's Energy":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Peter_Paul_Rubens_-_Sampson_and_Delilah_%28National_Gallery%29.jpg/600px-Peter_Paul_Rubens_-_Sampson_and_Delilah_%28National_Gallery%29.jpg',
+  "Monet's Water Lilies":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/600px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg',
+  'Starry Night':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/600px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+  "Renoir's Dancers":'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Pierre-Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette.jpg/600px-Pierre-Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette.jpg',
+  "Degas's Dancers":'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Degas_The_Dance_Class.jpg/600px-Degas_The_Dance_Class.jpg',
+  "Seurat's Pointillism":'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png/600px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png',
+  "Cézanne's Structure":'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Paul_C%C3%A9zanne_La_Montagne_Sainte-Victoire_%281887%29.jpg/600px-Paul_C%C3%A9zanne_La_Montagne_Sainte-Victoire_%281887%29.jpg',
+  "Les Demoiselles d'Avignon":'https://upload.wikimedia.org/wikipedia/en/4/4c/Les_Demoiselles_d%27Avignon.jpg',
+  "Mondrian's Grids":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  "Duchamp's Fountain":'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Marcel_Duchamp%2C_1917%2C_Fountain%2C_photograph_by_Alfred_Stieglitz.jpg/400px-Marcel_Duchamp%2C_1917%2C_Fountain%2C_photograph_by_Alfred_Stieglitz.jpg',
+  "Dali's Persistence":'https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg',
+  "Pollock's Drips":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  'Malevich Black Square':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg/400px-Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg',
+  'The Bauhaus School':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  "Marcel Breuer's Chair":'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Wassily_Chair.jpg/400px-Wassily_Chair.jpg',
+  "Paul Klee's Teaching":'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Paul_Klee_Senecio_1922.jpg/400px-Paul_Klee_Senecio_1922.jpg',
+  'Moholy-Nagy Light':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  'Bauhaus Typography':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  'Albers Color Study':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  "Vera Molnár's Algorithms":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Pixel Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'CGI Film':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Net Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Digital Photography':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Generative Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Generative Adversarial Networks':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'DALL-E & Midjourney':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'Style Transfer':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'Refik Anadol':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  "Beeple's Everydays":'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'Collaborative AI':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+};
+
+const ARTIFACT_IMAGES = {
+  'lascaux-bull':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'venus-willendorf':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Venus_von_Willendorf_01.jpg/400px-Venus_von_Willendorf_01.jpg',
+  'altamira-hand':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Cueva_de_las_Manos_2005.jpg/600px-Cueva_de_las_Manos_2005.jpg',
+  'tut-mask':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tutanchamun_Maske.jpg/400px-Tutanchamun_Maske.jpg',
+  'nefertiti':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
+  'rosetta':'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Rosetta_Stone_BW.jpeg/400px-Rosetta_Stone_BW.jpeg',
+  'venus-milo':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VenusMilloLouvre.jpg/400px-VenusMilloLouvre.jpg',
+  'discus':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Doryphoros_MAN_Napoli_Inv6011-2.jpg/400px-Doryphoros_MAN_Napoli_Inv6011-2.jpg',
+  'laocooon':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Laocoon_and_His_Sons.jpg/400px-Laocoon_and_His_Sons.jpg',
+  'augustus':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Statue_of_Augustus_of_Prima_Porta.JPG/400px-Statue_of_Augustus_of_Prima_Porta.JPG',
+  'trajan-col':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Trajan%27s_Column_Rome.jpg/400px-Trajan%27s_Column_Rome.jpg',
+  'pompeii-fresco':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Garden-fresco-Pompeii.jpg/600px-Garden-fresco-Pompeii.jpg',
+  'book-kells':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'bayeux':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Bayeux_tapestry_-_Norman_fleet.jpg/600px-Bayeux_tapestry_-_Norman_fleet.jpg',
+  'notre-dame':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Notre-Dame_de_Paris_2013-07-24.jpg/600px-Notre-Dame_de_Paris_2013-07-24.jpg',
+  'mona-lisa':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  'david':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Michelangelo%27s_David_-_right_view.jpg/400px-Michelangelo%27s_David_-_right_view.jpg',
+  'sistine':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/600px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg',
+  'birth-venus':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/600px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',
+  'last-supper':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9Altima_Cena_-_Da_Vinci_5.jpg/600px-%C3%9Altima_Cena_-_Da_Vinci_5.jpg',
+  'night-watch':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/The_Night_Watch_-_HD.jpg/600px-The_Night_Watch_-_HD.jpg',
+  'pearl-earring':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg',
+  'las-meninas':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/600px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg',
+  'starry-night':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/600px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+  'water-lilies':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/600px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg',
+  'grande-jatte':'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png/600px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png',
+  'guernica':'https://upload.wikimedia.org/wikipedia/en/7/74/PicassoGuernica.jpg',
+  'persistence':'https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg',
+  'demoiselles':'https://upload.wikimedia.org/wikipedia/en/4/4c/Les_Demoiselles_d%27Avignon.jpg',
+  'composition-ii':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  'wassily':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Wassily_Chair.jpg/400px-Wassily_Chair.jpg',
+  'dessau':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  'processing':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'toy-story-frame':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'gan-portrait':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'beeple-nft':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'anadol':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+};
+
+const ERA_IMAGES = {
+  'cave-art':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg',
+  'egypt':        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
+  'greece':       'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VenusMilloLouvre.jpg/400px-VenusMilloLouvre.jpg',
+  'rome':         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Statue_of_Augustus_of_Prima_Porta.JPG/400px-Statue_of_Augustus_of_Prima_Porta.JPG',
+  'medieval':     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'renaissance':  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  'baroque':      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg',
+  'impressionism':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/400px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+  'modernism':    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  'bauhaus':      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/400px-Bauhaus-Dessau.JPG',
+  'digital':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/400px-Spacewar%21-PDP-1-20070512.jpg',
+  'ai-art':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+};
+
+const ERAS = [
+  {
+    id:'cave-art',name:'Cave Art',period:'40,000–10,000 BCE',num:'01',emoji:'🦌',
+    color:'#8B5E3C',bg:'#120A06',
+    desc:'The earliest known human artistic expression — raw, powerful marks that connected our ancestors to the living world.',
+    cards:[
+      {title:'Lascaux Cave',insight:'Discovered in 1940, these paintings reveal advanced artistic planning and a deep connection to nature.',figure:'Unknown Paleolithic Artists',innovation:'Mineral pigment painting'},
+      {title:'Hand Stencils',insight:'The oldest form of self-portrait — a hand pressed against stone, proof of "I was here."',figure:'Unknown',innovation:'Negative space technique'},
+      {title:'Chauvet Cave',insight:'Horses, lions, and bears rendered with perspective that wouldn\'t be rediscovered for 30,000 years.',figure:'Unknown',innovation:'Depth illusion in 2D'},
+      {title:'Venus Figurines',insight:'Carved figures of women found across Europe, possibly representing fertility or the divine feminine.',figure:'Unknown',innovation:'Sculpture and 3D form'},
+      {title:'Rock Engravings',insight:'Petroglyphs carved into stone created the first permanent visual archive of human life.',figure:'Unknown',innovation:'Permanent record keeping'},
+      {title:'Altamira Bison',insight:'So sophisticated that 19th-century scholars refused to believe they were 14,000 years old.',figure:'Unknown',innovation:'Naturalistic animal rendering'}
+    ],
+    artifacts:['Lascaux Bull','Hand of Altamira','Venus of Willendorf','Chauvet Lion','Cave Bear','Bison of Font-de-Gaume'],
+    quiz:[
+      {q:'Where are the famous cave paintings of Lascaux located?',a:1,opts:['Spain','France','Germany','Italy']},
+      {q:'Approximately how old are the oldest known cave paintings?',a:2,opts:['10,000 years','25,000 years','40,000 years','100,000 years']},
+      {q:'What materials did cave artists primarily use for pigment?',a:0,opts:['Minerals & charcoal','Plant dyes','Animal blood','Clay only']}
+    ]
+  },
+  {
+    id:'egypt',name:'Ancient Egypt',period:'3100–30 BCE',num:'02',emoji:'𓂀',
+    color:'#D4AF37',bg:'#0D0C06',
+    desc:'Three thousand years of artistic continuity — where art was not decoration but a technology for eternal life.',
+    cards:[
+      {title:'The Great Sphinx',insight:'Guardian of Giza — built to protect the pharaoh\'s tomb for eternity.',figure:'Pharaoh Khafre',innovation:'Monumental stone sculpture'},
+      {title:'Hieroglyphic Art',insight:'Writing and image were inseparable in Egypt. Every symbol served both language and art.',figure:'Royal Scribes',innovation:'Pictographic communication'},
+      {title:'Tomb Paintings',insight:'Vivid scenes of daily life preserved for the afterlife, showing the Egyptian belief in eternal continuation.',figure:'Anonymous Court Artists',innovation:'Systematic visual narrative'},
+      {title:'The Book of the Dead',insight:'A guide to the afterlife illustrated with vivid imagery — the world\'s first illustrated manuscript.',figure:'Scribes of Thebes',innovation:'Sequential narrative illustration'},
+      {title:'Nefertiti Bust',insight:'The 3,400-year-old limestone portrait remains one of the most striking artworks ever created.',figure:'Thutmose',innovation:'Sculptural portraiture'},
+      {title:'Amarna Art',insight:'Akhenaten\'s radical reign produced a unique naturalistic style unlike anything before or after.',figure:'Akhenaten',innovation:'Naturalistic figure representation'}
+    ],
+    artifacts:['Mask of Tutankhamun','Nefertiti Bust','Book of the Dead','Rosetta Stone','Temple at Karnak','Eye of Horus'],
+    quiz:[
+      {q:'What is the ancient Egyptian system of pictographic writing called?',a:2,opts:['Cuneiform','Pictograms','Hieroglyphics','Sanskrit']},
+      {q:'The Nefertiti bust was created during which dynasty?',a:1,opts:['Old Kingdom','New Kingdom','Middle Kingdom','Late Period']},
+      {q:'What purpose did most Egyptian art serve?',a:0,opts:['Religious & funerary','Decoration','Trade','Entertainment']}
+    ]
+  },
+  {
+    id:'greece',name:'Ancient Greece',period:'800–146 BCE',num:'03',emoji:'🏺',
+    color:'#D4C5A9',bg:'#0C0C0A',
+    desc:'The Greeks invented beauty as an idea — and then tried relentlessly to capture it in marble and paint.',
+    cards:[
+      {title:'Black-Figure Pottery',insight:'Silhouetted figures in black against red clay told epic myths on objects used every day.',figure:'Exekias',innovation:'Narrative ceramics'},
+      {title:'The Parthenon',insight:'Built to perfection — columns that curve imperceptibly to correct optical illusions.',figure:'Phidias & Iktinos',innovation:'Optical correction in architecture'},
+      {title:'Contrapposto',insight:'The weight-shift stance that gave sculpture the illusion of natural movement and life.',figure:'Polykleitos',innovation:'Dynamic human figure'},
+      {title:'Ideal Proportions',insight:'The Canon of Polykleitos established mathematical ratios for the perfect human body.',figure:'Polykleitos',innovation:'Mathematical beauty'},
+      {title:'Red-Figure Vases',insight:'A technical revolution that allowed artists to show muscles, emotions, and complex scenes.',figure:'Euphronios',innovation:'Foreshortening technique'},
+      {title:'Hellenistic Realism',insight:'Late Greek sculpture embraced emotion, age, and struggle — moving beyond idealized perfection.',figure:'Unknown Hellenistic Master',innovation:'Emotional realism'}
+    ],
+    artifacts:['Elgin Marbles','Venus de Milo','Discobolus','Parthenon Frieze','Laocoön Group','Nike of Samothrace'],
+    quiz:[
+      {q:'What is the contrapposto stance in sculpture?',a:1,opts:['Arms raised upward','Weight shifted to one leg','Sitting position','Running pose']},
+      {q:'Which Greek artist created the "Canon" of ideal proportions?',a:2,opts:['Phidias','Praxiteles','Polykleitos','Myron']},
+      {q:'Black-figure pottery was replaced by which technique?',a:0,opts:['Red-figure','White-ground','Relief carving','Mosaic']}
+    ]
+  },
+  {
+    id:'rome',name:'Roman Empire',period:'27 BCE–476 CE',num:'04',emoji:'🏛️',
+    color:'#A8A8A8',bg:'#0A0A0A',
+    desc:'Rome took Greek ideals and turned them into propaganda, portraiture, and an empire-wide visual language.',
+    cards:[
+      {title:'Portrait Realism',insight:'Unlike Greek idealism, Romans depicted real faces with wrinkles, age, and character.',figure:'Anonymous Imperial Sculptors',innovation:'Veristic portraiture'},
+      {title:'Triumphal Arches',insight:'Public monuments that functioned as permanent victory announcements visible across the city.',figure:'Imperial Architects',innovation:'Narrative relief sculpture'},
+      {title:'Pompeii Frescoes',insight:'Preserved by Vesuvius, these wall paintings reveal a sophisticated Roman visual culture.',figure:'Anonymous House Painters',innovation:'Large-scale fresco technique'},
+      {title:'Roman Mosaic',insight:'Thousands of tiny tesserae assembled into paintings that could outlast any canvas.',figure:'Dioscurides of Samos',innovation:'Durable pictorial mosaic'},
+      {title:'The Pantheon',insight:'An engineering triumph — a dome with a perfect oculus that inspired architects for 2,000 years.',figure:'Apollodorus of Damascus',innovation:'Dome and oculus architecture'},
+      {title:'Column of Trajan',insight:'A 30-metre spiral narrative carved into marble — the world\'s first graphic novel.',figure:'Unknown Imperial Sculptors',innovation:'Spiral narrative relief'}
+    ],
+    artifacts:['Colosseum','Trajan\'s Column','Pantheon','Augustus Prima Porta','Roman Forum Mosaic','Pompeiian Fresco'],
+    quiz:[
+      {q:'What was veristic portraiture in Roman art?',a:0,opts:['Realistic facial features','Idealized perfection','Abstract forms','Religious imagery']},
+      {q:'The Pantheon\'s famous opening in the dome is called what?',a:2,opts:['Fenestra','Apertura','Oculus','Lunette']},
+      {q:'Pompeii\'s art was preserved by which volcanic eruption?',a:1,opts:['Stromboli','Vesuvius','Etna','Santorini']}
+    ]
+  },
+  {
+    id:'medieval',name:'Medieval',period:'500–1400 CE',num:'05',emoji:'⚜️',
+    color:'#8B0000',bg:'#0A0608',
+    desc:'Art turned inward — away from the body, toward the soul. Gold leaf, illuminated manuscripts, and Gothic cathedrals reaching toward heaven.',
+    cards:[
+      {title:'Illuminated Manuscripts',insight:'Monks spent lifetimes creating these jewel-like books — each page a meditation in color.',figure:'Benedictine Monks',innovation:'Miniature illumination with gold'},
+      {title:'Byzantine Icons',insight:'Spiritual portals, not mere images — faces flattened and gilded to transcend the physical world.',figure:'Anonymous Icon Painters',innovation:'Gold ground painting'},
+      {title:'Gothic Cathedral',insight:'Stone made to look weightless — light filtered through stained glass transforming sacred space.',figure:'Anonymous Master Builders',innovation:'Pointed arch & flying buttress'},
+      {title:'Tapestry Art',insight:'The Bayeux Tapestry tells the entire Norman Conquest in 70 meters of embroidered cloth.',figure:'Anonymous Weavers',innovation:'Narrative textile art'},
+      {title:'Stained Glass',insight:'At Chartres Cathedral, 176 stained glass windows create a symphony of colored light.',figure:'Unknown Glaziers',innovation:'Light as spiritual medium'},
+      {title:'Fresco Cycles',insight:'Giotto\'s Arena Chapel broke the Byzantine mold — giving figures weight, emotion, and space.',figure:'Giotto di Bondone',innovation:'Proto-naturalistic painting'}
+    ],
+    artifacts:['Book of Kells','Bayeux Tapestry','Notre-Dame Rose Window','Unicorn Tapestries','Duccio Madonna','Giotto Scrovegni'],
+    quiz:[
+      {q:'What artistic feature characterized Byzantine icon painting?',a:0,opts:['Gold ground & flat figures','Naturalistic perspective','Dark backgrounds','Oil paint technique']},
+      {q:'Which structural innovation allowed Gothic cathedrals to have large windows?',a:2,opts:['Round arches','Barrel vaults','Flying buttresses','Stone columns']},
+      {q:'Who created the Scrovegni Chapel frescoes that broke with Byzantine style?',a:1,opts:['Duccio','Giotto','Cimabue','Simone Martini']}
+    ]
+  },
+  {
+    id:'renaissance',name:'Renaissance',period:'1400–1600 CE',num:'06',emoji:'🎨',
+    color:'#8B2635',bg:'#0C0806',
+    desc:'Rebirth — humanity rediscovered itself as the measure of all things, and art became a window onto a rational, beautiful world.',
+    cards:[
+      {title:'Mona Lisa',insight:'The most famous smile in history — da Vinci\'s sfumato technique blurs boundaries between figure and landscape.',figure:'Leonardo da Vinci',innovation:'Sfumato technique'},
+      {title:'The Sistine Chapel',insight:'Four years lying on scaffolding — Michelangelo\'s ceiling became the apex of human artistic ambition.',figure:'Michelangelo Buonarroti',innovation:'Monumental fresco cycle'},
+      {title:'Linear Perspective',insight:'Brunelleschi\'s discovery that parallel lines converge at a vanishing point transformed painting forever.',figure:'Filippo Brunelleschi',innovation:'Mathematical perspective'},
+      {title:'The Birth of Venus',insight:'Botticelli\'s goddess rises from the sea — a pagan vision commissioned by the most powerful family in Florence.',figure:'Sandro Botticelli',innovation:'Mythological painting on canvas'},
+      {title:'Vitruvian Man',insight:'Leonardo\'s drawing reconciled the human body with geometric perfection — art and science as one.',figure:'Leonardo da Vinci',innovation:'Scientific humanism in art'},
+      {title:'School of Athens',insight:'Raphael placed all of ancient philosophy in one architectural space — the Renaissance as dialogue with antiquity.',figure:'Raphael Sanzio',innovation:'Complex multi-figure composition'}
+    ],
+    artifacts:['Mona Lisa','David','Birth of Venus','Sistine Chapel','The Last Supper','Vitruvian Man'],
+    quiz:[
+      {q:'What is the name of da Vinci\'s technique of blurring outlines?',a:1,opts:['Chiaroscuro','Sfumato','Tenebrism','Impasto']},
+      {q:'Who discovered the mathematical principles of linear perspective?',a:0,opts:['Brunelleschi','da Vinci','Alberti','Bramante']},
+      {q:'The Birth of Venus was commissioned by which Florentine family?',a:2,opts:['Pazzi','Strozzi','Medici','Visconti']}
+    ]
+  },
+  {
+    id:'baroque',name:'Baroque',period:'1600–1750 CE',num:'07',emoji:'🕯️',
+    color:'#D4AF37',bg:'#0A0800',
+    desc:'Drama, darkness, and divine light. Baroque artists wielded shadow like a weapon and emotion like a declaration.',
+    cards:[
+      {title:'Caravaggio\'s Tenebrism',insight:'Violent light from darkness — Caravaggio made holy subjects feel dangerous and alive.',figure:'Caravaggio',innovation:'Tenebrism (extreme chiaroscuro)'},
+      {title:'Rembrandt\'s Portraits',insight:'The greatest self-portrait artist in history — 90 self-portraits documenting a life through painting.',figure:'Rembrandt van Rijn',innovation:'Psychological portraiture'},
+      {title:'Vermeer\'s Light',insight:'Vermeer captured the silence of domestic life — light from a window turning ordinary scenes into poetry.',figure:'Johannes Vermeer',innovation:'Interior light painting'},
+      {title:'Bernini\'s Ecstasy',insight:'Marble that looks like it breathes. Bernini gave stone the emotion of flesh and the movement of wind.',figure:'Gian Lorenzo Bernini',innovation:'Emotional stone sculpture'},
+      {title:'Velázquez Court Art',insight:'Las Meninas broke every rule — artist and king reflected in a mirror, reality and painting collapsed.',figure:'Diego Velázquez',innovation:'Meta-pictorial composition'},
+      {title:'Rubens\'s Energy',insight:'Swirling compositions of massive figures — Baroque as physical, sensory overwhelming force.',figure:'Peter Paul Rubens',innovation:'Dynamic multi-figure painting'}
+    ],
+    artifacts:['Night Watch','Girl with a Pearl Earring','Las Meninas','Ecstasy of Saint Teresa','Calling of St Matthew','Self-Portrait Rembrandt'],
+    quiz:[
+      {q:'What technique uses extreme contrast between light and dark?',a:2,opts:['Sfumato','Fresco','Tenebrism','Tempera']},
+      {q:'Who painted Las Meninas?',a:0,opts:['Velázquez','Caravaggio','Rembrandt','Rubens']},
+      {q:'Rembrandt is known for how many self-portraits?',a:1,opts:['Around 30','Around 90','Around 150','Around 20']}
+    ]
+  },
+  {
+    id:'impressionism',name:'Impressionism',period:'1860–1900 CE',num:'08',emoji:'🌸',
+    color:'#C8A4C0',bg:'#0A080C',
+    desc:'They stepped outside — painting light itself, not objects. A revolution born in a rejected salon show.',
+    cards:[
+      {title:'Monet\'s Water Lilies',insight:'250 paintings of the same pond — a meditation on light, time, and the impossibility of capturing a moment.',figure:'Claude Monet',innovation:'Serial painting of light'},
+      {title:'Starry Night',insight:'Van Gogh\'s swirling sky is pure emotional energy translated into paint — the night sky as inner state.',figure:'Vincent van Gogh',innovation:'Expressive brushwork'},
+      {title:'Renoir\'s Dancers',insight:'The shimmer of dappled light across bodies in motion — paint applied like light itself was dancing.',figure:'Pierre-Auguste Renoir',innovation:'Broken color technique'},
+      {title:'Degas\'s Dancers',insight:'Backstage, off-guard — Degas captured movement and modern life from new, unexpected angles.',figure:'Edgar Degas',innovation:'Modern life as subject matter'},
+      {title:'Seurat\'s Pointillism',insight:'If you mix colors optically rather than on the palette, they sing. Seurat proved it with millions of dots.',figure:'Georges Seurat',innovation:'Divisionism/Pointillism'},
+      {title:'Cézanne\'s Structure',insight:'The father of modern art — finding the geometry beneath nature, paving the way for Cubism.',figure:'Paul Cézanne',innovation:'Structural color planes'}
+    ],
+    artifacts:['Starry Night','Water Lilies Series','A Sunday on La Grande Jatte','The Dance Class','Luncheon of the Boating Party','Mont Sainte-Victoire'],
+    quiz:[
+      {q:'Which Impressionist painted in series to capture changing light?',a:0,opts:['Monet','Renoir','Degas','Manet']},
+      {q:'Seurat developed which painting technique using small dots of color?',a:2,opts:['Impasto','Fresco','Pointillism','Glazing']},
+      {q:'Who is considered "the father of modern art"?',a:1,opts:['Van Gogh','Cézanne','Gauguin','Signac']}
+    ]
+  },
+  {
+    id:'modernism',name:'Modernism',period:'1900–1945 CE',num:'09',emoji:'◼',
+    color:'#FFFFFF',bg:'#0A0A0A',
+    desc:'The 20th century arrived and art shattered. Cubism, Expressionism, Surrealism — reality itself became debatable.',
+    cards:[
+      {title:'Les Demoiselles d\'Avignon',insight:'Picasso\'s 1907 painting fractured the single viewpoint — five figures seen from multiple perspectives simultaneously.',figure:'Pablo Picasso',innovation:'Cubist multi-perspective'},
+      {title:'Mondrian\'s Grids',insight:'Pure abstraction — primary colors and black lines. Mondrian believed this was the universal visual language.',figure:'Piet Mondrian',innovation:'Pure geometric abstraction'},
+      {title:'Duchamp\'s Fountain',insight:'A urinal signed R.Mutt. The most radical act in art history — concept over craft.',figure:'Marcel Duchamp',innovation:'Conceptual art & readymades'},
+      {title:'Dali\'s Persistence',insight:'A dreamscape made physical — the melting clocks of The Persistence of Memory made the unconscious visible.',figure:'Salvador Dalí',innovation:'Surrealist realism'},
+      {title:'Pollock\'s Drips',insight:'Painting without touching canvas — Pollock placed the canvas on the floor and became the painting.',figure:'Jackson Pollock',innovation:'Action painting'},
+      {title:'Malevich Black Square',insight:'A black square on white canvas. The most minimal and most radical painting of the 20th century.',figure:'Kazimir Malevich',innovation:'Suprematism — pure form'}
+    ],
+    artifacts:['Guernica','Les Demoiselles d\'Avignon','The Persistence of Memory','Composition II','Black Square','No. 31'],
+    quiz:[
+      {q:'In which year did Picasso paint Les Demoiselles d\'Avignon?',a:0,opts:['1907','1912','1915','1920']},
+      {q:'Marcel Duchamp\'s "Fountain" was which object?',a:2,opts:['A sculpture','A painting','A urinal','A window']},
+      {q:'What technique did Jackson Pollock develop?',a:1,opts:['Collage','Drip painting','Block printing','Mosaic']}
+    ]
+  },
+  {
+    id:'bauhaus',name:'Bauhaus',period:'1919–1933 CE',num:'10',emoji:'⬡',
+    color:'#E63946',bg:'#0A060A',
+    desc:'Art, craft, and industry united. The Bauhaus believed everything designed could be beautiful — chairs, buildings, typography, everything.',
+    cards:[
+      {title:'The Bauhaus School',insight:'Founded in Weimar by Gropius — art and technology combined in a school that changed design forever.',figure:'Walter Gropius',innovation:'Total design philosophy'},
+      {title:'Marcel Breuer\'s Chair',insight:'Steel tube and canvas — industrial materials transformed into furniture of radical simplicity.',figure:'Marcel Breuer',innovation:'Industrial material furniture'},
+      {title:'Paul Klee\'s Teaching',insight:'Color theory as emotional language — Klee taught at Bauhaus and transformed how we understand color.',figure:'Paul Klee',innovation:'Color theory pedagogy'},
+      {title:'Moholy-Nagy Light',insight:'Light as artistic medium — photography, film, and kinetic sculpture explored at Bauhaus.',figure:'László Moholy-Nagy',innovation:'Light as primary medium'},
+      {title:'Bauhaus Typography',insight:'Clean, geometric sans-serif fonts designed for legibility in the machine age.',figure:'Herbert Bayer',innovation:'Universal typography'},
+      {title:'Albers Color Study',insight:'Interaction of Color — Josef Albers demonstrated that color perception is always relative.',figure:'Josef Albers',innovation:'Perceptual color theory'}
+    ],
+    artifacts:['Wassily Chair','Bauhaus Manifesto','Concentric Squares','Steel Light Fixture','Bauhaus Building Dessau','Universal Alphabet'],
+    quiz:[
+      {q:'In which city was the Bauhaus school founded?',a:1,opts:['Berlin','Weimar','Munich','Hamburg']},
+      {q:'Marcel Breuer\'s famous chair was made from which material?',a:0,opts:['Steel tube','Oak wood','Iron cast','Aluminum sheet']},
+      {q:'Josef Albers is famous for his study of what?',a:2,opts:['Form','Typography','Color interaction','Architecture']}
+    ]
+  },
+  {
+    id:'digital',name:'Digital Art',period:'1960–2010 CE',num:'11',emoji:'💾',
+    color:'#00F5FF',bg:'#020B0C',
+    desc:'The screen became the canvas. New tools, new possibilities — and entirely new questions about what it means to make art.',
+    cards:[
+      {title:'Vera Molnár\'s Algorithms',insight:'Before personal computers, she wrote algorithms by hand and had them plotted — the first computational art.',figure:'Vera Molnár',innovation:'Algorithmic art'},
+      {title:'Pixel Art',insight:'The aesthetic constraint of early computers became a visual language — beautiful art made from limitation.',figure:'Various',innovation:'Raster pixel aesthetics'},
+      {title:'CGI Film',insight:'Toy Story in 1995 — the first fully computer-animated feature, opening an entirely new creative universe.',figure:'Pixar Animation',innovation:'3D computer animation'},
+      {title:'Net Art',insight:'Artists used the internet itself as the medium — art that could only exist in browser windows.',figure:'Various Net Artists',innovation:'Browser-based art'},
+      {title:'Digital Photography',insight:'Removing the scarcity of film changed everything about how we see, document, and create images.',figure:'Various',innovation:'Unlimited digital capture'},
+      {title:'Generative Art',insight:'Code that produces infinite unique variations — art as system rather than single object.',figure:'Casey Reas & others',innovation:'Software generative systems'}
+    ],
+    artifacts:['Vera\'s Computer Drawing','Space Invaders Sprite','Toy Story Frame','net.art Piece','Digital Photograph','Processing Sketch'],
+    quiz:[
+      {q:'Vera Molnár is known as a pioneer of which art form?',a:0,opts:['Algorithmic/Computational art','Photography','Video art','Print art']},
+      {q:'Which was the first fully CGI-animated feature film?',a:2,opts:['A Bug\'s Life','The Jungle Book','Toy Story','Shrek']},
+      {q:'What is generative art primarily created with?',a:1,opts:['Photography','Code/Algorithms','Digital painting','Video']}
+    ]
+  },
+  {
+    id:'ai-art',name:'AI Art',period:'2015–Present',num:'12',emoji:'✦',
+    color:'#7B2FBE',bg:'#080510',
+    desc:'Machine learning encountered human creativity and neither has been the same since. A new frontier, still uncharted.',
+    cards:[
+      {title:'Generative Adversarial Networks',insight:'Two neural networks compete — one creating, one judging — producing images no human has imagined.',figure:'Ian Goodfellow',innovation:'GAN image generation'},
+      {title:'DALL-E & Midjourney',insight:'Text becomes image in seconds. The prompt is the new brushstroke.',figure:'OpenAI / Midjourney',innovation:'Text-to-image synthesis'},
+      {title:'Style Transfer',insight:'Van Gogh\'s swirls wrapped around a photograph — artistic style separated from content and recombined.',figure:'Gatys, Ecker & Bethge',innovation:'Neural style transfer'},
+      {title:'Refik Anadol',insight:'Melting data into architecture — AI-generated projections that turn buildings into living paintings.',figure:'Refik Anadol',innovation:'Data sculpture & installation'},
+      {title:'Beeple\'s Everydays',insight:'5,000 digital artworks sold as NFT for $69 million — AI-adjacent digital art entered the fine art market.',figure:'Mike Winkelmann (Beeple)',innovation:'Digital art as collectible'},
+      {title:'Collaborative AI',insight:'Artists and algorithms working together — neither fully in control, discovering new aesthetic territories.',figure:'Various AI Artists',innovation:'Human-AI co-creation'}
+    ],
+    artifacts:['GAN Portrait','Midjourney Landscape','Neural Style Photo','Anadol\'s MoMA Wall','Beeple NFT','CLIP Imagined World'],
+    quiz:[
+      {q:'What does GAN stand for in AI art?',a:1,opts:['Generated Artistic Networks','Generative Adversarial Networks','Graphics Art Nodes','Generated Animation Networks']},
+      {q:'Which AI tool turns text descriptions into images?',a:0,opts:['DALL-E / Midjourney','DeepDream','StyleGAN','CLIP']},
+      {q:'Refik Anadol is known for which type of AI artwork?',a:2,opts:['Portrait generation','Photography','Data sculptures & projections','Film']}
+    ]
+  }
+];
+
+const ARTIFACTS_DATA = [
+  {id:'lascaux-bull',title:'Lascaux Bull',year:'c. 15,000 BCE',era:'cave-art',rarity:'legendary',emoji:'🦬',connections:['Cave Art','Animal Symbolism','Prehistoric Society','Hunting Rituals']},
+  {id:'venus-willendorf',title:'Venus of Willendorf',year:'c. 28,000 BCE',era:'cave-art',rarity:'legendary',emoji:'🗿',connections:['Fertility','Female Symbolism','Prehistoric Religion','First Sculpture']},
+  {id:'altamira-hand',title:'Hand of Altamira',year:'c. 25,000 BCE',era:'cave-art',rarity:'epic',emoji:'🖐',connections:['Self-Expression','Cave Art','Negative Space','Human Identity']},
+  {id:'tut-mask',title:'Mask of Tutankhamun',year:'c. 1323 BCE',era:'egypt',rarity:'legendary',emoji:'𓁚',connections:['Egyptian Art','Gold Work','Funerary Art','Kingship']},
+  {id:'nefertiti',title:'Nefertiti Bust',year:'c. 1345 BCE',era:'egypt',rarity:'legendary',emoji:'👑',connections:['Egyptian Portraiture','Amarna Art','Female Power','Sculptural Realism']},
+  {id:'rosetta',title:'Rosetta Stone',year:'196 BCE',era:'egypt',rarity:'epic',emoji:'📜',connections:['Hieroglyphics','Ancient Language','Egyptian Art','Decipherment']},
+  {id:'venus-milo',title:'Venus de Milo',year:'c. 100 BCE',era:'greece',rarity:'legendary',emoji:'🏛️',connections:['Greek Ideal Beauty','Hellenistic Period','Female Form','Marble Sculpture']},
+  {id:'discus',title:'Discobolus',year:'c. 450 BCE',era:'greece',rarity:'epic',emoji:'💪',connections:['Greek Athletics','Human Form','Bronze Casting','Motion in Art']},
+  {id:'laocooon',title:'Laocoön Group',year:'c. 25 BCE',era:'greece',rarity:'legendary',emoji:'⚡',connections:['Hellenistic Drama','Agony','Trojan War','Expressive Sculpture']},
+  {id:'augustus',title:'Augustus Prima Porta',year:'c. 20 BCE',era:'rome',rarity:'epic',emoji:'🏺',connections:['Imperial Propaganda','Roman Portraiture','Power Imagery','Greek Influence']},
+  {id:'trajan-col',title:'Trajan\'s Column',year:'113 CE',era:'rome',rarity:'rare',emoji:'🗽',connections:['Roman Narrative','Military Art','Spiral Relief','Historical Documentation']},
+  {id:'pompeii-fresco',title:'Pompeiian Fresco',year:'c. 50 CE',era:'rome',rarity:'rare',emoji:'🖼️',connections:['Roman Daily Life','Wall Painting','Interior Decoration','Volcanic Preservation']},
+  {id:'book-kells',title:'Book of Kells',year:'c. 800 CE',era:'medieval',rarity:'legendary',emoji:'📖',connections:['Christian Art','Illuminated Manuscript','Celtic Art','Monastic Culture']},
+  {id:'bayeux',title:'Bayeux Tapestry',year:'c. 1070 CE',era:'medieval',rarity:'legendary',emoji:'🧵',connections:['Norman Conquest','Narrative Textile','Medieval History','Embroidery Art']},
+  {id:'notre-dame',title:'Notre-Dame Rose Window',year:'c. 1250 CE',era:'medieval',rarity:'epic',emoji:'🌹',connections:['Gothic Architecture','Stained Glass','Sacred Light','Medieval Symbolism']},
+  {id:'mona-lisa',title:'Mona Lisa',year:'1503–1519',era:'renaissance',rarity:'legendary',emoji:'🎨',connections:['Portrait Painting','Sfumato','Humanism','The Last Supper','Modern Photography','Iconic Imagery']},
+  {id:'david',title:'David',year:'1501–1504',era:'renaissance',rarity:'legendary',emoji:'🗿',connections:['Human Form','Biblical Art','Florentine Republic','Marble Mastery']},
+  {id:'sistine',title:'Sistine Chapel Ceiling',year:'1508–1512',era:'renaissance',rarity:'legendary',emoji:'✋',connections:['Fresco','Biblical Narrative','Vatican','Divine Inspiration','Ceiling Painting']},
+  {id:'birth-venus',title:'Birth of Venus',year:'c. 1485',era:'renaissance',rarity:'legendary',emoji:'🐚',connections:['Mythology','Female Beauty','Medici Patronage','Neo-Platonism']},
+  {id:'last-supper',title:'The Last Supper',year:'1495–1498',era:'renaissance',rarity:'legendary',emoji:'🍷',connections:['Christian Art','Linear Perspective','Group Portrait','Narrative Painting']},
+  {id:'night-watch',title:'The Night Watch',year:'1642',era:'baroque',rarity:'legendary',emoji:'🌙',connections:['Group Portrait','Dutch Golden Age','Rembrandt','Light and Shadow']},
+  {id:'pearl-earring',title:'Girl with a Pearl Earring',year:'c. 1665',era:'baroque',rarity:'legendary',emoji:'💎',connections:['Tronie Portrait','Dutch Baroque','Vermeer\'s Light','Mystery in Art']},
+  {id:'las-meninas',title:'Las Meninas',year:'1656',era:'baroque',rarity:'legendary',emoji:'🪞',connections:['Meta-painting','Spanish Court','Velázquez','Mirror Reflection']},
+  {id:'starry-night',title:'Starry Night',year:'1889',era:'impressionism',rarity:'legendary',emoji:'🌌',connections:['Post-Impressionism','Emotional Color','Mental State','Swirling Movement','Modern Expressionism']},
+  {id:'water-lilies',title:'Water Lilies Series',year:'1896–1926',era:'impressionism',rarity:'legendary',emoji:'🌸',connections:['Impressionism','Serial Painting','Garden','Reflected Light']},
+  {id:'grande-jatte',title:'A Sunday on La Grande Jatte',year:'1884–1886',era:'impressionism',rarity:'epic',emoji:'☀️',connections:['Pointillism','Divisionism','Modern Leisure','Paris Life']},
+  {id:'guernica',title:'Guernica',year:'1937',era:'modernism',rarity:'legendary',emoji:'🕊️',connections:['Anti-war','Cubism','Spanish Civil War','Political Art','Suffering']},
+  {id:'persistence',title:'The Persistence of Memory',year:'1931',era:'modernism',rarity:'legendary',emoji:'⏰',connections:['Surrealism','Dreams','Time','Unconscious Mind','Dalí']},
+  {id:'demoiselles',title:'Les Demoiselles d\'Avignon',year:'1907',era:'modernism',rarity:'legendary',emoji:'🔷',connections:['Cubism','Primitive Art','Female Form','Art Revolution','African Masks']},
+  {id:'composition-ii',title:'Composition II in Red, Blue & Yellow',year:'1930',era:'modernism',rarity:'epic',emoji:'🟥',connections:['De Stijl','Pure Abstraction','Primary Colors','Grid Geometry']},
+  {id:'wassily',title:'Wassily Chair',year:'1925',era:'bauhaus',rarity:'rare',emoji:'💺',connections:['Industrial Design','Bauhaus','Form Follows Function','Steel Furniture']},
+  {id:'dessau',title:'Bauhaus Building Dessau',year:'1926',era:'bauhaus',rarity:'epic',emoji:'🏗️',connections:['Architecture','Modernism','Glass Curtain Wall','Gropius']},
+  {id:'processing',title:'Processing Sketch',year:'2001',era:'digital',rarity:'common',emoji:'💻',connections:['Creative Coding','Generative Art','Open Source','Digital Aesthetics']},
+  {id:'toy-story-frame',title:'Toy Story Frame',year:'1995',era:'digital',rarity:'rare',emoji:'🎬',connections:['CGI Animation','Digital Cinema','3D Graphics','Pixar']},
+  {id:'gan-portrait',title:'Portrait of Edmond de Belamy',year:'2018',era:'ai-art',rarity:'epic',emoji:'🤖',connections:['GAN Art','AI Creativity','Auction Record','Obvious Collective']},
+  {id:'beeple-nft',title:'Everydays: The First 5000 Days',year:'2021',era:'ai-art',rarity:'legendary',emoji:'✦',connections:['NFT','Digital Art Market','Beeple','Christie\'s Auction']},
+  {id:'anadol',title:'Unsupervised (MoMA)',year:'2022',era:'ai-art',rarity:'legendary',emoji:'🌊',connections:['AI Installation','Data Sculpture','MoMA','Refik Anadol']},
+];
+
+const ACHIEVEMENTS = [
+  {id:'first-discovery',name:'First Discovery',desc:'Collect your first artifact',emoji:'🔍',req:1},
+  {id:'explorer',name:'Explorer',desc:'Explore 3 art eras',emoji:'🗺️',req:3},
+  {id:'artifact-hunter',name:'Artifact Hunter',desc:'Collect 10 artifacts',emoji:'⚗️',req:10},
+  {id:'renaissance-explorer',name:'Renaissance Explorer',desc:'Complete the Renaissance era',emoji:'🎨',req:'era:renaissance'},
+  {id:'modernist-mind',name:'Modernist Mind',desc:'Complete the Modernism era',emoji:'◼',req:'era:modernism'},
+  {id:'master-collector',name:'Master Collector',desc:'Collect 25 artifacts',emoji:'🏆',req:25},
+  {id:'world-traveler',name:'World Traveler',desc:'Explore 8 art eras',emoji:'🌍',req:8},
+  {id:'art-historian',name:'Art Historian',desc:'Complete all 12 eras',emoji:'📚',req:12},
+  {id:'quiz-master',name:'Quiz Master',desc:'Ace 3 quizzes in a row',emoji:'🧠',req:'quiz:3'},
+  {id:'dna-decoded',name:'DNA Decoded',desc:'Explore 5 eras to reveal Art DNA',emoji:'🧬',req:5},
+];
+
+const COMING_SOON = [
+  {icon:'👛',title:'Wallet Connect',desc:'Link your crypto wallet to unlock exclusive features'},
+  {icon:'🛂',title:'Onchain Passport',desc:'Mint your Art Passport as a soulbound NFT on-chain'},
+  {icon:'🖼️',title:'NFT Collections',desc:'Own certified digital artworks from the ArtMap collection'},
+  {icon:'🌐',title:'Global Rankings',desc:'Compete with art explorers from around the world'},
+  {icon:'🏛️',title:'Museum Challenges',desc:'Partner with real museums for exclusive challenge drops'},
+];
+
+
+/* ===== STATE ===== */
+const STATE_KEY = 'artmap_v1';
+let state = JSON.parse(localStorage.getItem(STATE_KEY) || 'null') || {
+  xp: 0,
+  completedEras: [],
+  discoveredArtifacts: [],
+  quizStreak: 0,
+  hiddenFound: 0,
+
+};
+function saveState(){localStorage.setItem(STATE_KEY, JSON.stringify(state))}
+
+/* ===== NAVIGATION ===== */
+let currentScreen = 'landing';
+let currentEra = null;
+let currentCard = 0;
+let quizState = {era:null,qi:0,correct:0};
+
+const SITE_NAV_SCREENS = new Set(['landing','about','howto','legal','cookies']);
+const APP_SCREENS = new Set(['map','era','quiz','passport','collection','dna','achievements','coming-soon']);
+
+// Track whether user has launched the app in this session
+let appLaunched = false;
+
+function goToScreen(id){
+  if(id==='_landing') id='landing';
+  const siteNav = document.getElementById('site-nav');
+  const appTopbar = document.getElementById('app-topbar');
+  const bottomNav = document.getElementById('nav');
+
+  if(APP_SCREENS.has(id)){
+    // Inside the app → app topbar + bottom nav
+    appLaunched = true;
+    siteNav.classList.remove('visible');
+    appTopbar.classList.add('visible');
+    bottomNav.classList.add('visible');
+  } else if(appLaunched && (id==='about'||id==='howto'||id==='legal'||id==='cookies')){
+    // Info pages accessed from inside the app → keep app topbar
+    siteNav.classList.remove('visible');
+    appTopbar.classList.add('visible');
+    bottomNav.classList.remove('visible');
+  } else {
+    // Landing / info pages in normal flow → site nav only
+    siteNav.classList.add('visible');
+    appTopbar.classList.remove('visible');
+    bottomNav.classList.remove('visible');
+  }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.screen === id);
+  });
+  currentScreen = id;
+  if(id==='landing'){
+    updateLandingStats();
+  } else {
+    if(id==='map') renderMap();
+    if(id==='passport') renderPassport();
+    if(id==='collection') renderCollection();
+    if(id==='dna') renderDNA();
+    if(id==='achievements') renderAchievements();
+    if(id==='coming-soon') renderComingSoon();
+  }
+  const _activeEl = document.getElementById(id);
+  if (_activeEl) _activeEl.scrollTop = 0;
+}
+
+function scrollToHIW(){ goToScreen('howto'); }
+
+function goBack(){
+  if(appLaunched) goToScreen('map');
+  else goToScreen('landing');
+}
+
+function launchApp(){
+  if(state.completedEras.length > 0){
+    const nextIdx = state.completedEras.length < ERAS.length ? state.completedEras.length : 0;
+    openEra(ERAS[nextIdx].id);
+  } else {
+    goToScreen('map');
+  }
+}
+
+function startJourney(){
+  launchApp();
+}
+
+/* ===== MAP ===== */
+function renderMap(){
+  document.getElementById('map-xp').textContent = state.xp + ' XP';
+  document.getElementById('map-sub')?.setAttribute && document.querySelector('.map-sub') && (document.querySelector('.map-sub').textContent = state.completedEras.length + ' of ' + ERAS.length + ' eras explored');
+  const pct = Math.round((state.completedEras.length / ERAS.length) * 100);
+  document.getElementById('map-progress-fill').style.width = pct + '%';
+  
+  const container = document.getElementById('map-nodes');
+  container.innerHTML = '';
+  
+  ERAS.forEach((era, i) => {
+    const completed = state.completedEras.includes(era.id);
+    const locked = false; // All eras accessible
+    
+    // Connector line
+    if(i > 0){
+      const conn = document.createElement('div');
+      conn.className = 'connector' + (state.completedEras.includes(ERAS[i-1].id) ? ' filled' : '');
+      container.appendChild(conn);
+    }
+    
+    const node = document.createElement('div');
+    node.className = `era-node${completed?' completed':''}${locked?' locked':''}`;
+    node.style.setProperty('--era-color', era.color);
+    if(!locked) node.onclick = () => openEra(era.id);
+    
+    const artifacts = ARTIFACTS_DATA.filter(a=>a.era===era.id);
+    const discovered = artifacts.filter(a=>state.discoveredArtifacts.includes(a.id)).length;
+    
+    const isNext = !completed && (i===0 || state.completedEras.includes(ERAS[i-1].id));
+    node.innerHTML = `
+      <div class="era-node-thumb" style="border-color:${completed?era.color+'66':'transparent'}">
+        <img src="${ERA_IMAGES[era.id]||''}" alt="${era.name}" loading="lazy" onerror="this.style.display='none'">
+        <div class="era-node-thumb-bg" style="background:${era.color}33"></div>
+        <div class="era-node-thumb-emoji">${era.emoji}</div>
+        ${completed ? '<div class="era-thumb-stamp">✓</div>' : ''}
+      </div>
+      <div class="era-node-info">
+        <div class="era-node-num" style="color:${era.color}">${era.num}</div>
+        <div class="era-node-name">${era.name}</div>
+        <div class="era-node-date">${era.period}</div>
+        <div class="era-node-meta">
+          <span class="era-tag">${discovered}/${artifacts.length} artifacts</span>
+          ${completed ? '<span class="era-xp" style="color:var(--accent)">✓ Complete</span>' : ''}
+          ${isNext && !completed ? '<span class="era-xp" style="color:#60A5FA">→ Up next</span>' : ''}
+        </div>
+      </div>
+      <svg class="era-arrow" width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    `;
+    container.appendChild(node);
+  });
+}
+
+/* ===== ERA ===== */
+function openEra(eraId){
+  currentEra = ERAS.find(e=>e.id===eraId);
+  if(!currentEra) return;
+  
+  document.documentElement.style.setProperty('--era-bg', currentEra.bg);
+  document.getElementById('era').style.background = currentEra.bg;
+  document.getElementById('era-num').textContent = currentEra.num;
+  document.getElementById('era-title').textContent = currentEra.name;
+  document.getElementById('era-period').textContent = currentEra.period;
+  document.getElementById('era-desc').textContent = currentEra.desc;
+  
+  // Cards
+  renderCards();
+  
+  // Artifact chips
+  const chips = document.getElementById('artifact-chips');
+  chips.innerHTML = '';
+  const artifacts = ARTIFACTS_DATA.filter(a=>a.era===eraId);
+  artifacts.forEach(a=>{
+    const chip = document.createElement('button');
+    const discovered = state.discoveredArtifacts.includes(a.id);
+    chip.className = 'artifact-chip' + (discovered?' discovered':'');
+    chip.textContent = a.title;
+    chip.onclick = () => openArtifactModal(a);
+    chips.appendChild(chip);
+  });
+  
+  goToScreen('era');
+  
+  // Check for hidden artifact
+  if(Math.random() < 0.15){
+    setTimeout(()=>{
+      if(state.hiddenFound < 10){
+        state.hiddenFound++;
+        saveState();
+        showToast('✦ Hidden artifact discovered!', true);
+      }
+    }, 3000);
+  }
+}
+
+function renderCards(){
+  const track = document.getElementById('cards-track');
+  const dots = document.getElementById('cards-dots');
+  track.innerHTML = '';
+  dots.innerHTML = '';
+  
+  currentEra.cards.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'art-card';
+    const imgUrl = CARD_IMAGES[card.title] || ERA_IMAGES[currentEra.id] || '';
+    el.innerHTML = `
+      <div class="art-card-img">
+        ${imgUrl ? `<img src="${imgUrl}" alt="${card.title}" loading="lazy" onerror="this.style.display='none'">` : ''}
+        <div class="art-card-img-bg" style="background:linear-gradient(135deg,${currentEra.color}33,${currentEra.bg})"></div>
+        <div class="art-card-img-overlay"></div>
+        <div class="art-card-era-tag" style="background:${currentEra.color}22;border-color:${currentEra.color}55;color:${currentEra.color}">${card.innovation}</div>
+      </div>
+      <div class="art-card-body">
+        <div class="art-card-title">${card.title}</div>
+        <div class="art-card-insight">${card.insight}</div>
+        <div class="art-card-row">
+          <div class="art-card-field">
+            <label>Key Figure</label>
+            <span>${card.figure}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    track.appendChild(el);
+    
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i===0?' active':'');
+    dots.appendChild(dot);
+  });
+  
+  currentCard = 0;
+  track.onscroll = onCardsScroll;
+}
+
+function onCardsScroll(){
+  const track = document.getElementById('cards-track');
+  const idx = Math.round(track.scrollLeft / (track.offsetWidth * 0.9));
+  document.querySelectorAll('.cards-dots .dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===idx);
+  });
+  currentCard = idx;
+}
+
+/* ===== ARTIFACT MODAL ===== */
+let currentArtifact = null;
+function openArtifactModal(artifact){
+  currentArtifact = artifact;
+  document.getElementById('art-rarity').textContent = artifact.rarity.toUpperCase();
+  document.getElementById('art-rarity').className = 'artifact-rarity ' + artifact.rarity;
+  document.getElementById('art-title').textContent = artifact.title;
+  document.getElementById('art-year').textContent = artifact.year + ' · ' + ERAS.find(e=>e.id===artifact.era)?.name;
+  const artImgEl = document.getElementById('art-emoji');
+  const artImgUrl = ARTIFACT_IMAGES[artifact.id] || ERA_IMAGES[artifact.era] || '';
+  if(artImgUrl){
+    artImgEl.innerHTML = `<img src="${artImgUrl}" alt="${artifact.title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r)" onerror="this.outerHTML='<span style=font-size:72px>${artifact.emoji}</span>'">`;
+  } else {
+    artImgEl.textContent = artifact.emoji;
+  }
+  
+  const conns = document.getElementById('art-connections');
+  conns.innerHTML = artifact.connections.map(c=>`<span class="connection-tag">${c}</span>`).join('');
+  
+  const btn = document.getElementById('art-collect-btn');
+  const owned = state.discoveredArtifacts.includes(artifact.id);
+  btn.textContent = owned ? '✓ In Collection' : 'Add to Collection';
+  btn.style.opacity = owned ? '0.5' : '1';
+  btn.disabled = owned;
+  
+  document.getElementById('artifact-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function collectCurrentArtifact(){
+  if(!currentArtifact || state.discoveredArtifacts.includes(currentArtifact.id)) return;
+  state.discoveredArtifacts.push(currentArtifact.id);
+  
+  const xpMap = {legendary:150,epic:100,rare:60,common:30};
+  const xpGain = xpMap[currentArtifact.rarity] || 30;
+  state.xp += xpGain;
+  saveState();
+  
+  closeModal('artifact-modal');
+  showXPPopup(xpGain);
+  showToast(`${currentArtifact.title} added to collection!`, true);
+  checkAchievements();
+  
+  // Update chip
+  document.querySelectorAll('.artifact-chip').forEach(c=>{
+    if(c.textContent === currentArtifact.title) c.classList.add('discovered');
+  });
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ===== QUIZ ===== */
+function startQuiz(){
+  if(!currentEra) return;
+  quizState = {era: currentEra, qi: 0, correct: 0};
+  
+  document.getElementById('quiz-era-label').textContent = currentEra.name;
+  document.getElementById('quiz-result').classList.remove('show');
+  document.querySelectorAll('.quiz-options, .quiz-header').forEach(el=>el.style.display='');
+  
+  renderQuizQuestion();
+  goToScreen('quiz');
+}
+
+function renderQuizQuestion(){
+  const {era, qi} = quizState;
+  const q = era.quiz[qi];
+  
+  // Progress pips
+  const prog = document.getElementById('quiz-progress');
+  prog.innerHTML = era.quiz.map((_,i)=>`<div class="quiz-pip${i<qi?' done':i===qi?' current':''}"></div>`).join('');
+  
+  document.getElementById('quiz-q-num').textContent = `Question ${qi+1} of ${era.quiz.length}`;
+  document.getElementById('quiz-question').textContent = q.q;
+  
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  q.opts.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function answerQuiz(idx, btn){
+  const {era, qi} = quizState;
+  const q = era.quiz[qi];
+  const correct = idx === q.a;
+  
+  document.querySelectorAll('.quiz-option').forEach(b=>b.onclick=null);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if(!correct){
+    document.querySelectorAll('.quiz-option')[q.a].classList.add('correct');
+  }
+  if(correct) quizState.correct++;
+  
+  setTimeout(()=>{
+    quizState.qi++;
+    if(quizState.qi < era.quiz.length){
+      renderQuizQuestion();
+    } else {
+      showQuizResult();
+    }
+  }, 900);
+}
+
+function showQuizResult(){
+  const {era, correct} = quizState;
+  const total = era.quiz.length;
+  const perfect = correct === total;
+  const xpEarned = correct * 50 + (perfect ? 100 : 0);
+  
+  state.xp += xpEarned;
+  if(perfect){
+    state.quizStreak = (state.quizStreak||0) + 1;
+    if(!state.completedEras.includes(era.id)){
+      state.completedEras.push(era.id);
+    }
+  }
+  saveState();
+  
+  document.getElementById('quiz-q-num').style.display = 'none';
+  document.getElementById('quiz-question').style.display = 'none';
+  document.getElementById('quiz-options').style.display = 'none';
+  
+  const icons = ['😔','😐','😊','🎉'];
+  const pct = correct/total;
+  document.getElementById('quiz-result-icon').textContent = icons[Math.min(Math.floor(pct*3+0.5),3)];
+  document.getElementById('quiz-result-title').textContent = perfect ? 'Perfect Score!' : correct > 1 ? 'Well Done!' : 'Keep Exploring';
+  document.getElementById('quiz-result-sub').textContent = `You got ${correct} out of ${total} correct.${perfect?' Era complete!':''}`;
+  document.getElementById('quiz-xp-earned').textContent = '+' + xpEarned;
+  document.getElementById('quiz-result').classList.add('show');
+  
+  showXPPopup(xpEarned);
+  checkAchievements();
+}
+
+function finishQuiz(){
+  document.getElementById('quiz-q-num').style.display = '';
+  document.getElementById('quiz-question').style.display = '';
+  document.getElementById('quiz-options').style.display = '';
+  document.getElementById('quiz-result').classList.remove('show');
+  goToScreen('map');
+}
+
+
+
+
+
+/* ===== PASSPORT ===== */
+function renderPassport(){
+  const pct = Math.round((state.completedEras.length / ERAS.length) * 100);
+  document.getElementById('passport-pct').textContent = pct + '%';
+  document.querySelector('.passport-big-label') && (document.querySelector('.passport-big-label').textContent = pct === 100 ? 'Complete! 🎉' : 'Explored');
+  document.getElementById('passport-fill').style.width = pct + '%';
+  
+  const grid = document.getElementById('stamps-grid');
+  grid.innerHTML = ERAS.map(era=>`
+    <div class="stamp${state.completedEras.includes(era.id)?' earned':''}" onclick="openEra('${era.id}')">
+      <div class="stamp-emoji">${era.emoji}</div>
+      <div class="stamp-label">${era.name.split(' ')[0]}</div>
+    </div>
+  `).join('');
+  
+  const level = Math.floor(state.xp / 200) + 1;
+  const xpToNext = 200 - (state.xp % 200);
+  const stats = document.getElementById('passport-stats');
+  stats.innerHTML = `
+    <div class="pstat"><div class="pstat-num">${state.xp}</div><div class="pstat-label">Total XP</div></div>
+    <div class="pstat"><div class="pstat-num">${state.completedEras.length}<span style="font-size:16px;opacity:0.4">/12</span></div><div class="pstat-label">Eras Done</div></div>
+    <div class="pstat"><div class="pstat-num">${state.discoveredArtifacts.length}<span style="font-size:16px;opacity:0.4">/${ARTIFACTS_DATA.length}</span></div><div class="pstat-label">Artifacts</div></div>
+    <div class="pstat"><div class="pstat-num">Lv ${level}</div><div class="pstat-label">${xpToNext} XP to next</div></div>
+  `;
+}
+
+/* ===== COLLECTION ===== */
+let collectionFilter = 'all';
+function renderCollection(){
+  const collected = ARTIFACTS_DATA.filter(a=>state.discoveredArtifacts.includes(a.id));
+  const total = ARTIFACTS_DATA.length;
+  document.getElementById('collection-count').textContent = `${collected.length} of ${total} artifacts collected`;
+
+  // Summary stats
+  const summaryEl = document.getElementById('collection-summary');
+  if(summaryEl){
+    const legendary = collected.filter(a=>a.rarity==='legendary').length;
+    const epic = collected.filter(a=>a.rarity==='epic').length;
+    summaryEl.innerHTML = `
+      <div class="coll-stat"><div class="coll-stat-num">${collected.length}</div><div class="coll-stat-label">Collected</div></div>
+      <div class="coll-stat"><div class="coll-stat-num" style="color:#FFD700">${legendary}</div><div class="coll-stat-label">Legendary</div></div>
+      <div class="coll-stat"><div class="coll-stat-num" style="color:#C084FC">${epic}</div><div class="coll-stat-label">Epic</div></div>
+      <div class="coll-stat"><div class="coll-stat-num">${Math.round(collected.length/total*100)}%</div><div class="coll-stat-label">Complete</div></div>
+    `;
+  }
+
+  const pool = collectionFilter === 'all' ? ARTIFACTS_DATA : ARTIFACTS_DATA.filter(a=>a.rarity===collectionFilter);
+  
+  const grid = document.getElementById('collection-grid');
+  grid.innerHTML = pool.map(a=>{
+    const owned = state.discoveredArtifacts.includes(a.id);
+    const era = ERAS.find(e=>e.id===a.era);
+    const imgUrl = ARTIFACT_IMAGES[a.id] || ERA_IMAGES[a.era] || '';
+    return `
+      <div class="collect-card${owned?'':' undiscovered'}" onclick="openArtifactModal(ARTIFACTS_DATA.find(x=>x.id==='${a.id}'))">
+        <div class="collect-card-art">
+          ${imgUrl ? `<img src="${imgUrl}" alt="${a.title}" loading="lazy" onerror="this.style.display='none'">` : ''}
+          <div class="collect-card-art-bg" style="background:${era?.color+'18' || 'rgba(255,255,255,0.02)'}"></div>
+          ${!owned ? `<div class="collect-card-lock-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>` : ''}
+          <span class="collect-card-rarity rarity-${a.rarity}" style="z-index:4;position:absolute;top:8px;right:8px">${a.rarity}</span>
+        </div>
+        <div class="collect-card-info">
+          <div class="collect-card-title">${owned ? a.title : '???'}</div>
+          <div class="collect-card-era">${era?.name || ''}</div>
+          ${!owned ? '<span class="collect-card-era-tag">Tap to discover</span>' : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterCollection(filter, btn){
+  collectionFilter = filter;
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderCollection();
+}
+
+/* ===== DNA ===== */
+function renderDNA(){
+  const explored = state.completedEras;
+  const totalCompleted = explored.length;
+
+  // Build full DNA map across all 12 eras
+  const dnaMap = {};
+  if(totalCompleted > 0){
+    const base = Math.floor(100 / totalCompleted);
+    let remainder = 100 - base * totalCompleted;
+    explored.forEach((id,i)=>{ dnaMap[id] = base + (i===0?remainder:0); });
+  }
+
+  if(totalCompleted === 0){
+    document.getElementById('dna-title').innerHTML = '12 Eras<br>to Explore';
+  } else {
+    const topId = explored[0];
+    const topEra = ERAS.find(e=>e.id===topId);
+    document.getElementById('dna-title').innerHTML = `${dnaMap[topId]}%<br>${topEra.name}`;
+  }
+
+  document.getElementById('dna-bars').innerHTML = ERAS.map(era=>{
+    const pct = dnaMap[era.id] || 0;
+    const done = explored.includes(era.id);
+    return `
+      <div class="dna-bar-row${done?'':' dim'}">
+        <div class="dna-bar-label">${era.emoji} ${era.name.split(' ')[0]}</div>
+        <div class="dna-bar-track"><div class="dna-bar-fill" style="width:${pct}%;background:${done?era.color:'rgba(255,255,255,0.08)'}"></div></div>
+        <div class="dna-bar-pct">${done?pct+'%':'—'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function exportDNA(){
+  // Canvas export
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 800;
+  const ctx = canvas.getContext('2d');
+  
+  ctx.fillStyle = '#0A0A0A';
+  ctx.fillRect(0,0,800,800);
+  
+  ctx.fillStyle = '#E6FF00';
+  ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+  ctx.fillText('YOUR ART DNA', 60, 80);
+  
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 72px "Space Grotesk", sans-serif';
+  ctx.fillText('ArtMap', 60, 160);
+  
+  ctx.fillStyle = '#B0B0B0';
+  ctx.font = '18px "Space Grotesk", sans-serif';
+  ctx.fillText('artmap.college', 60, 200);
+  
+  const explored = state.completedEras;
+  if(explored.length > 0){
+    let y = 280;
+    const total = explored.length;
+    explored.slice(0,5).forEach(id=>{
+      const era = ERAS.find(e=>e.id===id);
+      const pct = Math.round(100/total);
+      ctx.fillStyle = era.color;
+      ctx.fillRect(60, y, (680*pct/100), 28);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 16px "Space Grotesk", sans-serif';
+      ctx.fillText(era.name + ' — ' + pct + '%', 60, y+50);
+      y += 80;
+    });
+  } else {
+    ctx.fillStyle = '#B0B0B0';
+    ctx.font = '20px "Space Grotesk", sans-serif';
+    ctx.fillText('Start exploring to reveal your Art DNA', 60, 360);
+  }
+  
+  const link = document.createElement('a');
+  link.download = 'artmap-dna.png';
+  link.href = canvas.toDataURL();
+  link.click();
+  showToast('Art DNA exported!', true);
+}
+
+function confirmReset(){
+  if(confirm('Reset your entire journey? All progress will be lost.')){
+    state = {xp:0,completedEras:[],discoveredArtifacts:[],quizStreak:0,hiddenFound:0};
+    saveState();
+    goToScreen('landing');
+    showToast('Journey reset.');
+  }
+}
+
+/* ===== ACHIEVEMENTS ===== */
+function getAchievementProgress(a){
+  if(typeof a.req==='number'){
+    const v = Math.max(state.discoveredArtifacts.length, state.completedEras.length);
+    return Math.min(100, Math.round(v/a.req*100));
+  }
+  if(typeof a.req==='string'){
+    if(a.req.startsWith('era:')) return state.completedEras.includes(a.req.split(':')[1])?100:0;
+    if(a.req.startsWith('quiz:')){
+      const need=parseInt(a.req.split(':')[1]);
+      return Math.min(100,Math.round((state.quizStreak||0)/need*100));
+    }
+  }
+  return 0;
+}
+
+function renderAchievements(){
+  const grid = document.getElementById('achieve-grid');
+  grid.innerHTML = ACHIEVEMENTS.map(a=>{
+    const unlocked = isAchievementUnlocked(a);
+    const prog = unlocked ? 100 : getAchievementProgress(a);
+    return `
+      <div class="achieve-card${unlocked?' unlocked':' locked'}">
+        ${unlocked?'<div class="achieve-unlocked-tag">Earned</div>':''}
+        <div class="achieve-badge" style="opacity:${unlocked?1:0.5}">${a.emoji}</div>
+        <div class="achieve-name">${a.name}</div>
+        <div class="achieve-desc">${a.desc}</div>
+        ${!unlocked && prog>0 ? `<div style="margin-top:10px;background:rgba(255,255,255,0.06);border-radius:4px;height:3px;overflow:hidden"><div style="width:${prog}%;height:100%;background:var(--accent);border-radius:4px"></div></div><div style="font-size:10px;color:var(--dim);margin-top:4px">${prog}% progress</div>` : ''}
+      </div>
+    `;
+  }).join('');
+  
+  const hc = state.hiddenFound || 0;
+  document.getElementById('hidden-count').textContent = hc + '/10';
+  document.getElementById('hidden-dots').innerHTML = Array(10).fill(0).map((_,i)=>`<div class="hdot${i<hc?' found':''}"></div>`).join('');
+}
+
+function isAchievementUnlocked(a){
+  if(typeof a.req === 'number') return state.discoveredArtifacts.length >= a.req || state.completedEras.length >= a.req;
+  if(typeof a.req === 'string'){
+    if(a.req.startsWith('era:')) return state.completedEras.includes(a.req.split(':')[1]);
+    if(a.req.startsWith('quiz:')) return (state.quizStreak||0) >= parseInt(a.req.split(':')[1]);
+  }
+  return false;
+}
+
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    const unlocked = isAchievementUnlocked(a);
+    const key = 'ach_notified_' + a.id;
+    if(unlocked && !localStorage.getItem(key)){
+      localStorage.setItem(key,'1');
+      setTimeout(()=>showToast('🏆 Achievement: ' + a.name, true), 800);
+    }
+  });
+}
+
+/* ===== COMING SOON ===== */
+function renderComingSoon(){
+  document.getElementById('cs-list').innerHTML = COMING_SOON.map(c=>`
+    <div class="cs-item">
+      <div class="cs-icon">${c.icon}</div>
+      <div>
+        <div class="cs-title">${c.title}</div>
+        <div class="cs-sub">${c.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+
+/* ===== LANDING CANVAS ===== */
+function initCanvas(){
+  const canvas = document.getElementById('landing-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  const ERA_DEFS = [
+    {name:'Cave Art',    color:'#8B5E3C', rx:0.12, ry:0.22},
+    {name:'Egypt',       color:'#D4AF37', rx:0.30, ry:0.13},
+    {name:'Greece',      color:'#D4C5A9', rx:0.52, ry:0.20},
+    {name:'Rome',        color:'#A8A8A8', rx:0.70, ry:0.16},
+    {name:'Medieval',    color:'#8B0000', rx:0.85, ry:0.32},
+    {name:'Renaissance', color:'#C19A6B', rx:0.80, ry:0.55},
+    {name:'Baroque',     color:'#D4AF37', rx:0.65, ry:0.73},
+    {name:'Impressionism',color:'#C8A4C0',rx:0.44, ry:0.82},
+    {name:'Modernism',   color:'#E05C5C', rx:0.24, ry:0.72},
+    {name:'Bauhaus',     color:'#E6FF00', rx:0.10, ry:0.52},
+    {name:'Digital',     color:'#4FC3F7', rx:0.18, ry:0.38},
+    {name:'AI Art',      color:'#CE93D8', rx:0.48, ry:0.46},
+  ];
+
+  let nodes = [];
+
+  function resize(){
+    W = canvas.width = canvas.offsetWidth || window.innerWidth;
+    H = canvas.height = canvas.offsetHeight || window.innerHeight;
+    nodes = ERA_DEFS.map((e,i)=>({
+      ...e,
+      bx: e.rx * W, by: e.ry * H,
+      cx: e.rx * W, cy: e.ry * H,
+      phase: (i / ERA_DEFS.length) * Math.PI * 2,
+      r: 2.5 + Math.random() * 1.5,
+    }));
+  }
+
+  function frame(){
+    t += 0.007;
+    ctx.clearRect(0, 0, W, H);
+
+    // Update positions — gentle sinusoidal drift
+    nodes.forEach((n, i) => {
+      n.cx = n.bx + Math.sin(t + n.phase) * 22 + Math.cos(t * 0.65 + i * 0.9) * 12;
+      n.cy = n.by + Math.cos(t * 0.8 + n.phase) * 18 + Math.sin(t * 0.55 + i * 0.7) * 10;
+    });
+
+    // Connections between all pairs within range
+    for(let i = 0; i < nodes.length; i++){
+      for(let j = i + 1; j < nodes.length; j++){
+        const d = Math.hypot(nodes[i].cx - nodes[j].cx, nodes[i].cy - nodes[j].cy);
+        const maxD = W * 0.42;
+        if(d < maxD){
+          const base = Math.pow(1 - d / maxD, 2.5) * 0.18;
+          const pulse = 0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.6 + j * 0.4);
+          ctx.globalAlpha = base * (0.55 + 0.45 * pulse);
+          const grad = ctx.createLinearGradient(nodes[i].cx, nodes[i].cy, nodes[j].cx, nodes[j].cy);
+          grad.addColorStop(0, nodes[i].color);
+          grad.addColorStop(1, nodes[j].color);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 0.6 + pulse * 0.5;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].cx, nodes[i].cy);
+          ctx.lineTo(nodes[j].cx, nodes[j].cy);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Glow halos + core dots
+    nodes.forEach((n, i) => {
+      const glow = 0.5 + 0.5 * Math.sin(t * 1.1 + n.phase);
+      const glowR = n.r * (3.5 + glow * 2.5);
+      const radial = ctx.createRadialGradient(n.cx, n.cy, 0, n.cx, n.cy, glowR);
+      radial.addColorStop(0, n.color + '60');
+      radial.addColorStop(1, n.color + '00');
+      ctx.globalAlpha = 0.35 + glow * 0.3;
+      ctx.fillStyle = radial;
+      ctx.beginPath();
+      ctx.arc(n.cx, n.cy, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core dot
+      ctx.globalAlpha = 0.75 + glow * 0.25;
+      ctx.fillStyle = n.color;
+      ctx.beginPath();
+      ctx.arc(n.cx, n.cy, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  frame();
+}
+
+/* ===== UTILS ===== */
+function showToast(msg, accent=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (accent?' accent':'');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.className='', 2800);
+}
+
+function showXPPopup(xp){
+  const p = document.getElementById('xp-popup');
+  document.getElementById('xp-popup-num').textContent = '+' + xp;
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'), 1600);
+}
+
+function updateLandingStats(){
+  // handled by initLanding
+}
+
+/* ===== LANDING ANIMATIONS ===== */
+function initLanding(){
+  // Era typer — cycles through era names
+  const ERA_NAMES = ['CAVE ART','EGYPT','ANCIENT GREECE','ROMAN EMPIRE','MEDIEVAL','RENAISSANCE','BAROQUE','IMPRESSIONISM','MODERNISM','BAUHAUS','DIGITAL ART','AI ART'];
+  let eraIdx = 0;
+  const eraEl = document.getElementById('landing-type-era');
+  if(eraEl){
+    function nextEra(){
+      eraEl.style.opacity = '0';
+      setTimeout(()=>{
+        eraIdx = (eraIdx + 1) % ERA_NAMES.length;
+        eraEl.textContent = ERA_NAMES[eraIdx];
+        eraEl.style.opacity = '1';
+      }, 300);
+    }
+    setInterval(nextEra, 2200);
+  }
+
+  // Animated stat counters
+  function animateCount(el, target, suffix, duration){
+    if(!el) return;
+    const start = performance.now();
+    function step(now){
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target) + suffix;
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Scroll-reveal via IntersectionObserver
+  const revealObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.12});
+
+  document.querySelectorAll('.reveal').forEach((el, i)=>{
+    el.style.transitionDelay = (i * 0.06) + 's';
+    revealObserver.observe(el);
+  });
+
+  // Staggered hiw steps
+  const stepObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const steps = entry.target.querySelectorAll('.hiw-inline-step');
+        steps.forEach((step, i)=>{
+          step.style.transition = 'opacity 0.45s '+((i*0.12)+0.05)+'s cubic-bezier(.22,1,.36,1), transform 0.45s '+((i*0.12)+0.05)+'s cubic-bezier(.22,1,.36,1), border-color 0.3s, background 0.3s';
+          setTimeout(()=>step.classList.add('visible'), i * 120 + 50);
+        });
+        stepObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.2});
+  const hiwEl = document.querySelector('.hiw-inline');
+  if(hiwEl) stepObserver.observe(hiwEl);
+
+  // Stat counters fire when stats row becomes visible
+  const statsEl = document.querySelector('.land-stats');
+  if(statsEl){
+    const statsObserver = new IntersectionObserver((entries)=>{
+      if(entries[0].isIntersecting){
+        animateCount(document.getElementById('stat-eras'),      12,  '',   900);
+        animateCount(document.getElementById('stat-artifacts'), 36,  '+', 1100);
+        animateCount(document.getElementById('stat-years'),     40,  'k', 1300);
+        animateCount(document.getElementById('stat-xp'),       250,  '',  1600);
+        statsObserver.unobserve(statsEl);
+      }
+    }, {threshold: 0.5});
+    statsObserver.observe(statsEl);
+  }
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  initCanvas();
+  initLanding();
+  document.getElementById('site-nav').classList.add('visible');
+
+  // Close modals on backdrop click
+  document.getElementById('artifact-modal').addEventListener('click', e=>{
+    if(e.target===document.getElementById('artifact-modal')) closeModal('artifact-modal');
+  });
+});
+</script>
+</body>
+</html>
