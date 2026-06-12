@@ -175,8 +175,13 @@ html{scroll-behavior:smooth}
 .cards-track{padding:0 24px;overflow-x:auto;display:flex;gap:16px;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .cards-track::-webkit-scrollbar{display:none}
 .art-card{min-width:min(calc(100vw - 64px),340px);max-width:360px;background:rgba(255,255,255,0.04);border-radius:var(--r2);border:1px solid rgba(255,255,255,0.06);overflow:hidden;scroll-snap-align:start;flex-shrink:0}
-.art-card-img{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,var(--era-bg,#111) 0%,rgba(255,255,255,0.03) 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.art-card-art{font-size:80px;opacity:0.4;filter:drop-shadow(0 0 40px currentColor)}
+.art-card-img{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:rgba(0,0,0,0.25)}
+.art-card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.45s cubic-bezier(.22,1,.36,1)}
+.art-card:hover .art-card-img img{transform:scale(1.05)}
+.art-card-img-bg{position:absolute;inset:0;z-index:0}
+.art-card-img-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0) 52%)}
+.art-card-era-tag{position:absolute;bottom:12px;left:12px;z-index:2;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;border:1px solid;backdrop-filter:blur(6px)}
+.art-card-art{display:none}
 .art-card-body{padding:20px}
 .art-card-title{font-size:20px;font-weight:700;letter-spacing:-0.02em}
 .art-card-insight{font-size:13px;color:var(--dim);line-height:1.5;margin-top:8px}
@@ -208,7 +213,8 @@ html{scroll-behavior:smooth}
 .artifact-rarity.common{color:var(--dim)}
 .artifact-sheet-title{font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
 .artifact-sheet-year{font-size:13px;color:var(--dim);margin-bottom:24px}
-.artifact-sheet-art{width:100%;aspect-ratio:16/9;border-radius:var(--r);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:24px}
+.artifact-sheet-art{width:100%;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;position:relative;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:24px}
+.artifact-sheet-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r)}
 .artifact-connections{margin-bottom:24px}
 .artifact-connections h3{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--dim);margin-bottom:12px}
 .connection-tags{display:flex;gap:8px;flex-wrap:wrap}
@@ -278,7 +284,12 @@ html{scroll-behavior:smooth}
 .collection-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 24px 40px}
 .collect-card{background:rgba(255,255,255,0.03);border-radius:var(--r2);overflow:hidden;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform 0.15s,border-color 0.2s;position:relative}
 .collect-card:active{transform:scale(0.97)}
-.collect-card-art{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:52px;background:rgba(255,255,255,0.02);position:relative}
+.collect-card-art{aspect-ratio:1;position:relative;overflow:hidden;background:rgba(255,255,255,0.02)}
+.collect-card-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.4s cubic-bezier(.22,1,.36,1)}
+.collect-card:hover .collect-card-art img{transform:scale(1.08)}
+.collect-card-art-bg{position:absolute;inset:0;z-index:0}
+.collect-card-art::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent 60%);pointer-events:none;z-index:1}
+.collect-card-lock-overlay{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px)}
 .collect-card-rarity{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 7px;border-radius:4px}
 .rarity-legendary{background:rgba(255,215,0,0.2);color:#FFD700}
 .rarity-epic{background:rgba(192,132,252,0.2);color:#C084FC}
@@ -659,7 +670,7 @@ html{scroll-behavior:smooth}
           </div>
           <div class="ph-upvote">
             <span class="ph-upvote-arrow">▲</span>
-            <span>0</span>
+            <span>Upvote</span>
           </div>
         </a>
       </div>
@@ -902,7 +913,7 @@ html{scroll-behavior:smooth}
       </div>
       <div class="footer-divider"></div>
       <div class="footer-bottom">
-        <div class="footer-copy">© 2025 ArtMap · artmap.college</div>
+        <div class="footer-copy">© 2025–2026 ArtMap · artmap.college</div>
       </div>
     </footer>
   </div>
@@ -913,7 +924,7 @@ html{scroll-behavior:smooth}
   <div class="map-header">
     <div>
       <div class="map-title">World Art Map</div>
-      <div class="map-sub">Your journey through human creativity</div>
+      <div class="map-sub" id="map-sub">Your journey through human creativity</div>
     </div>
     <div class="xp-badge">
       <span>⚡</span>
@@ -1327,6 +1338,121 @@ html{scroll-behavior:smooth}
 
 <script>
 /* ===== DATA ===== */
+const CARD_IMAGES = {
+  'Lascaux Cave':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'Hand Stencils':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Cueva_de_las_Manos_2005.jpg/600px-Cueva_de_las_Manos_2005.jpg',
+  'Chauvet Cave':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Chauvet_Cave%2C_paintings_of_horses.jpg/600px-Chauvet_Cave%2C_paintings_of_horses.jpg',
+  'Venus Figurines':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Venus_von_Willendorf_01.jpg/400px-Venus_von_Willendorf_01.jpg',
+  'Rock Engravings':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'Altamira Bison':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/AltamiraBison.jpg/600px-AltamiraBison.jpg',
+  'The Great Sphinx':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Great_Sphinx_of_Giza_-_20080716a.jpg/600px-Great_Sphinx_of_Giza_-_20080716a.jpg',
+  'Hieroglyphic Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Luxor_temple_Ramesses_II_colossus.jpg/600px-Luxor_temple_Ramesses_II_colossus.jpg',
+  'Tomb Paintings':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Nebamun_fowling.jpg/600px-Nebamun_fowling.jpg',
+  'The Book of the Dead':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/BD_Weighing_of_the_Heart.jpg/600px-BD_Weighing_of_the_Heart.jpg',
+  'Nefertiti Bust':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
+  'Amarna Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Akhenaten_Nefertiti_and_their_children.jpg/600px-Akhenaten_Nefertiti_and_their_children.jpg',
+  'Black-Figure Pottery':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Amphora_Achilles_Ajax_Louvre_F109.jpg/500px-Amphora_Achilles_Ajax_Louvre_F109.jpg',
+  'The Parthenon':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/600px-The_Parthenon_in_Athens.jpg',
+  'Contrapposto':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Doryphoros_MAN_Napoli_Inv6011-2.jpg/400px-Doryphoros_MAN_Napoli_Inv6011-2.jpg',
+  'Ideal Proportions':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Doryphoros_MAN_Napoli_Inv6011-2.jpg/400px-Doryphoros_MAN_Napoli_Inv6011-2.jpg',
+  'Red-Figure Vases':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Euphronios_krater_side_A_MET_L.2006.10.jpg/600px-Euphronios_krater_side_A_MET_L.2006.10.jpg',
+  'Hellenistic Realism':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Laocoon_and_His_Sons.jpg/400px-Laocoon_and_His_Sons.jpg',
+  'Portrait Realism':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Capitoline_Brutus_2.jpg/400px-Capitoline_Brutus_2.jpg',
+  'Triumphal Arches':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Arch_of_Titus_Rome.jpg/600px-Arch_of_Titus_Rome.jpg',
+  'Pompeii Frescoes':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Garden-fresco-Pompeii.jpg/600px-Garden-fresco-Pompeii.jpg',
+  'Roman Mosaic':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Alexander_and_Darius_mosaic.jpg/600px-Alexander_and_Darius_mosaic.jpg',
+  'The Pantheon':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Pantheon_Rome_2005May.jpg/600px-Pantheon_Rome_2005May.jpg',
+  'Column of Trajan':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Trajan%27s_Column_Rome.jpg/400px-Trajan%27s_Column_Rome.jpg',
+  'Illuminated Manuscripts':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'Byzantine Icons':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Virgin_of_Vladimir.jpg/400px-Virgin_of_Vladimir.jpg',
+  'Gothic Cathedral':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Notre-Dame_de_Paris_2013-07-24.jpg/600px-Notre-Dame_de_Paris_2013-07-24.jpg',
+  'Tapestry Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Bayeux_tapestry_-_Norman_fleet.jpg/600px-Bayeux_tapestry_-_Norman_fleet.jpg',
+  'Stained Glass':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'Fresco Cycles':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Giotto_di_Bondone_-_Nr.18_The_Lamentation_of_Christ_-_WGA09195.jpg/600px-Giotto_di_Bondone_-_Nr.18_The_Lamentation_of_Christ_-_WGA09195.jpg',
+  'Mona Lisa':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/400px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  'The Sistine Chapel':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/600px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg',
+  'Linear Perspective':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/600px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg',
+  'The Birth of Venus':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/600px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',
+  'Vitruvian Man':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Da_Vinci_Vitruve_Luc_Viatour.jpg/400px-Da_Vinci_Vitruve_Luc_Viatour.jpg',
+  'School of Athens':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/600px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg',
+  "Caravaggio's Tenebrism":'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/CARAVAGGIO_Judith.jpg/600px-CARAVAGGIO_Judith.jpg',
+  "Rembrandt's Portraits":'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg/400px-Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg',
+  "Vermeer's Light":'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg',
+  "Bernini's Ecstasy":'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Ecstasy_of_Saint_Teresa_epitome.jpg/400px-Ecstasy_of_Saint_Teresa_epitome.jpg',
+  'Velázquez Court Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/600px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg',
+  "Rubens's Energy":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Peter_Paul_Rubens_-_Sampson_and_Delilah_%28National_Gallery%29.jpg/600px-Peter_Paul_Rubens_-_Sampson_and_Delilah_%28National_Gallery%29.jpg',
+  "Monet's Water Lilies":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/600px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg',
+  'Starry Night':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/600px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+  "Renoir's Dancers":'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Pierre-Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette.jpg/600px-Pierre-Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette.jpg',
+  "Degas's Dancers":'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Degas_The_Dance_Class.jpg/600px-Degas_The_Dance_Class.jpg',
+  "Seurat's Pointillism":'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png/600px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png',
+  "Cézanne's Structure":'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Paul_C%C3%A9zanne_La_Montagne_Sainte-Victoire_%281887%29.jpg/600px-Paul_C%C3%A9zanne_La_Montagne_Sainte-Victoire_%281887%29.jpg',
+  "Les Demoiselles d'Avignon":'https://upload.wikimedia.org/wikipedia/en/4/4c/Les_Demoiselles_d%27Avignon.jpg',
+  "Mondrian's Grids":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  "Duchamp's Fountain":'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Marcel_Duchamp%2C_1917%2C_Fountain%2C_photograph_by_Alfred_Stieglitz.jpg/400px-Marcel_Duchamp%2C_1917%2C_Fountain%2C_photograph_by_Alfred_Stieglitz.jpg',
+  "Dali's Persistence":'https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg',
+  "Pollock's Drips":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  'Malevich Black Square':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg/400px-Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg',
+  'The Bauhaus School':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  "Marcel Breuer's Chair":'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Wassily_Chair.jpg/400px-Wassily_Chair.jpg',
+  "Paul Klee's Teaching":'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Paul_Klee_Senecio_1922.jpg/400px-Paul_Klee_Senecio_1922.jpg',
+  'Moholy-Nagy Light':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  'Bauhaus Typography':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  'Albers Color Study':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  "Vera Molnár's Algorithms":'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Pixel Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'CGI Film':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Net Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Digital Photography':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Generative Art':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'Generative Adversarial Networks':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'DALL-E & Midjourney':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'Style Transfer':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'Refik Anadol':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  "Beeple's Everydays":'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'Collaborative AI':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+};
+
+const ARTIFACT_IMAGES = {
+  'lascaux-bull':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'venus-willendorf':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Venus_von_Willendorf_01.jpg/400px-Venus_von_Willendorf_01.jpg',
+  'altamira-hand':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Cueva_de_las_Manos_2005.jpg/600px-Cueva_de_las_Manos_2005.jpg',
+  'tut-mask':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tutanchamun_Maske.jpg/400px-Tutanchamun_Maske.jpg',
+  'nefertiti':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
+  'rosetta':'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Rosetta_Stone_BW.jpeg/400px-Rosetta_Stone_BW.jpeg',
+  'venus-milo':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VenusMilloLouvre.jpg/400px-VenusMilloLouvre.jpg',
+  'discus':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Doryphoros_MAN_Napoli_Inv6011-2.jpg/400px-Doryphoros_MAN_Napoli_Inv6011-2.jpg',
+  'laocooon':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Laocoon_and_His_Sons.jpg/400px-Laocoon_and_His_Sons.jpg',
+  'augustus':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Statue_of_Augustus_of_Prima_Porta.JPG/400px-Statue_of_Augustus_of_Prima_Porta.JPG',
+  'trajan-col':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Trajan%27s_Column_Rome.jpg/400px-Trajan%27s_Column_Rome.jpg',
+  'pompeii-fresco':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Garden-fresco-Pompeii.jpg/600px-Garden-fresco-Pompeii.jpg',
+  'book-kells':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/KellsFol032vChristEnthroned.jpg/400px-KellsFol032vChristEnthroned.jpg',
+  'bayeux':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Bayeux_tapestry_-_Norman_fleet.jpg/600px-Bayeux_tapestry_-_Norman_fleet.jpg',
+  'notre-dame':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Notre-Dame_de_Paris_2013-07-24.jpg/600px-Notre-Dame_de_Paris_2013-07-24.jpg',
+  'mona-lisa':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  'david':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Michelangelo%27s_David_-_right_view.jpg/400px-Michelangelo%27s_David_-_right_view.jpg',
+  'sistine':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/600px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg',
+  'birth-venus':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/600px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',
+  'last-supper':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9Altima_Cena_-_Da_Vinci_5.jpg/600px-%C3%9Altima_Cena_-_Da_Vinci_5.jpg',
+  'night-watch':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/The_Night_Watch_-_HD.jpg/600px-The_Night_Watch_-_HD.jpg',
+  'pearl-earring':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/400px-1665_Girl_with_a_Pearl_Earring.jpg',
+  'las-meninas':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/600px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg',
+  'starry-night':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/600px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+  'water-lilies':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/600px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg',
+  'grande-jatte':'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png/600px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.png',
+  'guernica':'https://upload.wikimedia.org/wikipedia/en/7/74/PicassoGuernica.jpg',
+  'persistence':'https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg',
+  'demoiselles':'https://upload.wikimedia.org/wikipedia/en/4/4c/Les_Demoiselles_d%27Avignon.jpg',
+  'composition-ii':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/400px-Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg',
+  'wassily':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Wassily_Chair.jpg/400px-Wassily_Chair.jpg',
+  'dessau':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Bauhaus-Dessau.JPG/600px-Bauhaus-Dessau.JPG',
+  'processing':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'toy-story-frame':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Spacewar%21-PDP-1-20070512.jpg/600px-Spacewar%21-PDP-1-20070512.jpg',
+  'gan-portrait':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'beeple-nft':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+  'anadol':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Portrait_of_Edmond_de_Belamy.png/400px-Portrait_of_Edmond_de_Belamy.png',
+};
+
 const ERA_IMAGES = {
   'cave-art':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg',
   'egypt':        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Nefertiti_bust.jpg/400px-Nefertiti_bust.jpg',
@@ -1725,7 +1851,7 @@ function startJourney(){
 /* ===== MAP ===== */
 function renderMap(){
   document.getElementById('map-xp').textContent = state.xp + ' XP';
-  document.getElementById('map-sub')?.setAttribute && document.querySelector('.map-sub') && (document.querySelector('.map-sub').textContent = state.completedEras.length + ' of ' + ERAS.length + ' eras explored');
+  document.getElementById('map-sub').textContent = state.completedEras.length + ' of ' + ERAS.length + ' eras explored';
   const pct = Math.round((state.completedEras.length / ERAS.length) * 100);
   document.getElementById('map-progress-fill').style.width = pct + '%';
   
@@ -1826,9 +1952,13 @@ function renderCards(){
   currentEra.cards.forEach((card, i) => {
     const el = document.createElement('div');
     el.className = 'art-card';
+    const imgUrl = CARD_IMAGES[card.title] || ERA_IMAGES[currentEra.id] || '';
     el.innerHTML = `
       <div class="art-card-img">
-        <span class="art-card-art">${currentEra.emoji}</span>
+        ${imgUrl ? `<img src="${imgUrl}" alt="${card.title}" loading="lazy" onerror="this.style.display='none'">` : ''}
+        <div class="art-card-img-bg" style="background:linear-gradient(135deg,${currentEra.color}33,${currentEra.bg})"></div>
+        <div class="art-card-img-overlay"></div>
+        <div class="art-card-era-tag" style="background:${currentEra.color}22;border-color:${currentEra.color}55;color:${currentEra.color}">${card.innovation}</div>
       </div>
       <div class="art-card-body">
         <div class="art-card-title">${card.title}</div>
@@ -1837,10 +1967,6 @@ function renderCards(){
           <div class="art-card-field">
             <label>Key Figure</label>
             <span>${card.figure}</span>
-          </div>
-          <div class="art-card-field" style="text-align:right">
-            <label>Innovation</label>
-            <span style="color:var(--accent)">${card.innovation}</span>
           </div>
         </div>
       </div>
@@ -1873,7 +1999,13 @@ function openArtifactModal(artifact){
   document.getElementById('art-rarity').className = 'artifact-rarity ' + artifact.rarity;
   document.getElementById('art-title').textContent = artifact.title;
   document.getElementById('art-year').textContent = artifact.year + ' · ' + ERAS.find(e=>e.id===artifact.era)?.name;
-  document.getElementById('art-emoji').textContent = artifact.emoji;
+  const artImgEl = document.getElementById('art-emoji');
+  const artImgUrl = ARTIFACT_IMAGES[artifact.id] || ERA_IMAGES[artifact.era] || '';
+  if(artImgUrl){
+    artImgEl.innerHTML = `<img src="${artImgUrl}" alt="${artifact.title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r)" onerror="this.outerHTML='<span style=font-size:72px>${artifact.emoji}</span>'">`;
+  } else {
+    artImgEl.textContent = artifact.emoji;
+  }
   
   const conns = document.getElementById('art-connections');
   conns.innerHTML = artifact.connections.map(c=>`<span class="connection-tag">${c}</span>`).join('');
@@ -2064,15 +2196,19 @@ function renderCollection(){
   const grid = document.getElementById('collection-grid');
   grid.innerHTML = pool.map(a=>{
     const owned = state.discoveredArtifacts.includes(a.id);
+    const era = ERAS.find(e=>e.id===a.era);
+    const imgUrl = ARTIFACT_IMAGES[a.id] || ERA_IMAGES[a.era] || '';
     return `
       <div class="collect-card${owned?'':' undiscovered'}" onclick="openArtifactModal(ARTIFACTS_DATA.find(x=>x.id==='${a.id}'))">
         <div class="collect-card-art">
-          ${owned ? a.emoji : '<span class="collect-card-lock">🔒</span>'}
-          <span class="collect-card-rarity rarity-${a.rarity}">${a.rarity}</span>
+          ${imgUrl ? `<img src="${imgUrl}" alt="${a.title}" loading="lazy" onerror="this.style.display='none'">` : ''}
+          <div class="collect-card-art-bg" style="background:${era?.color+'18' || 'rgba(255,255,255,0.02)'}"></div>
+          ${!owned ? `<div class="collect-card-lock-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>` : ''}
+          <span class="collect-card-rarity rarity-${a.rarity}" style="z-index:4;position:absolute;top:8px;right:8px">${a.rarity}</span>
         </div>
         <div class="collect-card-info">
           <div class="collect-card-title">${owned ? a.title : '???'}</div>
-          <div class="collect-card-era">${ERAS.find(e=>e.id===a.era)?.name}</div>
+          <div class="collect-card-era">${era?.name || ''}</div>
           ${!owned ? '<span class="collect-card-era-tag">Tap to discover</span>' : ''}
         </div>
       </div>
@@ -2181,7 +2317,9 @@ function confirmReset(){
 /* ===== ACHIEVEMENTS ===== */
 function getAchievementProgress(a){
   if(typeof a.req==='number'){
-    const v = Math.max(state.discoveredArtifacts.length, state.completedEras.length);
+    // Collector achievements track artifacts; explorer achievements track eras
+    const eraAchs = new Set(['explorer','world-traveler','art-historian','dna-decoded']);
+    const v = eraAchs.has(a.id) ? state.completedEras.length : state.discoveredArtifacts.length;
     return Math.min(100, Math.round(v/a.req*100));
   }
   if(typeof a.req==='string'){
@@ -2216,7 +2354,10 @@ function renderAchievements(){
 }
 
 function isAchievementUnlocked(a){
-  if(typeof a.req === 'number') return state.discoveredArtifacts.length >= a.req || state.completedEras.length >= a.req;
+  if(typeof a.req === 'number'){
+    const eraAchs = new Set(['explorer','world-traveler','art-historian','dna-decoded']);
+    return eraAchs.has(a.id) ? state.completedEras.length >= a.req : state.discoveredArtifacts.length >= a.req;
+  }
   if(typeof a.req === 'string'){
     if(a.req.startsWith('era:')) return state.completedEras.includes(a.req.split(':')[1]);
     if(a.req.startsWith('quiz:')) return (state.quizStreak||0) >= parseInt(a.req.split(':')[1]);
