@@ -63,19 +63,61 @@ a{color:inherit;text-decoration:none}
 /* LANDING */
 #landing{padding:0}
 #landing-canvas{position:absolute;inset:0;z-index:0}
-.landing-content{position:relative;z-index:1;padding:calc(68px + var(--sat)) 24px 32px}
-.landing-logo{font-size:clamp(44px,11vw,120px);font-weight:700;letter-spacing:-0.04em;line-height:0.9;color:var(--fg)}
+.landing-content{position:relative;z-index:1;padding:calc(68px + var(--sat)) 24px 0}
+.landing-logo{font-size:clamp(22px,6vw,34px);font-weight:800;letter-spacing:-0.04em;line-height:0.9;color:var(--fg)}
 .landing-logo span{color:var(--accent)}
-.landing-tagline{margin-bottom:0;font-size:clamp(13px,3.5vw,16px);color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:16px;font-weight:400}
-.landing-hero-text{margin-top:0;padding-top:20px}
-.landing-headline{font-size:clamp(32px,9vw,72px);font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:16px}
-.landing-sub{font-size:clamp(14px,3.5vw,18px);color:var(--dim);line-height:1.5;max-width:340px;margin-bottom:40px}
-.landing-ctas{display:flex;flex-direction:column;gap:12px}
-.btn-primary{background:var(--accent);color:#000;font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:18px 32px;border-radius:var(--r);width:100%;transition:transform 0.15s,opacity 0.15s}
+.landing-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.landing-live-badge{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#000;background:var(--accent);padding:3px 8px;border-radius:4px;margin-top:1px}
+
+/* Hero main block */
+.landing-hero-main{padding-top:12px;padding-bottom:0}
+.landing-years-num{font-size:clamp(68px,19vw,130px);font-weight:800;letter-spacing:-0.05em;line-height:0.85;color:var(--fg);font-variant-numeric:tabular-nums;opacity:0;animation:heroNumIn 0.7s 0.15s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes heroNumIn{from{opacity:0;transform:translateY(24px) scale(0.94)}to{opacity:1;transform:none}}
+.landing-years-label{font-size:clamp(18px,5vw,28px);font-weight:700;letter-spacing:-0.02em;color:var(--fg);line-height:1.1;margin-top:4px;opacity:0;animation:heroNumIn 0.7s 0.28s cubic-bezier(.22,1,.36,1) forwards}
+.landing-type-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:16px;opacity:0;animation:heroNumIn 0.6s 0.42s cubic-bezier(.22,1,.36,1) forwards}
+.landing-type-prefix{font-size:12px;font-weight:500;color:var(--dim);letter-spacing:0.08em;text-transform:uppercase}
+.landing-type-era{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:0.05em;text-transform:uppercase;min-width:90px;transition:opacity 0.3s}
+.landing-type-cursor{display:inline-block;width:2px;height:14px;background:var(--accent);border-radius:1px;vertical-align:middle;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.landing-sub{font-size:14px;color:var(--dim);line-height:1.6;max-width:320px;margin-bottom:24px;opacity:0;animation:heroNumIn 0.6s 0.55s cubic-bezier(.22,1,.36,1) forwards}
+.landing-ctas{display:flex;flex-direction:row;gap:10px;flex-wrap:wrap;opacity:0;animation:heroNumIn 0.6s 0.65s cubic-bezier(.22,1,.36,1) forwards}
+.btn-primary{background:var(--accent);color:#000;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:16px 24px;border-radius:var(--r);display:flex;align-items:center;gap:8px;transition:transform 0.15s,box-shadow 0.3s}
 .btn-primary:active{transform:scale(0.97)}
-.btn-secondary{background:transparent;color:var(--fg);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:17px 32px;border-radius:var(--r);width:100%;border:1px solid rgba(255,255,255,0.15);transition:border-color 0.2s}
-.btn-secondary:active{border-color:var(--accent)}
-.landing-stats{display:flex;gap:32px;margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.07)}
+.btn-glow{box-shadow:0 0 0 0 rgba(230,255,0,0.5);animation:glowPulse 2.8s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(230,255,0,0.45)}50%{box-shadow:0 0 22px 6px rgba(230,255,0,0.22)}}
+.btn-secondary{background:rgba(255,255,255,0.06);color:var(--fg);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:16px 22px;border-radius:var(--r);border:1px solid rgba(255,255,255,0.13);transition:border-color 0.2s,background 0.2s}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1)}
+.btn-secondary:active{transform:scale(0.97)}
+
+/* Section label */
+.land-section-label{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:28px 0 10px;padding:0}
+
+/* Artwork marquee */
+.artwork-marquee-wrap{overflow:hidden;margin:0 -24px;position:relative}
+.artwork-marquee-wrap::before,.artwork-marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:40px;z-index:1;pointer-events:none}
+.artwork-marquee-wrap::before{left:0;background:linear-gradient(to right,#0A0A0A,transparent)}
+.artwork-marquee-wrap::after{right:0;background:linear-gradient(to left,#0A0A0A,transparent)}
+.artwork-marquee{display:flex;width:max-content;animation:marqueeScroll 45s linear infinite}
+.artwork-marquee:hover{animation-play-state:paused}
+.artwork-marquee-half{display:flex;align-items:center;gap:0;padding:10px 0;white-space:nowrap}
+.marquee-item{font-size:11px;font-weight:500;letter-spacing:0.06em;color:rgba(255,255,255,0.28);padding:0 16px;transition:color 0.2s;cursor:pointer;text-transform:uppercase}
+.marquee-item:hover{color:var(--accent)}
+.marquee-sep{width:1px;height:10px;background:rgba(255,255,255,0.12);flex-shrink:0}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* How it works inline */
+.hiw-inline{padding:40px 0 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:32px}
+.hiw-inline-label{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:20px}
+.hiw-inline-steps{display:flex;flex-direction:column;gap:16px}
+.hiw-inline-step{display:flex;align-items:center;gap:16px;padding:16px;background:rgba(255,255,255,0.02);border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);transition:border-color 0.25s,background 0.25s}
+.hiw-inline-step:hover{border-color:rgba(230,255,0,0.2);background:rgba(230,255,0,0.03)}
+.hiw-inline-num{width:36px;height:36px;border-radius:50%;background:rgba(230,255,0,0.1);border:1px solid rgba(230,255,0,0.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--accent);flex-shrink:0}
+.hiw-inline-body{flex:1}
+.hiw-inline-title{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin-bottom:3px}
+.hiw-inline-desc{font-size:12px;color:var(--dim);line-height:1.5}
+.hiw-inline-icon{font-size:22px;flex-shrink:0}
+
+/* Stat row */
 .stat-item{display:flex;flex-direction:column;gap:4px}
 .stat-num{font-size:28px;font-weight:700;color:var(--accent);letter-spacing:-0.02em}
 .stat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
@@ -572,11 +614,57 @@ a{color:inherit;text-decoration:none}
 <div id="landing" class="screen active">
   <canvas id="landing-canvas"></canvas>
   <div class="landing-content">
-    <div>
+
+    <!-- Logo row -->
+    <div class="landing-logo-row">
       <div class="landing-logo">ART<span>MAP</span></div>
-      <div class="landing-tagline">Navigate Human Creativity</div>
+      <div class="landing-live-badge">LIVE</div>
     </div>
-    <div class="hero-eras-wrap"><div class="hero-eras">
+
+    <!-- Hero main -->
+    <div class="landing-hero-main">
+      <div class="landing-years-num">40,000</div>
+      <div class="landing-years-label">Years of Human Creativity</div>
+      <div class="landing-type-row">
+        <span class="landing-type-prefix">Now exploring →</span>
+        <span class="landing-type-era" id="landing-type-era">CAVE ART</span><span class="landing-type-cursor"></span>
+      </div>
+      <p class="landing-sub">Travel through 12 art eras — from Lascaux to AI. Collect legendary artifacts, ace quizzes, and build your unique Art DNA.</p>
+      <div class="landing-ctas">
+        <button class="btn-primary btn-glow" onclick="launchApp()">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Journey
+        </button>
+        <button class="btn-secondary" onclick="goToScreen('howto')">How it Works</button>
+      </div>
+    </div>
+
+    <!-- Animated stats -->
+    <div class="land-stats">
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-eras">12</div>
+        <div class="land-stat-l">Art Eras</div>
+      </div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-artifacts">36+</div>
+        <div class="land-stat-l">Artifacts</div>
+      </div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-years">40k</div>
+        <div class="land-stat-l">Years</div>
+      </div>
+      <div class="land-stat-div"></div>
+      <div class="land-stat">
+        <div class="land-stat-n" id="stat-xp">250</div>
+        <div class="land-stat-l">XP / Era</div>
+      </div>
+    </div>
+
+    <!-- Era chips -->
+    <div class="land-section-label">EXPLORE ALL 12 ERAS</div>
+    <div class="hero-eras-wrap"><div class="hero-eras" id="hero-eras-row">
       <div class="hero-era-chip" style="--era-c:#8B5E3C" onclick="launchApp()">
         <img class="era-chip-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/400px-Lascaux_painting.jpg" alt="Cave Art" loading="lazy" onerror="this.style.opacity=0">
         <div class="era-chip-overlay"></div>
@@ -686,34 +774,96 @@ a{color:inherit;text-decoration:none}
         </div>
       </div>
     </div></div>
-    <div class="land-stats">
-      <div class="land-stat"><div class="land-stat-n">12</div><div class="land-stat-l">Art Eras</div></div>
-      <div class="land-stat-div"></div>
-      <div class="land-stat"><div class="land-stat-n">36+</div><div class="land-stat-l">Artifacts</div></div>
-      <div class="land-stat-div"></div>
-      <div class="land-stat"><div class="land-stat-n">250</div><div class="land-stat-l">XP per Era</div></div>
-    </div>
-    <div class="landing-hero-text">
-      <div class="landing-headline">Explore 40,000 Years of Art</div>
-      <div class="landing-sub">Travel through human creativity — from cave paintings to AI art. Collect artifacts, ace quizzes, and build your Art DNA.</div>
-      <div class="landing-ctas" style="margin-bottom:0">
-        <button class="btn-primary" onclick="launchApp()">Start Journey</button>
+
+    <!-- Artworks marquee ticker -->
+    <div class="artwork-marquee-wrap" style="margin-top:20px">
+      <div class="artwork-marquee">
+        <div class="artwork-marquee-half">
+          <span class="marquee-item">Mona Lisa</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Starry Night</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Venus de Milo</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Guernica</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Sistine Chapel</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Birth of Venus</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Night Watch</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Girl with a Pearl Earring</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Lascaux Cave</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Nefertiti Bust</span><span class="marquee-sep"></span>
+          <span class="marquee-item">David</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Water Lilies</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Persistence of Memory</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Vitruvian Man</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Las Meninas</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Portrait of Edmond de Belamy</span><span class="marquee-sep"></span>
+        </div>
+        <div class="artwork-marquee-half" aria-hidden="true">
+          <span class="marquee-item">Mona Lisa</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Starry Night</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Venus de Milo</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Guernica</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Sistine Chapel</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Birth of Venus</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Night Watch</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Girl with a Pearl Earring</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Lascaux Cave</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Nefertiti Bust</span><span class="marquee-sep"></span>
+          <span class="marquee-item">David</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Water Lilies</span><span class="marquee-sep"></span>
+          <span class="marquee-item">The Persistence of Memory</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Vitruvian Man</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Las Meninas</span><span class="marquee-sep"></span>
+          <span class="marquee-item">Portrait of Edmond de Belamy</span><span class="marquee-sep"></span>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- HOW IT WORKS -->
-  <!-- SITE FOOTER -->
-  <footer class="site-footer" style="padding:32px 24px 48px;text-align:center">
-    <div class="footer-logo" style="margin-bottom:16px">ART<span>MAP</span></div>
-    <div style="display:flex;justify-content:center;gap:20px;margin-bottom:20px">
-      <button class="footer-link" onclick="goToScreen('about')">About</button>
-      <button class="footer-link" onclick="goToScreen('howto')">How It Works</button>
-      <button class="footer-link" onclick="goToScreen('legal')">Privacy</button>
-      <button class="footer-link" onclick="goToScreen('cookies')">Cookies</button>
+
+    <!-- How it works inline -->
+    <div class="hiw-inline">
+      <div class="hiw-inline-label">HOW IT WORKS</div>
+      <div class="hiw-inline-steps">
+        <div class="hiw-inline-step">
+          <div class="hiw-inline-num">1</div>
+          <div class="hiw-inline-body">
+            <div class="hiw-inline-title">Choose an Era</div>
+            <div class="hiw-inline-desc">Pick from 12 art eras spanning 40,000 years — from prehistoric cave art to AI-generated masterpieces.</div>
+          </div>
+          <div class="hiw-inline-icon">🗺️</div>
+        </div>
+        <div class="hiw-inline-step">
+          <div class="hiw-inline-num">2</div>
+          <div class="hiw-inline-body">
+            <div class="hiw-inline-title">Explore &amp; Collect</div>
+            <div class="hiw-inline-desc">Swipe through insight cards, collect legendary artifacts, and discover hidden connections between art movements.</div>
+          </div>
+          <div class="hiw-inline-icon">🖼️</div>
+        </div>
+        <div class="hiw-inline-step">
+          <div class="hiw-inline-num">3</div>
+          <div class="hiw-inline-body">
+            <div class="hiw-inline-title">Ace Quizzes &amp; Reveal Your DNA</div>
+            <div class="hiw-inline-desc">Test your knowledge with era quizzes, earn XP, unlock badges, and build your unique Art DNA profile.</div>
+          </div>
+          <div class="hiw-inline-icon">🧬</div>
+        </div>
+      </div>
     </div>
-    <div class="footer-divider" style="margin-bottom:16px"></div>
-    <div class="footer-copy">© 2025 ArtMap · artmap.college</div>
-  </footer>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-logo">ART<span>MAP</span></div>
+      <div class="footer-tagline">Google Earth for Art History. Navigate 40,000 years of human creativity.</div>
+      <div class="footer-links-grid">
+        <button class="footer-link" onclick="goToScreen('about')">About</button>
+        <button class="footer-link" onclick="goToScreen('howto')">How It Works</button>
+        <button class="footer-link" onclick="goToScreen('legal')">Privacy</button>
+        <button class="footer-link" onclick="goToScreen('cookies')">Cookies</button>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2025 ArtMap · artmap.college</div>
+      </div>
+    </footer>
+  </div>
 </div>
 
 <!-- MAP -->
@@ -2062,57 +2212,94 @@ function initCanvas(){
   const canvas = document.getElementById('landing-canvas');
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  let W, H, nodes=[], particles=[];
-  
+  let W, H, t = 0;
+
+  const ERA_DEFS = [
+    {name:'Cave Art',    color:'#8B5E3C', rx:0.12, ry:0.22},
+    {name:'Egypt',       color:'#D4AF37', rx:0.30, ry:0.13},
+    {name:'Greece',      color:'#D4C5A9', rx:0.52, ry:0.20},
+    {name:'Rome',        color:'#A8A8A8', rx:0.70, ry:0.16},
+    {name:'Medieval',    color:'#8B0000', rx:0.85, ry:0.32},
+    {name:'Renaissance', color:'#C19A6B', rx:0.80, ry:0.55},
+    {name:'Baroque',     color:'#D4AF37', rx:0.65, ry:0.73},
+    {name:'Impressionism',color:'#C8A4C0',rx:0.44, ry:0.82},
+    {name:'Modernism',   color:'#E05C5C', rx:0.24, ry:0.72},
+    {name:'Bauhaus',     color:'#E6FF00', rx:0.10, ry:0.52},
+    {name:'Digital',     color:'#4FC3F7', rx:0.18, ry:0.38},
+    {name:'AI Art',      color:'#CE93D8', rx:0.48, ry:0.46},
+  ];
+
+  let nodes = [];
+
   function resize(){
     W = canvas.width = canvas.offsetWidth || window.innerWidth;
     H = canvas.height = canvas.offsetHeight || window.innerHeight;
-    initNodes();
-  }
-  
-  function initNodes(){
-    nodes = Array(8).fill(0).map(()=>({
-      x: Math.random()*W, y: Math.random()*H,
-      vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
-      r: Math.random()*3+2,
-      color: ['#E6FF00','#FFFFFF','#B0B0B0','#8B5E3C','#D4AF37'][Math.floor(Math.random()*5)]
+    nodes = ERA_DEFS.map((e,i)=>({
+      ...e,
+      bx: e.rx * W, by: e.ry * H,
+      cx: e.rx * W, cy: e.ry * H,
+      phase: (i / ERA_DEFS.length) * Math.PI * 2,
+      r: 2.5 + Math.random() * 1.5,
     }));
   }
-  
+
   function frame(){
-    ctx.clearRect(0,0,W,H);
-    nodes.forEach(n=>{
-      n.x += n.vx; n.y += n.vy;
-      if(n.x<0||n.x>W) n.vx*=-1;
-      if(n.y<0||n.y>H) n.vy*=-1;
+    t += 0.007;
+    ctx.clearRect(0, 0, W, H);
+
+    // Update positions — gentle sinusoidal drift
+    nodes.forEach((n, i) => {
+      n.cx = n.bx + Math.sin(t + n.phase) * 22 + Math.cos(t * 0.65 + i * 0.9) * 12;
+      n.cy = n.by + Math.cos(t * 0.8 + n.phase) * 18 + Math.sin(t * 0.55 + i * 0.7) * 10;
     });
-    // Draw connections
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const d = Math.hypot(nodes[i].x-nodes[j].x, nodes[i].y-nodes[j].y);
-        if(d<220){
-          ctx.globalAlpha = (1-d/220)*0.12;
-          ctx.strokeStyle = '#E6FF00';
-          ctx.lineWidth = 0.8;
+
+    // Connections between all pairs within range
+    for(let i = 0; i < nodes.length; i++){
+      for(let j = i + 1; j < nodes.length; j++){
+        const d = Math.hypot(nodes[i].cx - nodes[j].cx, nodes[i].cy - nodes[j].cy);
+        const maxD = W * 0.42;
+        if(d < maxD){
+          const base = Math.pow(1 - d / maxD, 2.5) * 0.18;
+          const pulse = 0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.6 + j * 0.4);
+          ctx.globalAlpha = base * (0.55 + 0.45 * pulse);
+          const grad = ctx.createLinearGradient(nodes[i].cx, nodes[i].cy, nodes[j].cx, nodes[j].cy);
+          grad.addColorStop(0, nodes[i].color);
+          grad.addColorStop(1, nodes[j].color);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 0.6 + pulse * 0.5;
           ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.moveTo(nodes[i].cx, nodes[i].cy);
+          ctx.lineTo(nodes[j].cx, nodes[j].cy);
           ctx.stroke();
         }
       }
     }
-    // Draw nodes
-    nodes.forEach(n=>{
-      ctx.globalAlpha = 0.35;
+
+    // Glow halos + core dots
+    nodes.forEach((n, i) => {
+      const glow = 0.5 + 0.5 * Math.sin(t * 1.1 + n.phase);
+      const glowR = n.r * (3.5 + glow * 2.5);
+      const radial = ctx.createRadialGradient(n.cx, n.cy, 0, n.cx, n.cy, glowR);
+      radial.addColorStop(0, n.color + '60');
+      radial.addColorStop(1, n.color + '00');
+      ctx.globalAlpha = 0.35 + glow * 0.3;
+      ctx.fillStyle = radial;
+      ctx.beginPath();
+      ctx.arc(n.cx, n.cy, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core dot
+      ctx.globalAlpha = 0.75 + glow * 0.25;
       ctx.fillStyle = n.color;
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      ctx.arc(n.cx, n.cy, n.r, 0, Math.PI * 2);
       ctx.fill();
     });
+
     ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
   }
-  
+
   resize();
   window.addEventListener('resize', resize);
   frame();
@@ -2135,22 +2322,58 @@ function showXPPopup(xp){
 }
 
 function updateLandingStats(){
-  // Stats section removed from landing — no DOM targets needed
+  // handled by initLanding
+}
+
+/* ===== LANDING ANIMATIONS ===== */
+function initLanding(){
+  // Era typer — cycles through era names
+  const ERA_NAMES = ['CAVE ART','EGYPT','ANCIENT GREECE','ROMAN EMPIRE','MEDIEVAL','RENAISSANCE','BAROQUE','IMPRESSIONISM','MODERNISM','BAUHAUS','DIGITAL ART','AI ART'];
+  let eraIdx = 0;
+  const eraEl = document.getElementById('landing-type-era');
+  if(eraEl){
+    function nextEra(){
+      if(!eraEl) return;
+      eraEl.style.opacity = '0';
+      setTimeout(()=>{
+        eraIdx = (eraIdx + 1) % ERA_NAMES.length;
+        eraEl.textContent = ERA_NAMES[eraIdx];
+        eraEl.style.opacity = '1';
+      }, 300);
+    }
+    setInterval(nextEra, 2200);
+  }
+
+  // Animated stat counters
+  function animateCount(el, target, suffix, duration){
+    if(!el) return;
+    const start = performance.now();
+    function step(now){
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target) + suffix;
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  setTimeout(()=>{
+    animateCount(document.getElementById('stat-eras'),     12,   '',  900);
+    animateCount(document.getElementById('stat-artifacts'), 36,  '+', 1100);
+    animateCount(document.getElementById('stat-years'),    40,   'k', 1300);
+    animateCount(document.getElementById('stat-xp'),       250,  '',  1600);
+  }, 600);
 }
 
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded', ()=>{
   initCanvas();
-  updateLandingStats();
+  initLanding();
   document.getElementById('site-nav').classList.add('visible');
-  
+
   // Close modals on backdrop click
   document.getElementById('artifact-modal').addEventListener('click', e=>{
     if(e.target===document.getElementById('artifact-modal')) closeModal('artifact-modal');
   });
-  
-  // Coming soon in nav not needed — it's not in nav
-  // Add coming-soon trigger from DNA screen
 });
 </script>
 </body>
