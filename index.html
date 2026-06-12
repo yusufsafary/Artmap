@@ -540,9 +540,18 @@ html{scroll-behavior:smooth}
 /* ─── Landing stat bar ─── */
 .land-stats{display:flex;align-items:center;justify-content:center;padding:20px 0 8px;gap:0}
 .land-stat{flex:1;text-align:center}
-.land-stat-n{font-size:28px;font-weight:800;letter-spacing:-0.03em;color:var(--accent);line-height:1}
-.land-stat-l{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin-top:4px;font-weight:500}
-.land-stat-div{width:1px;height:32px;background:rgba(255,255,255,0.1);flex-shrink:0}
+.land-stat-n{font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--accent);line-height:1}
+.land-stat-l{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);margin-top:3px;font-weight:500}
+.land-stat-div{width:1px;height:24px;background:rgba(255,255,255,0.1);flex-shrink:0}
+/* EasyA */
+.snav-easya{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;border:1px solid rgba(74,222,74,0.3);background:rgba(74,222,74,0.06);transition:background 0.2s,border-color 0.2s;text-decoration:none;margin-left:auto;margin-right:12px}
+.snav-easya:hover{background:rgba(74,222,74,0.12);border-color:rgba(74,222,74,0.5)}
+.snav-easya img{width:22px;height:22px;border-radius:4px;object-fit:cover;flex-shrink:0}
+.snav-easya-label{font-size:11px;font-weight:700;color:#4fde4f;letter-spacing:0.04em}
+.btn-easya{display:flex;align-items:center;gap:7px;padding:12px 18px;border-radius:var(--r);border:1px solid rgba(74,222,74,0.35);background:rgba(74,222,74,0.07);color:#4fde4f;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:background 0.2s,border-color 0.2s,transform 0.15s;cursor:pointer}
+.btn-easya:hover{background:rgba(74,222,74,0.14);border-color:rgba(74,222,74,0.55)}
+.btn-easya:active{transform:scale(0.97)}
+.btn-easya img{width:16px;height:16px;border-radius:3px;object-fit:cover;flex-shrink:0}
 /* ─── Howto stats bar ─── */
 .howto-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 24px 28px}
 .hwstat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 8px;text-align:center}
@@ -608,6 +617,10 @@ html{scroll-behavior:smooth}
 
 <header id="site-nav">
   <div class="snav-logo" onclick="goToScreen('landing')">ART<span>MAP</span></div>
+  <a class="snav-easya" href="https://kickstart.easya.io/" target="_blank" rel="noopener">
+    <img src="/easya-logo.png" alt="EasyA Kickstart">
+    <span class="snav-easya-label">EasyA</span>
+  </a>
   <nav class="snav-links">
     <button class="snav-link" onclick="goToScreen('about')">About</button>
     <button class="snav-link snav-app-btn" onclick="launchApp()">App ↗</button>
@@ -634,6 +647,10 @@ html{scroll-behavior:smooth}
           Start Journey
         </button>
         <button class="btn-secondary" onclick="goToScreen('howto')">How it Works</button>
+        <a class="btn-easya" href="https://kickstart.easya.io/" target="_blank" rel="noopener">
+          <img src="/easya-logo.png" alt="EasyA">
+          EasyA Kickstart
+        </a>
       </div>
     </div>
 
