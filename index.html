@@ -126,7 +126,7 @@ a{color:inherit;text-decoration:none}
 .era-desc{font-size:14px;color:var(--dim);line-height:1.6;margin-top:16px;max-width:340px}
 
 /* CARDS */
-.cards-track{padding:0 24px;overflow-x:auto;display:flex;gap:16px;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.cards-track{padding:0 24px;overflow-x:auto;display:flex;gap:16px;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .cards-track::-webkit-scrollbar{display:none}
 .art-card{min-width:min(calc(100vw - 64px),340px);max-width:360px;background:rgba(255,255,255,0.04);border-radius:var(--r2);border:1px solid rgba(255,255,255,0.06);overflow:hidden;scroll-snap-align:start;flex-shrink:0}
 .art-card-img{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,var(--era-bg,#111) 0%,rgba(255,255,255,0.03) 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -507,13 +507,9 @@ a{color:inherit;text-decoration:none}
 .info-body ul li{font-size:14px;color:var(--dim);line-height:1.5}
 
 /* ─── Landing smoothness ─── */
-.landing-content{animation:landingFadeUp 0.7s cubic-bezier(.22,1,.36,1) both}
-@keyframes landingFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-.landing-logo{animation:landingFadeUp 0.6s 0.05s cubic-bezier(.22,1,.36,1) both}
-.landing-tagline{animation:landingFadeUp 0.6s 0.12s cubic-bezier(.22,1,.36,1) both}
-.hero-eras-wrap{animation:landingFadeUp 0.6s 0.2s cubic-bezier(.22,1,.36,1) both}
-.land-stats{animation:landingFadeUp 0.6s 0.28s cubic-bezier(.22,1,.36,1) both}
-.landing-hero-text{animation:landingFadeUp 0.6s 0.36s cubic-bezier(.22,1,.36,1) both}
+/* landing fade — single clean animation on content wrapper */
+@keyframes landingFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#landing.screen.active .landing-content{animation:landingFadeUp 0.55s cubic-bezier(.22,1,.36,1) both}
 
 /* ─── Era chip scroll snap ─── */
 .hero-eras{scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px}
@@ -689,18 +685,6 @@ a{color:inherit;text-decoration:none}
           <div class="era-chip-period">2010 CE</div>
         </div>
       </div>
-    </div></div>
-      <div class="hero-era-chip" style="--era-c:#D4AF37"><div class="era-chip-num">02</div><div class="era-chip-name">Egypt</div><div class="era-chip-period">3000 BCE</div></div>
-      <div class="hero-era-chip" style="--era-c:#B0C4DE"><div class="era-chip-num">03</div><div class="era-chip-name">Greece</div><div class="era-chip-period">800 BCE</div></div>
-      <div class="hero-era-chip" style="--era-c:#C0392B"><div class="era-chip-num">04</div><div class="era-chip-name">Rome</div><div class="era-chip-period">509 BCE</div></div>
-      <div class="hero-era-chip" style="--era-c:#7B5EA7"><div class="era-chip-num">05</div><div class="era-chip-name">Medieval</div><div class="era-chip-period">500 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#C19A6B"><div class="era-chip-num">06</div><div class="era-chip-name">Renaissance</div><div class="era-chip-period">1400 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#4A6FA5"><div class="era-chip-num">07</div><div class="era-chip-name">Baroque</div><div class="era-chip-period">1600 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#7EC8E3"><div class="era-chip-num">08</div><div class="era-chip-name">Impressionism</div><div class="era-chip-period">1860 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#E05C5C"><div class="era-chip-num">09</div><div class="era-chip-name">Modernism</div><div class="era-chip-period">1900 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#E6FF00"><div class="era-chip-num">10</div><div class="era-chip-name">Bauhaus</div><div class="era-chip-period">1919 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#4FC3F7"><div class="era-chip-num">11</div><div class="era-chip-name">Digital</div><div class="era-chip-period">1990 CE</div></div>
-      <div class="hero-era-chip" style="--era-c:#CE93D8"><div class="era-chip-num">12</div><div class="era-chip-name">AI Art</div><div class="era-chip-period">2010 CE</div></div>
     </div></div>
     <div class="land-stats">
       <div class="land-stat"><div class="land-stat-n">12</div><div class="land-stat-l">Art Eras</div></div>
